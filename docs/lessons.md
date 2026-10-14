@@ -164,6 +164,37 @@ Many sessions ended early: stream disconnects, context limits and five-hour
 usage windows. The hand-over rules exist because of this, and a handoff file
 per campaign was the only reliable recovery.
 
+### Version control was the research log, but only once we used it
+
+jj recorded 2,409 operations and 1,007 commits. Of the operations, 1,944
+fall on 12–13 October, after the rule "update the record in the same commit
+as the work" came in. The directed work of 3–11 October, which produced four
+of the six significant results, left only 136 operations. Its results can
+be dated only by when their write-ups first appeared. Everything quantitative
+in our report comes from the fine-grained part of the history:
+- when each problem was settled;
+- how difficulty scores moved;
+- which record fields were actually used.
+
+jj helped in two ways. It snapshots the working copy automatically, so no
+agent edit was ever lost, and any state could be restored from the operation
+log. It is also cheap to describe and split changes, which kept commits small
+and per-record. Its friction was minor: it refused to snapshot very large
+downloaded files, and agents had to be told not to fall back to git.
+
+### Failed attempts sprawled into hundreds of files
+
+Despite the rule that TeX holds results only, the research folders ended up
+with about 350 Markdown notes, 575 TeX files, 260 scripts and 140 JSON or CSV
+outputs. 107 problem records list five or more artifacts, one lists 24, and
+one hard problem alone produced 31 files. Most are attempt notes, superseded
+drafts and exploratory scripts.
+
+Parallel agents each wrote their own note rather than appending to a shared
+one. Nobody deleted superseded drafts; they were archived. The cost was
+real: later agents had to read through the pile to avoid repeating routes,
+and sometimes did not.
+
 ## Review is the weakest link
 
 Of the 141 results our agents settled, essentially all were checked by

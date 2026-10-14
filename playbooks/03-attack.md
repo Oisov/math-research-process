@@ -60,6 +60,15 @@ citations, and nothing else. Write it in the asker's notation. Build it with
 warnings. Set `stage: written` and list it in `artifacts`. Then
 request a referee (stage 4); never review your own work.
 
+## Keeping the files few
+
+- Append to `notes/<ID>.md`; never start `notes/<ID>-attempt3.md` or
+  `<ID>-agentB.md`.
+- Run exploratory numerics from the scratchpad, and record the one number
+  that matters in the record.
+- If you rewrite a solution sheet, overwrite it; the history keeps the old
+  version.
+
 ## Ending a session
 
 - Rewrite *State of play* (5–10 lines): what is known, the reductions proved,

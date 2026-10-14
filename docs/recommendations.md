@@ -47,6 +47,21 @@ The short version, in priority order. Each point comes from
 13. **Solution sheet before "solved".** Problem as posed, theorem, complete
     proof, exact citations, nothing else.
 
+## Files and history
+
+24. **Use version control as the research log from day one.** Commit each
+    problem's record together with the work it describes, with a message
+    that says what changed. jj is a good fit: it snapshots automatically and
+    makes small commits cheap. Our early work, done without this, cannot be
+    dated.
+25. **One notes file per problem**, `notes/<ID>.md`, with dated sections
+    that later sessions append to. Failed routes get one line in the record.
+    Scratch work, exploratory scripts and drafts live in the session
+    scratchpad, never in the repository. A script enters the repository only
+    if it certifies a claim.
+26. **Delete superseded drafts; don't archive them.** The version history
+    keeps them.
+
 ## Review
 
 14. **An adversarial referee re-reads the source and sets the scope.** The

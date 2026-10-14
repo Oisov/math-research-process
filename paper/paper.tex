@@ -729,6 +729,34 @@ them. The proofs and computations were produced by AI agents and checked by the
 author. Following Tao's rule of thumb~\cite{tao-age}, no result should be
 published until a human can give a clear, expert-level talk on it.
 
+\section{History and files}\label{sec:infrastructure}
+
+\emph{Version control was the research log, but only once we used it.} The
+repository was managed with Jujutsu (\texttt{jj}), which recorded 2409
+operations and 1007 commits. Of the operations, 1944 fall on 12 and 13 October,
+after the rule that each problem record is committed together with the work it
+describes. The directed work of 3 to 11 October, which produced four of the six
+significant results, left only 136 operations; those results can be dated only
+by when their write-ups first appeared. Everything quantitative in this report
+(when problems were settled, how difficulty scores moved, which record fields
+were used) comes from the fine-grained part of the history. Jujutsu's automatic
+snapshots meant that no edit by an agent was ever lost, and cheap small commits
+kept changes per record. We recommend committing per problem from the first
+day, with any version control system.
+
+\emph{Failed attempts sprawled.} The rule that TeX files hold results only,
+with failures recorded in one line of the problem record, was adopted but not
+enforced. The research folders ended with about 350 Markdown notes, 575 TeX
+files, 260 scripts and 140 data files. 107 problem records list five or more
+artifacts, and one hard problem accumulated 31 files. Parallel agents each
+wrote their own note instead of appending to a shared one, superseded drafts
+were archived rather than deleted, and exploratory scripts were saved next to
+certificates. Later agents had to read through the pile to avoid repeating
+routes, and sometimes did not. The playbooks now require one notes file per
+problem with dated sections, scratch work outside the repository, scripts in
+the repository only when a claim depends on them, and deletion of superseded
+drafts, which the history keeps.
+
 \section{Related work}\label{sec:related}
 
 \emph{Machine-assisted discovery.} Machine learning has guided human intuition

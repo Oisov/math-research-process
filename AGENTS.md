@@ -41,7 +41,7 @@ to continue.
 problems/<theme>/<ID>.md     one record per problem (templates/record.md)
 problems/INDEX.md            generated; never edit by hand
 sources/<arxiv-id>/          fetched arXiv sources and extracted text
-notes/<ID>.md                longer derivations (results only)
+notes/<ID>.md                one file per problem: derivations too long for the record, dated sections appended
 solutions/<ID>.tex           solution sheets (templates/solution-sheet.tex)
 discoveries/<ID>.md          the claiming model's verbatim response, model and date
 code/                        certificates that check claims
@@ -98,6 +98,21 @@ literature, and settling the easy ones. Expect most solved problems to be
 already in the literature, routine from known tools, or counterexamples that
 are easy to check. Do not expect it to break problems that experts are stuck
 on, and do not present it as doing so.
+
+## Version control and files
+
+- Use version control as the research log. Commit each record together with
+  the work it describes, one problem or task per commit, with a message that
+  says what changed. jj is recommended: it snapshots automatically and makes
+  small commits cheap. With git, commit just as often.
+- Write at most one notes file per problem, `notes/<ID>.md`, and append dated
+  sections to it. Do not create a new file per attempt, per agent or per idea.
+- Scratch work belongs in the session scratchpad, outside the repository:
+  exploratory scripts, numerics that don't certify anything, and drafts.
+- A script goes in `code/` only if a claim depends on it.
+- When a draft is superseded, delete it; the history keeps it.
+- Subagents report back to the orchestrator in their final message and
+  write only to the record and notes file they were given.
 
 ## Reporting to the user
 
