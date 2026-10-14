@@ -86,9 +86,19 @@ in `scripts/tex-style.yaml`; the targets are documented in
 9. **Leave hand-over state.** Sessions end without warning. Update the
    record's State of play before anything else when in doubt.
 
+## What to expect
+
+This pipeline is best at mapping a field: finding problems, checking the
+literature, and settling the easy ones. Expect most solved problems to be
+already in the literature, routine from known tools, or counterexamples that
+are easy to check. Do not expect it to break problems that experts are stuck
+on, and do not present it as doing so.
+
 ## Reporting to the user
 
 Lead with outcomes against the original questions: answered fully,
-answered partially (and what is open), or no progress. Do not count partial
+answered partially (and what is open), or no progress. Classify each solved
+problem as: already in the literature; routine from known tools; easy-to-check
+counterexample; or substantial new argument. Do not count partial
 results as solutions, special cases as the conjecture, or "for some p" as
 "for every p". Say what has *not* been checked.

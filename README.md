@@ -11,6 +11,22 @@ a coding agent can follow in another field: give it a list of papers, a list
 of authors or an arXiv query, and it builds, triages and works a problem
 database the same way.
 
+## What the agents achieved, and what they did not
+
+The agents were very good at mapping the field: finding, collecting and
+classifying problems, checking the literature, and picking off low-hanging
+fruit. Most of the problems they settled were short arguments from known
+tools, or counterexamples that are easy to verify once found. Only a few
+results are of real significance; those have been sent to the people who
+asked the questions.
+
+They did not get us past the walls. On the hard problems, several agents
+working for days produced maps of what fails, not proofs. A hard problem
+stayed hard. We use this method as the first step of research, to get to know
+a field and find questions worth working on, not as a way to break hard
+problems. Terence Tao has made the same observation about the Erdős problems;
+see [docs/paper.md](docs/paper.md).
+
 ## Credit
 
 The questions belong to the people who asked them, and every record cites
@@ -29,7 +45,7 @@ authors who asked the question.
 |---|---|
 | Problems in the database | 373 (289 asked by others, 84 by us) |
 | Settled by someone else (journal or arXiv), found during triage | 64 |
-| Settled by our agents, all *Sketch* | 141 (89 of them asked by others) |
+| Settled by our agents, all *Sketch*, mostly low-hanging fruit | 141 (89 of them asked by others) |
 | Of those, public as PDFs | 61 |
 | Partial results only | 142 |
 | Untouched or still being worked | 26 |
@@ -52,6 +68,7 @@ says what that is worth.
 | [`docs/lessons.md`](docs/lessons.md) | What worked and what did not, with the evidence |
 | [`docs/schema-review.md`](docs/schema-review.md) | Which record fields earned their place |
 | [`docs/recommendations.md`](docs/recommendations.md) | **What we recommend** |
+| [`docs/paper.md`](docs/paper.md) | Draft framing and outline for a paper on this work |
 
 The evidence behind these documents is the version history of the working
 repository (about 1,000 commits), 14 Claude Code sessions with 393 subagents,

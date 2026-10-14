@@ -5,6 +5,8 @@ The short version, in priority order. Each point comes from
 
 ## Before you start
 
+0. **Use it to map a field, not to break a wall.** Expect the gains in
+   finding, triaging and clearing easy problems, not in solving the hard ones.
 1. **Decide scope as a sentence you sign off**, for example "what the
    people working on Hardy spaces of Dirichlet series would work on". Keep
    excluded candidates in a report instead of deleting them.
