@@ -37,16 +37,19 @@ asked the question:
 
 Then ask a second-model referee to read it as the asker would.
 
-## Before anything leaves the workspace
+## Before sharing
+
+Sharing means posting a result openly or sending it to askers, labelled with
+how much stands behind it. It does not require command of the research
+context.
 
 - **The user signs off** that the statement proved matches the question
   asked. This is separate from refereeing the proof (Kallel and El Louadi,
   arXiv:2608.28997, §9).
-- **The explain-it test:** the user confirms they could give a clear,
-  expert-level talk on the result (Tao, arXiv:2608.16753, §8).
-- **The exposition** sent to askers is one the user has read, understood and
-  approved, not an unread agent-generated PDF (Bloom, *Changes to the Erdős
-  problems web site*, 2026).
+- **The user has read and understood what is sent**: the statement, the idea
+  of the proof, and what was and was not checked. No unread agent-generated
+  PDF leaves the workspace (Bloom, *Changes to the Erdős problems web site*,
+  2026).
 - **State the check level next to *Sketch*:** agent-reviewed, user-checked,
   or asker-checked.
 - **Disclosure section.** Every PDF has a "Tool and computational resource
@@ -54,8 +57,20 @@ Then ask a second-model referee to read it as the asker would.
   the user checked (Leiden Declaration).
 - **Language.** Avoid "first", "we solved" and other ownership language.
   Novelty is at best an upper bound (Feng et al., §1.4).
-- **Lean, where feasible.** Attach a Lean proof, and have a referee check
-  that the formal statement matches the source.
+- **Lean where it adds assurance**, for example for a long or delicate
+  argument; have a referee check that the formal statement matches the
+  source.
+
+## Before vouching
+
+Vouching means a research paper under a name: arXiv or a journal. It needs
+command of the result's research context, by the user or a collaborator.
+
+- **The explain-it test:** the author could give a clear, expert-level talk on
+  the result and answer the audience's questions (Tao, arXiv:2608.16753, §8).
+- **Context:** the author can say what the result extends, whether it is new,
+  which assumptions matter and what it implies.
+- **Askers told** before submission.
 
 ## Exporting
 
@@ -65,6 +80,14 @@ Then ask a second-model referee to read it as the asker would.
 - Grep every PDF's text for private paths, record ids and file extensions
   (`.md`, `.tex`) before pushing.
 - Put *Sketch* on page one, in the title block or the first line.
+
+## Record updates
+
+- **Shared** (posted openly): `stage: public`, `public: <path of the public
+  PDF>`, resolution tier `ours-public` for a full result, and `told_authors`
+  set once the askers are told (a date, or `"held: <reason>"`).
+- **Vouched** (on arXiv or in a journal): resolution tier `arxiv` or
+  `journal`, with `ref` the identifier.
 
 ## Contacting authors
 

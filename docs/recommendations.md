@@ -75,8 +75,10 @@ The short version, in priority order. Each point comes from
     solver never marks its own result reviewed.
 15. **Cross-model review** for anything a person will read. Record the model
     in the review field.
-16. **A human expert is the only real check.** Budget for it: the asker, a
-    supervisor or a colleague.
+16. **Exact certificates, formal proofs and substantive independent reviews
+    are real checks.** What a specialist adds is judgement of context,
+    significance and overlooked assumptions. Budget for it before vouching:
+    the asker, a supervisor or a colleague.
 
 ## Writing and outreach
 

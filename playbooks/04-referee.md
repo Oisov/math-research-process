@@ -36,7 +36,11 @@ record which model you are.
    - a restricted domain or range of parameters;
    - a hypothesis that holds by construction rather than by content.
 
-   Any difference makes the result `partial` (QED, §4.3; Kallel and
+   The test is whether the proved statement implies the requested
+   conclusion under the source's definitions and hypotheses. An equivalent
+   reformulation or a stronger theorem can be a full answer: explain the
+   reformulation and prove the implication in the sheet. If the implication
+   fails or is unproved, the result is `partial` (QED, §4.3; Kallel and
    El Louadi, arXiv:2608.28997, §4).
 
    Then the **vacuity check**: if the answer is easy, assume the problem
@@ -74,10 +78,14 @@ record which model you are.
 - **Correct, or correct after minor fixes:**
   - apply the fixes, rebuild and set `stage: reviewed`;
   - write `review` as `{by: agent, model: <model>, date: <date>, verdict: "<verdict and what you checked>"}`;
-  - for a full result, set `resolution` (tier `ours-internal`, ref, `checked: true`).
+  - set `result_scope: full` or `partial`; only a full result gets a
+    `resolution` (tier `ours-internal`, ref, `checked: true`).
 - **Real errors:** do not repair the proof yourself. Leave the stage at
   `written`, describe the error and any repair you see under State of play,
-  and report it. If the error sinks the claim, delete `discoveries/<ID>.md`.
+  and report it. If the error sinks the claim, mark `discoveries/<ID>.md`
+  **refuted** and link your report; do not delete it.
+- **After two rounds without agreement:** set `stage: contested`, leave
+  `resolution` empty, and send the record to the user.
 - Add a review entry to the attempt log, and run the record check.
 
 ## Report

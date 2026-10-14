@@ -28,7 +28,7 @@ Ask once, at the start, for anything missing:
 | 2. Triage | [`playbooks/02-triage.md`](playbooks/02-triage.md) | Literature status, initial scores, tags |
 | 3. Attack | [`playbooks/03-attack.md`](playbooks/03-attack.md) | Sessions, attempt logs, solution sheets |
 | 4. Referee | [`playbooks/04-referee.md`](playbooks/04-referee.md) | Verdict, scope, fixes |
-| 5. Publish | [`playbooks/05-publish.md`](playbooks/05-publish.md) | PDFs for askers; contact before arXiv |
+| 5. Publish | [`playbooks/05-publish.md`](playbooks/05-publish.md) | Results shared openly, askers told; vouching before arXiv |
 | Orchestrate | [`playbooks/06-orchestrate.md`](playbooks/06-orchestrate.md) | How to run stages 1–4 with several agents |
 
 Stages run in order for each problem, but different problems can be at
@@ -76,18 +76,25 @@ in `scripts/tex-style.yaml`; the targets are documented in
 4. **Our results are Sketch.** Nothing produced here is called "proved",
    "theorem" or "result" outside the private records until it is on arXiv or
    in a journal. Public PDFs say *Sketch* on the first page.
-5. **No arXiv posting, no contact, no publishing without the user.** The
-   user emails askers before anything goes to arXiv.
-6. **Prove, do not catalogue.** TeX files contain results only. Failed routes
+5. **No sharing, contact or arXiv posting without the user.** Results may be
+   shared openly first, labelled with how much stands behind them; the askers
+   are told promptly afterwards. Nothing goes to arXiv until the askers have
+   been told and someone with command of the result's research context can
+   vouch for it.
+6. **Measure progress against the objective** (map or settle; see
+   `playbooks/03-attack.md`). TeX files contain results only. Failed routes
    get one line in the record, with the reason they failed.
-7. **Scope is decided against the source.** A result answers the question as
-   posed or it is `partial`. The solver never marks its own work reviewed.
+7. **Scope is decided against the source.** A result is full only if the
+   proved statement implies the requested conclusion under the source's
+   definitions; otherwise it is `partial`. The solver never marks its own work reviewed.
 8. **Bounded numerics.** Every computation has a time bound, prints
    progress, and decides one named quantity. Kill what you start.
 9. **Archive discoveries.** When a model claims to have settled a problem,
    save its response verbatim in `discoveries/<ID>.md` with the model name,
    the date and time, and the session. If verification shows the claim is
-   false, delete the file and keep one line in the attempt log.
+   false, keep the file, mark it **refuted** at the top, and link the
+   objection or correction; add one line to the attempt log. Refuted claims
+   are evidence of how convincing errors arise.
 10. **Leave hand-over state.** Sessions end without warning. Update the
    record's State of play before anything else when in doubt.
 

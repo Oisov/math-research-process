@@ -18,7 +18,7 @@ literature:
   checked: 2026-10-14         # date of the bounded search
   evidence: []                # "arXiv:… Thm 1.3 proves the case p>1", with a quote in the body
 ours:
-  stage: untriaged            # untriaged | triaged | attacking | written | reviewed | public | abandoned
+  stage: untriaged            # untriaged | triaged | attacking | written | contested | reviewed | public | abandoned
   sign: null                  # proof | counterexample | determination (set when settled)
   result_scope: null          # full | partial (set by the referee)
   artifacts: []               # notes, sheets, certificates

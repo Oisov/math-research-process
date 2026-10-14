@@ -53,11 +53,21 @@ cp -r ../process/{AGENTS.md,Makefile,scripts,tools,templates,playbooks} .
 
 Then ask your agent to read `AGENTS.md` and start the harvest.
 
+For Claude Code there is also a skill, a short version of the method that
+loads when you ask for this kind of work. Copy it to your user or project
+skills folder:
+
+```sh
+cp -r process/skills/math-research-process ~/.claude/skills/        # all projects
+cp -r process/skills/math-research-process .claude/skills/          # this project only
+```
+
 ## Contents
 
 | File | What it is |
 |---|---|
 | [`AGENTS.md`](AGENTS.md) | Entry point for agents: the pipeline and the hard rules |
+| [`skills/math-research-process/SKILL.md`](skills/math-research-process/SKILL.md) | The method as a Claude Code skill |
 | [`playbooks/`](playbooks/) | One file per stage: harvest, triage, attack, referee, publish, orchestrate |
 | [`templates/`](templates/) | Problem record, solution sheet, referee brief, discovery archive |
 | [`tools/`](tools/) | `arxiv_harvest.py` (candidate extraction from arXiv sources), `check_records.py` (record validator) |

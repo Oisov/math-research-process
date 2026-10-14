@@ -44,9 +44,13 @@ reason you can state.
 - **Prove-mode** (when the user asks for a proof): commit to the single
   strategy most likely to give a proof. Push it to a theorem, or to a proof
   that is complete except for one precisely stated lemma. Report only that.
-- **Certificates.** If a computation is part of the proof, use exact or
-  outward-rounded arithmetic, cover the whole parameter range, handle tails
-  analytically, and make it run in seconds. Put it in `code/`.
+- **Certificates.** If a computation is part of the proof, it must establish
+  the precise claim: exact or outward-rounded arithmetic, and, where the claim
+  covers a range, complete coverage of it with tails handled analytically. A
+  finite exact counterexample or a symbolic identity needs none of the range
+  machinery. Validity does not depend on speed, but anything published must
+  rerun in seconds to a minute, so referees actually rerun it. Put it in
+  `code/`.
 - **A counterexample counts.** If evidence turns against the conjecture,
   look for a disproof as seriously as for a proof.
 
@@ -82,8 +86,9 @@ reason you can state.
   arXiv:2605.22763, §3–4).
 - **Asymptotic results.** An asymptotic answer is partial when the original
   question requires all parameter values or an explicit effective threshold
-  and those requirements remain unresolved. A bound "for all sufficiently
-  large N" fully answers a question that asks for an order of growth. A
+  and those requirements remain unresolved. A question asking for an order of
+  growth is fully answered by matching upper and lower bounds that establish
+  that order for all sufficiently large N; an upper bound alone is partial. A
   counterexample at a case the asker would exclude does not
   settle the question (Le Duc and Liberti, arXiv:2510.12829, §5.2).
 - **End with one outcome label**, recorded in the attempt log:
@@ -102,7 +107,8 @@ verbatim to `discoveries/<ID>.md` using
 [`templates/discovery.md`](../templates/discovery.md): model, date and time,
 session, the prompt it answered, and the response. If the result is later
 published, this records who found what and when. If verification shows the
-claim is false, the file is deleted.
+claim is false, keep the file, mark it **refuted** at the top and link the
+objection or correction.
 
 ## Writing it up
 

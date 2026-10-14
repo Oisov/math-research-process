@@ -7,14 +7,14 @@ three seconds (arXiv's published limit). No other sites are contacted.
   python3 tools/arxiv_harvest.py --ids 2504.05986 --out sources/
   python3 tools/arxiv_harvest.py --authors "A. Author" --since 2016 --out sources/
   python3 tools/arxiv_harvest.py --query 'cat:math.CV AND abs:"Hardy space"' --max 50 --out sources/
-  python3 tools/arxiv_harvest.py --local paper.tar.gz --out sources/   # a file you supplied
+  python3 tools/arxiv_harvest.py --local paper.tar.gz src-dir/ --out sources/   # files or folders you supplied
 
 Per paper it writes sources/<id>/metadata.json, the extracted source (or
 paper.pdf when no source exists) and candidates.jsonl. Candidates are not
 problems: an agent reads each in context (playbooks/01-harvest.md).
 Standard library only.
 """
-import argparse, gzip, io, json, os, re, sys, tarfile, time, urllib.parse, urllib.request
+import argparse, shutil, gzip, io, json, os, re, sys, tarfile, time, urllib.parse, urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -121,11 +121,16 @@ def candidates(src):
     files = sorted(p for p in src.rglob('*.tex') if p.is_file())
     texts = {p: p.read_text('utf-8', 'replace').splitlines() for p in files}
     envs = {}
-    decl = re.compile(r'\\(?:newtheorem|declaretheorem)\*?\{([^}]+)\}(?:\[[^]]*\])?(?:\{([^}]*)\})?')
+    newthm = re.compile(r'\\newtheorem\*?\{([^}]+)\}(?:\[[^]]*\])?\{([^}]*)\}')
+    declthm = re.compile(r'\\declaretheorem\*?(?:\[([^]]*)\])?\{([^}]+)\}(?:\[([^]]*)\])?')
     for lines in texts.values():
         for line in lines:
-            for env, name in decl.findall(strip_comments(line)):
+            line = strip_comments(line)
+            for env, name in newthm.findall(line):
                 envs[env] = name or env
+            for before, env, after in declthm.findall(line):
+                opt = re.search(r'name\s*=\s*\{?([^,}\]]+)', before + ',' + after)
+                envs[env] = opt.group(1).strip() if opt else env
     wanted = {e for e, n in envs.items() if TARGET.search(n)} | (DEFAULT_ENVS - set(envs))
     out = []
     for path, lines in texts.items():
@@ -155,10 +160,14 @@ def candidates(src):
     return out
 
 
-def process(meta, blob, out, local=False):
+def process(meta, blob, out, local=False, srcdir=None):
     pid = meta['id'].replace('/', '_')
     dest = out / pid
-    kind = unpack(blob, dest)
+    if srcdir is not None:
+        shutil.copytree(srcdir, dest / 'src', dirs_exist_ok=True)
+        kind = 'source'
+    else:
+        kind = unpack(blob, dest)
     meta = dict(meta, eprint=kind, local=local)
     if meta.get('comment') and re.search(r'withdraw', meta['comment'], re.I):
         meta['warning'] = 'comment mentions withdrawal: check the abstract page'
@@ -177,7 +186,7 @@ def main(argv=None):
     g.add_argument('--ids', nargs='+', help='arXiv ids, e.g. 2504.05986 or 2504.05986v3')
     g.add_argument('--authors', nargs='+', help='author names (each searched separately)')
     g.add_argument('--query', help='raw arXiv API search_query')
-    g.add_argument('--local', nargs='+', type=Path, help='source archives or PDFs you supplied')
+    g.add_argument('--local', nargs='+', type=Path, help='source archives, PDFs or source folders you supplied')
     ap.add_argument('--since', type=int, help='keep papers first submitted in or after this year')
     ap.add_argument('--max', type=int, default=100, help='maximum results per search (default 100)')
     ap.add_argument('--category', help='keep only papers with this category, e.g. math.CV')
@@ -188,13 +197,17 @@ def main(argv=None):
     a.out.mkdir(parents=True, exist_ok=True)
 
     if a.local:
+        failed = 0
         for p in a.local:
-            blob = p.read_bytes() if p.is_file() else None
-            if blob is None:
-                print(f'{p}: not a file (pack directories as .tar first)', file=sys.stderr)
-                continue
-            process({'id': p.name.split('.tar')[0].split('.pdf')[0], 'title': p.name}, blob, a.out, local=True)
-        return 0
+            meta = {'id': p.name.split('.tar')[0].split('.pdf')[0], 'title': p.name}
+            if p.is_dir():
+                process(meta, None, a.out, local=True, srcdir=p)
+            elif p.is_file():
+                process(meta, p.read_bytes(), a.out, local=True)
+            else:
+                print(f'{p}: no such file or directory', file=sys.stderr)
+                failed += 1
+        return 1 if failed else 0
 
     if a.ids:
         metas = list(search({'id_list': ','.join(a.ids)}, a.delay, len(a.ids)))

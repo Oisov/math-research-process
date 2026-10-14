@@ -16,13 +16,24 @@ except ImportError:
 
 KIND = {'stated', 'implicit', 'inference'}
 ORIGIN = {'external', 'ours'}
-STAGE = ['untriaged', 'triaged', 'attacking', 'written', 'reviewed', 'public', 'abandoned']
+STAGE = ['untriaged', 'triaged', 'attacking', 'written', 'contested', 'reviewed', 'public', 'abandoned']
 STATUS = {'open', 'partial', 'resolved', 'claimed', 'refuted', 'invalid'}
 TIER = {'journal', 'arxiv', 'ours-public', 'ours-internal'}
 SCOPE = {None, 'full', 'partial'}
 SIGN = {None, 'proof', 'counterexample', 'determination'}
 FORM = {'conjecture', 'problem', 'question', 'remark', 'ours'}
 REQUIRED = ['id', 'title', 'kind', 'origin', 'theme', 'literature', 'ours']
+KNOWN = {
+    None: {'id', 'title', 'kind', 'origin', 'theme', 'source', 'premises', 'references',
+           'literature', 'ours', 'resolution', 'impact', 'difficulty_initial', 'difficulty',
+           'scores_note', 'tags', 'effort', 'related', 'aliases'},
+    'source': {'paper', 'location', 'posed_by', 'form', 'quote'},
+    'literature': {'status', 'checked', 'evidence'},
+    'ours': {'stage', 'sign', 'result_scope', 'artifacts', 'review', 'public', 'told_authors'},
+    'resolution': {'tier', 'ref', 'checked', 'conditional_on'},
+    'effort': {'sessions', 'last', 'parked'},
+}
+REVIEW = ('by', 'model', 'date', 'verdict')
 
 
 def score(v):
@@ -45,6 +56,11 @@ def check(path, seen):
             errors.append(f'missing {k}')
     if errors:
         return errors, warnings
+    for section, allowed in KNOWN.items():
+        block = d if section is None else d.get(section)
+        if isinstance(block, dict):
+            for key in sorted(set(block) - allowed):
+                errors.append(f'unknown field {key!r}' + (f' in {section}' if section else ''))
     if d['id'] != path.stem:
         errors.append(f'id {d["id"]} does not match file name')
     if d['id'] in seen:
@@ -90,8 +106,12 @@ def check(path, seen):
     if stage != 'untriaged' and d.get('difficulty_initial') is None:
         warnings.append('difficulty_initial not set at triage')
     after_review = STAGE.index(stage) >= STAGE.index('reviewed') and stage != 'abandoned'
-    if after_review and not ours.get('review'):
-        errors.append(f'stage {stage} needs ours.review')
+    review = ours.get('review')
+    if after_review:
+        if not isinstance(review, dict) or not all(review.get(k) for k in REVIEW):
+            errors.append(f'stage {stage} needs ours.review with {", ".join(REVIEW)}')
+    if ours.get('public') and stage != 'public':
+        errors.append(f'ours.public is set but stage is {stage}')
     if stage == 'public':
         if not ours.get('public'):
             errors.append('stage public needs ours.public')
@@ -106,11 +126,19 @@ def check(path, seen):
             errors.append(f'resolution.tier {tier!r} not in {sorted(TIER)}')
         if not res.get('ref'):
             errors.append('resolution needs ref')
+        if stage == 'contested':
+            errors.append('a contested result cannot carry a resolution tier')
         if tier in ('ours-public', 'ours-internal'):
             if not after_review:
                 errors.append(f'tier {tier} needs a reviewed result (stage {stage})')
             if ours.get('result_scope') == 'partial':
                 errors.append('a partial result cannot carry a resolution tier')
+            elif ours.get('result_scope') != 'full':
+                errors.append(f'tier {tier} needs result_scope full, set by the referee')
+            if res.get('checked') is not True:
+                errors.append(f'tier {tier} needs resolution.checked: true')
+        if tier == 'ours-public' and not ours.get('public'):
+            errors.append('tier ours-public needs ours.public (the public PDF)')
         if tier == 'journal' and res.get('conditional_on'):
             errors.append('a journal tier cannot be conditional')
     if stage not in ('untriaged',) and '## State of play' not in body:
@@ -120,7 +148,13 @@ def check(path, seen):
 
 def main(argv):
     root = Path(argv[1] if len(argv) > 1 else 'problems')
+    if not root.is_dir():
+        print(f'ERROR {root}: no such records directory')
+        return 2
     files = sorted(p for p in root.glob('*/*.md') if not p.name.isupper())
+    if not files:
+        print(f'ERROR {root}: no records found under <theme>/<ID>.md')
+        return 2
     seen, n_err, n_warn = {}, 0, 0
     for p in files:
         errors, warnings = check(p, seen)
