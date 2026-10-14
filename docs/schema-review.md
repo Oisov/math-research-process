@@ -45,6 +45,11 @@ judgement after six weeks of working with them.
 
 ## Missing fields we wished we had
 
+- **`source.form`**: how strongly the source poses the question: a
+  conjecture, a numbered problem or question, an informal remark ("it would
+  be interesting"), or our own derived question. We had to recover it from
+  the location strings afterwards; it turned out to predict which answers
+  mattered.
 - **`source.quote`**: the question verbatim. The public volume rework found
   altered quotations, and a quote is cheaper to check than a page number.
 - **`review.model`**: which model refereed. Same-model review is weaker, and

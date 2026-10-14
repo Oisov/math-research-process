@@ -8,6 +8,7 @@ source:                       # for stated and implicit
   paper: "arXiv:2303.12345v2" # the version you read
   location: "Conjecture 9.2, p. 31"
   posed_by: [Author, Author]
+  form: conjecture             # conjecture | problem | question | remark (stated informally) | ours
   quote: >-
     The question verbatim, copied from the PDF.
 premises: []                  # inference only: [{paper, location, result}]

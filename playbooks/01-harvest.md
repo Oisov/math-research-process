@@ -43,6 +43,7 @@ text. Candidates are not records. Read each one in context and decide:
 |---|---|
 | `stated` record | An explicit Conjecture/Question/Problem. |
 | `implicit` record | A remark or phrase poses a question without labelling it. Say in the body what suggests it. |
+| `form` | How strongly the source poses it: `conjecture` (the author predicts the answer), `problem` or `question` (asked in a numbered environment or a problem list), `remark` ("it would be interesting", "we do not know"), or `ours` (our own derived question). Record it; it predicts how much an answer matters. |
 | Discard | Rhetorical, answered later in the same paper, or out of scope. Keep a one-line note in `problems/EXCLUDED.md`. |
 
 ## 3. Locate exactly

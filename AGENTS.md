@@ -102,8 +102,10 @@ on, and do not present it as doing so.
 ## Reporting to the user
 
 Lead with outcomes against the original questions: answered fully,
-answered partially (and what is open), or no progress. Classify each solved
-problem as: already in the literature; routine from known tools; easy-to-check
+answered partially (and what is open), or no progress. Say how each question
+was posed (conjecture, problem, question, informal remark, or our own), and
+never report an answer to our own derived question as if it settled someone
+else's conjecture. Classify each solved problem as: already in the literature; routine from known tools; easy-to-check
 counterexample; or substantial new argument. Do not count partial
 results as solutions, special cases as the conjecture, or "for some p" as
 "for every p". Say what has *not* been checked.

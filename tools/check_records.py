@@ -20,6 +20,7 @@ STAGE = ['untriaged', 'triaged', 'attacking', 'written', 'reviewed', 'public', '
 STATUS = {'open', 'partial', 'resolved', 'claimed', 'refuted'}
 TIER = {'journal', 'arxiv', 'ours-public', 'ours-internal'}
 SCOPE = {None, 'full', 'partial'}
+FORM = {'conjecture', 'problem', 'question', 'remark', 'ours'}
 REQUIRED = ['id', 'title', 'kind', 'origin', 'theme', 'literature', 'ours']
 
 
@@ -60,6 +61,13 @@ def check(path, seen):
             errors.append('stated/implicit record needs source.paper and source.location')
         if not src.get('quote'):
             warnings.append('no source.quote (the question verbatim)')
+    form = src.get('form')
+    if form is None and d['origin'] == 'ours':
+        form = 'ours'
+    if form not in FORM:
+        errors.append(f'source.form {form!r} not in {sorted(FORM)} (how strongly the source poses it)')
+    if form == 'ours' and d['origin'] != 'ours':
+        errors.append('source.form ours requires origin ours')
     if d['kind'] == 'inference' and not d.get('premises'):
         errors.append('inference record needs premises')
     lit, ours = d['literature'] or {}, d['ours'] or {}
