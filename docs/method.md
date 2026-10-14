@@ -6,14 +6,14 @@ in [lessons.md](lessons.md).
 
 ## People and tools
 
-- **One human**, with a master's degree in the area, directing everything:
+- **Me**, with a master's degree in the area, directing everything:
   choosing targets, judging whether a result mattered, steering stuck agents,
   reading the papers before they went out, and doing all contact with other
   mathematicians.
 - **Claude Code** (Opus 5.5 as the main session; Sonnet and Haiku for cheap
   subagents) and **Codex** (GPT-5.6 Luna and Sol, GPT-6 Astra, later 6.1 Sol)
   running in the same repository, often at the same time on disjoint folders.
-  The human relayed between them; neither could message the other.
+  I relayed between them; neither could message the other.
 - A single private repository under Jujutsu (`jj`), LaTeX built through a
   lint-gated `make`, Python (mpmath, cvxpy, SymPy) for numerics and
   certificates, Lean for one formalization.
@@ -45,8 +45,8 @@ There were four sources, in this order.
    would be interesting", "we do not know" and "remains open". Each candidate
    was recorded with the paper, the exact location and a quote.
 2. **Second order: the references of those papers.** The same extraction on
-   the papers they cite, after downloading the missing ones (arXiv first; some
-   through the human's university library access).
+   the papers they cite, after downloading the missing ones (arXiv first; a few
+   through my university library).
 3. **Synthesis passes.** Agents read the last decade of the core authors'
    papers "between the lines". This produced `implicit` questions (a remark
    suggests the question but does not pose it) and `inference` records:
@@ -56,7 +56,7 @@ There were four sources, in this order.
    workshops, a classical problem book, and the open-problem sections of two
    monographs.
 
-Scope came from the human: "what the people working in this area would work
+Scope came from me: "what the people working in this area would work
 on". Agents proposed scope decisions, and excluded records were kept in a
 separate report rather than deleted.
 
@@ -133,8 +133,5 @@ so time was not the binding constraint; the depth of the attempt was.
 
 ## Sources
 
-Most sources came from arXiv. Some papers and books were collected through
-the human's university library access. They stayed in the private
-repository and were never published. The reusable tools in this repository
-fetch from arXiv only; anything else is supplied by the user from their own
-access.
+Most sources came from arXiv; a few papers came through my university
+library.

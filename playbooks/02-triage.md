@@ -57,5 +57,5 @@ Report:
 - counts by literature status;
 - the records resolved by others, with references;
 - a table of open records by `difficulty_initial` and impact;
-- the records inside the human's difficulty window, which the human selects
+- the records inside the user's difficulty window, which the user selects
   for attack.

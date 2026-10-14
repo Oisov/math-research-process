@@ -18,7 +18,7 @@ python3 tools/arxiv_harvest.py --query 'cat:math.CV AND abs:"Hardy space"' --max
 The tool queries the arXiv API, downloads each paper's source archive
 (falling back to PDF-only when the source is not available), extracts it
 safely, and writes `sources/<id>/candidates.jsonl`. It waits three seconds
-between requests; do not lower this. For papers the human supplies as files,
+between requests; do not lower this. For papers the user supplies as files,
 use `--local <archive-or-dir>`.
 
 **Depth 2.** Read each seed's bibliography, keep the references that fall in
@@ -80,4 +80,4 @@ Leave scores and literature status to triage.
 
 Report the counts: papers fetched, candidates, records created, duplicates
 merged, and excluded with reasons. Also list the papers you could not fetch;
-the human decides whether to supply them.
+the user decides whether to supply them.

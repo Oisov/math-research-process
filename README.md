@@ -1,43 +1,33 @@
 # Harvesting and attacking open problems with AI agents
 
-This repository describes a process, and gives agents the instructions to run
-it. For about six weeks in autumn 2026 one person worked through the open
-problems of a single research area with Claude Code and Codex agents. The
-area was Hardy, Bergman and Dirichlet-series spaces, Hankel and Helson
-operators, and Nehari-type theorems. The person has a master's degree in that
-area and directed the work.
+For about six weeks in autumn 2026 I worked through the open problems of one
+research area with Claude Code and Codex agents: Hardy, Bergman and
+Dirichlet-series spaces, Hankel and Helson operators, and Nehari-type
+theorems. I have a master's degree in the area and directed the work.
 
-Here we record how we did it, what worked, what did not, and what we would
-do differently. The [`AGENTS.md`](AGENTS.md) file turns the recommended
-version into instructions that a coding agent can follow on another field:
-give it a list of papers, a list of authors or an arXiv query, and it builds,
-triages and works a problem database the same way.
+This repository records how we did it, what worked and what did not. The
+[`AGENTS.md`](AGENTS.md) file turns the recommended version into instructions
+a coding agent can follow in another field: give it a list of papers, a list
+of authors or an arXiv query, and it builds, triages and works a problem
+database the same way.
 
-## What this is not
+## Credit
 
-- **Not a claim of credit.** The questions belong to the people who asked
-  them; every record cites the exact source location. The proofs and
-  computations were produced by AI agents (Claude and GPT models), directed
-  and checked by one human. Nothing here has been refereed by a journal.
-- **Not a results repository.** The mathematics is published separately as
-  PDFs. This repository is about the process.
-- **Not a crawler for paywalled material.** The tools fetch from arXiv's
-  public API only, at its requested rate. See
-  [Sources](docs/method.md#sources).
+The questions belong to the people who asked them, and every record cites
+the exact source. The proofs and computations were produced by AI agents and
+checked by me. The mathematics itself is published separately as PDFs.
 
 ## The publication rule
 
 Everything we produced is labelled **Sketch** until it appears on arXiv or in
-a journal, regardless of how it was checked: by an agent referee, a second
-model, exact-arithmetic certificates or even a Lean formalization. Before
-anything goes to arXiv we email the authors who asked the question. Public
-PDFs exist only so that the people who asked can read and check the answer.
+a journal, however it was checked. Before anything goes to arXiv I email the
+authors who asked the question.
 
 ## Where things stand (14 October 2026)
 
 | | Count |
 |---|---|
-| Problems in the database | 373 (289 asked by others, 84 asked by us) |
+| Problems in the database | 373 (289 asked by others, 84 by us) |
 | Settled by someone else (journal or arXiv), found during triage | 64 |
 | Settled by our agents, all *Sketch* | 141 (89 of them asked by others) |
 | Of those, public as PDFs | 61 |
@@ -45,10 +35,9 @@ PDFs exist only so that the people who asked can read and check the answer.
 | Untouched or still being worked | 26 |
 | Askers contacted so far | a handful of author groups; the rest are batched |
 
-"Settled by our agents" means: a written proof or counterexample, a
-self-contained solution sheet, and one independent agent referee pass. It
-does not mean correct; see
-[Lessons: review](docs/lessons.md#review-is-the-weakest-link).
+"Settled by our agents" means a written proof or counterexample, a solution
+sheet and one agent referee pass. [Lessons: review](docs/lessons.md#review-is-the-weakest-link)
+says what that is worth.
 
 ## Contents
 
@@ -67,4 +56,4 @@ does not mean correct; see
 The evidence behind these documents is the version history of the working
 repository (about 1,000 commits), 14 Claude Code sessions with 393 subagents,
 and 586 Codex sessions, about 4.5 GB of logs in all. The logs are not
-published; the documents quote them only where a quote is the evidence.
+published.

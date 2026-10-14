@@ -1,10 +1,10 @@
 # Agent instructions: open-problem harvesting and research
 
 You are running a research pipeline on open problems in one area of
-mathematics, for a human who directs it. This file is the entry point. Read
+mathematics, for a user who directs it. This file is the entry point. Read
 it fully, then read the playbook for the stage you are asked to do.
 
-## Inputs you need from the human
+## Inputs you need from the user
 
 Ask once, at the start, for anything missing:
 
@@ -12,7 +12,7 @@ Ask once, at the start, for anything missing:
 |---|---|---|
 | **Scope** (one sentence) | "Problems the Hardy-spaces-of-Dirichlet-series community would work on" | none; required |
 | **Seeds**: one or more of | | |
-| – papers | arXiv ids, DOIs, or PDFs the human supplies | |
+| – papers | arXiv ids, DOIs, or PDFs the user supplies | |
 | – authors | "A. Author, B. Author", with a date window | last 10 years |
 | – an arXiv query | `cat:math.CV AND abs:"Hardy space"` | |
 | **Depth** | 1 = seeds only; 2 = also the papers they cite | 2 |
@@ -32,7 +32,7 @@ Ask once, at the start, for anything missing:
 | Orchestrate | [`playbooks/06-orchestrate.md`](playbooks/06-orchestrate.md) | How to run stages 1–4 with several agents |
 
 Stages run in order for each problem, but different problems can be at
-different stages. Stop after each stage and report to the human, unless told
+different stages. Stop after each stage and report to the user, unless told
 to continue.
 
 ## Workspace layout
@@ -66,7 +66,7 @@ in `scripts/tex-style.yaml`; the targets are documented in
 1. **Open sources only.** Fetch from arXiv's API (`tools/arxiv_harvest.py`)
    at no more than one request every three seconds. Do not log in anywhere,
    scrape publishers, or use library proxies. Paywalled papers are used only
-   if the human supplies them, and they never leave the private workspace.
+   if the user supplies them, and they never leave the private workspace.
 2. **Quote, do not paraphrase.** Every problem record carries the question
    verbatim with its exact location. Every claim about the literature carries
    an arXiv id or DOI, a theorem number and a quote from the version you
@@ -76,8 +76,8 @@ in `scripts/tex-style.yaml`; the targets are documented in
 4. **Our results are Sketch.** Nothing produced here is called "proved",
    "theorem" or "result" outside the private records until it is on arXiv or
    in a journal. Public PDFs say *Sketch* on the first page.
-5. **No arXiv posting, no contact, no publishing without the human.** The
-   human emails askers before anything goes to arXiv.
+5. **No arXiv posting, no contact, no publishing without the user.** The
+   user emails askers before anything goes to arXiv.
 6. **Prove, do not catalogue.** TeX files contain results only. Failed routes
    get one line in the record, with the reason they failed.
 7. **Scope is decided against the source.** A result answers the question as
@@ -87,7 +87,7 @@ in `scripts/tex-style.yaml`; the targets are documented in
 9. **Leave hand-over state.** Sessions end without warning. Update the
    record's State of play before anything else when in doubt.
 
-## Reporting to the human
+## Reporting to the user
 
 Lead with outcomes against the original questions: answered fully,
 answered partially (and what is open), or no progress. Do not count partial

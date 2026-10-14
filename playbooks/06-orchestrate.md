@@ -6,7 +6,7 @@ reports, redirects, and keeps the database consistent.
 
 ## Allocation
 
-- **Cap concurrent agents** at a number the human sets (we used about 7).
+- **Cap concurrent agents** at a number the user sets (we used about 7).
   Do not stop an agent that is working productively just to meet a schedule.
 - **Model by stage.** Use cheap models for harvest, triage and literature
   checks, and strong models for attempts on problems that survived triage.
@@ -31,8 +31,8 @@ lane, what counts as success, what not to touch, and the hard rules from
   - an agent is cataloguing rather than proving: switch it to prove-mode;
   - numerics are running without a question they answer.
 - When an agent reports success, send the claim to a referee before you
-  report it to the human.
-- Report to the human against the original questions: full, partial or no
+  report it to the user.
+- Report to the user against the original questions: full, partial or no
   progress. Partial results are not solutions.
 
 ## Hand-over

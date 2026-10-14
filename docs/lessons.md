@@ -32,7 +32,7 @@ A Markdown file per problem, with YAML frontmatter checked by `make problems`
 (unknown keys, enums, duplicate ids, stage and tier consistency), let six or
 more agents and two different tools edit the database at once without
 corrupting it. The generated index (INDEX, GAPS, PEOPLE, CITED) gave the
-human a dashboard for free. Moving from a single JSON catalogue to this
+me a dashboard for free. Moving from a single JSON catalogue to this
 format on 12 October was the turning point in throughput.
 
 ### State of play plus attempt log
@@ -50,7 +50,7 @@ wording in the protocol.
 A claimed result counted only once it was a self-contained TeX sheet (problem
 as posed, theorem, proof, exact citations) that builds through a lint gate.
 This turned vague "it should follow" claims into checkable objects, and the
-lint gate removed most typographic noise before a human looked.
+lint gate removed most typographic noise before I looked.
 
 ### Adversarial referees, and a second model
 
@@ -63,7 +63,7 @@ assume the result is wrong. They found real problems. One example:
 - overstated scope ("answers the question" when it answered a special case).
 
 A referee from a *different* model family was the most valuable single check
-before anything was shown to a human.
+before anything reached me.
 
 ### Certificates that run in seconds
 
@@ -114,7 +114,7 @@ that helped:
 
 Left alone, agents turn a hard problem into a map: what fails, three
 equivalent reformulations, a list of special cases. This looks like progress,
-and on one endpoint problem it absorbed two days. The human's phrase for
+and on one endpoint problem it absorbed two days. My phrase for
 proving more and more special classes was "filling ℝ with ℚ". The repair was
 an explicit *prove mode*: commit to one strategy, push it to a theorem or to
 a proof modulo one precisely stated lemma, and report only that. Failures get
@@ -171,15 +171,15 @@ recovery.
 Of the 141 results our agents settled, essentially all were checked by
 agents, most of them by the same model family that wrote them. Agent referees
 catch local errors well and global errors poorly. They rarely ask "is this
-the right claim?" or "did anyone try a different weight?". One human
-complaint, accurate: "The audits check each step line by line but never ask
+the right claim?" or "did anyone try a different weight?". My own
+complaint at the time, accurately: "The audits check each step line by line but never ask
 whether the claim is the right one."
 
 That is why everything stays *Sketch* until the asker or arXiv sees it.
 
-## Human steering
+## Steering
 
-Reading the human side of the logs back shows the same interventions again and again:
+Reading my side of the logs back, I made the same interventions again and again:
 
 - "Did I ask you to stop?" (agents ending turns early);
 - "any real progress or just churn?";

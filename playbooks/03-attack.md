@@ -25,7 +25,7 @@ reason you can state.
 - **Prove, do not catalogue.** A map of what fails is not progress. If you
   find yourself proving more and more special classes of the claim, stop and
   ask whether the approach can ever reach the full statement.
-- **Prove-mode** (when the human asks for a proof): commit to the single
+- **Prove-mode** (when the user asks for a proof): commit to the single
   strategy most likely to give a proof. Push it to a theorem, or to a proof
   that is complete except for one precisely stated lemma. Report only that.
 - **Certificates.** If a computation is part of the proof, use exact or
@@ -70,5 +70,5 @@ request a referee (stage 4); never review your own work.
 
 Park a problem (`effort.parked: true`) after the session budget for its
 difficulty (1, 2, 3, 5, 8 sessions for difficulty 1–5) without progress, or
-when the human decides. Write in State of play what would justify reopening
+when the user decides. Write in State of play what would justify reopening
 it: a specific new idea, a new paper, or a specific lemma.

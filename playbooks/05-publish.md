@@ -1,6 +1,6 @@
 # Stage 5: Publish and contact
 
-Nothing in this stage happens without the human's explicit approval for that
+Nothing in this stage happens without the user's explicit approval for that
 item.
 
 ## The labels
@@ -42,10 +42,10 @@ Then ask a second-model referee to read it as the asker would.
 
 ## Contacting authors
 
-- The human writes the email. Draft it if asked.
+- The user writes the email; draft it if asked.
 - One email per research group, not one per result. Colleagues in the same
   department get one batched message.
-- Say plainly how the work was done (with AI agents, checked by the human)
+- Say plainly how the work was done (with AI agents, checked by the user)
   and what has *not* been checked.
 - Nothing goes to arXiv before the askers have been told.
 - Record the date in `told_authors`. Mark held items with a reason.

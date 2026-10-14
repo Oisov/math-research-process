@@ -5,7 +5,7 @@ The short version, in priority order. Each point comes from
 
 ## Before you start
 
-1. **Decide scope as a sentence a human signs off**, for example "what the
+1. **Decide scope as a sentence you sign off**, for example "what the
    people working on Hardy spaces of Dirichlet series would work on". Keep
    excluded candidates in a report instead of deleting them.
 2. **Open sources only.** Harvest from arXiv through its API, at its rate
@@ -50,7 +50,7 @@ The short version, in priority order. Each point comes from
 
 14. **An adversarial referee re-reads the source and sets the scope.** The
     solver never marks its own result reviewed.
-15. **Cross-model review** for anything a human will read. Record the model
+15. **Cross-model review** for anything a person will read. Record the model
     in the review field.
 16. **A human expert is the only real check.** Budget for it: the asker, a
     supervisor or a colleague.
