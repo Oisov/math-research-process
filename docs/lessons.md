@@ -76,8 +76,7 @@ not get rerun by referees, so they do not get checked.
 
 Expert feedback was consistent. The arguments were "fairly standard
 variational arguments; the hard part is finding which variation". An expert
-rewrote one of our proofs in his own style in an afternoon, half the length.
-After that we:
+rewrote one of our papers in his own style. After that we:
 
 - rewrote proofs in the asker's notation, using methods from their papers;
 - put the idea before the computation;
