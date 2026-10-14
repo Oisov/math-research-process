@@ -17,6 +17,10 @@ Columns:
   or certificate, S = substantial argument
 - initial_difficulty: the first score each record received, before the
   12-October campaign
+
+data/audit.csv is the blind audit of 14 October: a random sample (seed 20261014) of
+20 answers settled by us and 10 problems settled by
+others, keyed by the row number in records.csv, with each verdict.
 """
 import csv
 import collections
@@ -70,3 +74,7 @@ print(f'\nre-read agreement {agree}/{n} ({100*agree/n:.0f}%), Cohen kappa {(agre
 deep = [r for r in ours if r['significance_deep']]
 table('Deep pass (16 boundary records): first grade by deep grade', lambda r: r['significance'], lambda r: r['significance_deep'], deep, ['H', 'M', 'L'], ['H', 'M', 'L'])
 table('Deep pass: re-read by deep grade', lambda r: r['significance_reread'], lambda r: r['significance_deep'], deep, ['H', 'M', 'L'], ['H', 'M', 'L'])
+
+audit = list(csv.DictReader(open(Path(__file__).with_name('audit.csv'))))
+print('\naudit', dict(collections.Counter((r['group'], r['verdict']) for r in audit)),
+      'bookkeeping errors', sum(r['bookkeeping_error'] == 'yes' for r in audit))

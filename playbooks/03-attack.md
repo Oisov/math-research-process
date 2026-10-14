@@ -80,8 +80,11 @@ reason you can state.
   convention, a quantifier, a domain. If the statement is ambiguous, the
   user asks the asker before anything is claimed (AlphaProof Nexus,
   arXiv:2605.22763, §3–4).
-- **Asymptotic results.** A result "for n ≥ n0" with no explicit n0 is
-  partial. A counterexample at a case the asker would exclude does not
+- **Asymptotic results.** An asymptotic answer is partial when the original
+  question requires all parameter values or an explicit effective threshold
+  and those requirements remain unresolved. A bound "for all sufficiently
+  large N" fully answers a question that asks for an order of growth. A
+  counterexample at a case the asker would exclude does not
   settle the question (Le Duc and Liberti, arXiv:2510.12829, §5.2).
 - **End with one outcome label**, recorded in the attempt log:
   - KNOWN: the answer is already in the literature;

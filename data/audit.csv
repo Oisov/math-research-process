@@ -1,0 +1,31 @@
+row,group,verdict,conditional_on_preprint,bookkeeping_error,reviewer_saw_earlier_review
+155,ours,"correct, full",yes,no,no
+146,ours,"correct, full",no,no,no
+20,ours,"correct, full",no,no,no
+41,ours,"correct, full",no,no,no
+78,ours,"correct, full",no,yes,no
+2,ours,"correct, full",yes,yes,no
+219,ours,"correct, full",no,yes,no
+30,ours,"correct, full",yes,no,no
+318,ours,"correct, full",no,no,no
+341,ours,"correct, full",no,no,no
+297,ours,"correct, full",no,no,yes
+343,ours,"correct, full",no,no,no
+139,ours,"correct, full",no,no,no
+317,ours,less than asked,no,no,no
+90,ours,"correct, full",no,yes,no
+287,ours,"correct, full",no,no,yes
+143,ours,less than asked,no,no,yes
+148,ours,"correct, full",no,no,no
+270,ours,"correct, full",yes,yes,no
+357,ours,"correct, full",no,no,no
+71,others,confirmed,no,no,no
+303,others,confirmed,no,no,no
+140,others,confirmed,no,no,no
+295,others,partly settled,no,no,no
+82,others,confirmed,no,no,no
+5,others,partly settled,no,no,no
+116,others,confirmed,no,no,no
+210,others,confirmed,no,no,no
+115,others,confirmed,no,no,no
+80,others,confirmed,no,no,no

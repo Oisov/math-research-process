@@ -99,8 +99,8 @@ what it cost. \Cref{sec:related} compares the work with other reports,
 \cref{sec:limits} lists its limits, and \cref{sec:next} describes the next
 stage, review by the people who asked the questions. The appendices hold a
 sample record, an analysis of the record fields, notes on version control and
-files, the practices we adopted from other studies, and the agents' own reports
-of the main results.
+files, the practices we adopted from other studies, the significance gradings
+in detail, and the agents' own reports of the main results.
 
 \sectionbreak
 \section{The starting point}\label{sec:start}
@@ -244,7 +244,12 @@ instructions.\@
 upwards: ``start with the low-hanging fruit''. Within a round the orchestrating
 session picked open, unparked problems with the best impact relative to
 difficulty, mixing cheap problems with one or two of high impact, and skipping
-problems whose literature status was an unverified claim by others.\@
+problems whose literature status was an unverified claim by others. Impact,
+like difficulty, was scored from 1 to 5 against anchor problems: 5 for a
+central named problem whose solution would be widely noted, 4 for a significant
+problem of the community whose solution is a standalone paper, 3 for a natural
+problem worth a short paper, 2 for a technical or narrow question worth a
+remark, and 1 for a curiosity.\@
 
 \emph{How long to persist.} Each problem had a budget of working sessions (one
 agent attempt, typically up to an hour) equal to its difficulty. A problem at
@@ -275,11 +280,13 @@ with up to about seven agents running on different problems. On a few hard
 problems several agents shared one problem, each assigned a different approach
 (\emph{lanes}), while a coordinating session read their interim reports and
 redirected them, for example ``three lanes have proved the same single-scale
-bound; stop extending it''. The contrast between the two modes is one of our
-clearest findings: five of the seven significant results came from the week of
-focused work before the database existed, when the author steered one problem
-at a time with the asker's question in view, and none came from the multi-agent
-lanes.\@
+bound; stop extending it''. Parallel lanes needed distinct mathematical
+mandates and active coordination; without them they repeatedly reproduced the
+same intermediate bounds. Five of the seven significant results arose during
+the week of focused work before the database existed, when the author steered
+one problem at a time with the asker's question in view. We do not read this as
+a comparison of the two modes, since the lanes were given the hardest problems
+in the database.\@
 
 \emph{What counts as progress.} This rule changed during the work, and the
 change resolves an apparent tension in the method. While building the map, a
@@ -296,6 +303,43 @@ regime.\@
 would itself be a theorem, and further sessions only added special cases, the
 author stopped and wrote the reduction up for the person who had asked the
 question (\cref{sec:episodes}).
+
+\subsection*{One brief, and what changed it}
+To make the rules concrete, here is an actual brief, for the second session on
+a problem of Saksman and Seip~\cite{saksman-seip}*{Problem~6.2}, which asks for
+the properties of a random measure built from random multiplicative functions.
+The first session had proved the normalisation and tightness of its maximum,
+and a referee had checked them. The brief, abridged and with paths shortened,
+read:
+\begin{quote}\small
+  Your problem: [the record], impact 4, difficulty 3. This is session 2, so
+  continue from its State of play. The reviewed partial sheet [\dots] proves
+  the freezing normalization $a_N$ for $\beta>2$ and tightness of the
+  maximum. Targets, in order: 1. A post-2018 literature check for the
+  tightness corollary [\dots]. If it has been done, credit it. 2. Pure
+  atomicity of the subsequential limits of $a_N\mu_{\beta,N}$ for $\beta>2$.
+    [\dots] Partial progress is fine. If atomicity needs an input you cannot
+  prove, isolate it as a lemma and say what it needs. 3. If time remains:
+  convergence in law. Add any new results to the sheet as new numbered
+  results; do not mark them reviewed.
+\end{quote}
+The standing protocol the brief points to supplied the rest: read the record,
+the source passage and the attempt log first; write a three-line plan; edit
+only this record and its sheet; stop at a result, at a precise obstruction to
+every route in view, or at a step that needs something the session cannot do;
+and end by rewriting the state of play and appending one line to the attempt
+log.
+
+The objective was \emph{map}, and the session delivered: concentration of the
+measure on small cells, pure atomicity of the limits and convergence of the
+maximum on a grid, all checked by a referee the same day. The change came with
+a triage pass under a \emph{settle} objective, which asked of each problem
+whether a full answer was possible. Re-read in its source, the problem asks
+only to ``study the properties'' of the measure, and no theorem settles that.
+The next session recorded this, parked the problem, and proposed splitting its
+two definite sub-questions into records of their own, each with an answer that
+could be checked. Without the switch of objective the agents would have kept
+adding properties.
 
 \sectionbreak
 \section{Continuity: the record as memory}\label{sec:continuity}
@@ -436,25 +480,27 @@ subproblems instead of problems I could plausibly finish''.\@ \emph{What
 changed.} A separate field for full or partial, set only by the referee after
 re-reading the source; partial results do not receive a resolution tier, and
 repeated narrowing without a new idea counts as no progress.\@ \emph{What
-happened after.} The database separates 141 full answers from 142 partial
-results, and the audit found two answers whose scope still had to be
-downgraded.
+happened after.} The database separates 141 answers recorded as full from 142
+partial results, and the audit of \cref{sec:audit} later found two of the 141
+whose scope had to be downgraded.
 
 \sectionbreak
 \section{What the method produced}\label{sec:produced}
 
 \subsection{Counts}
-\Cref{tab:difficulty} gives the outcome of all 373 problems by initial
-difficulty. A lower score went with being settled, with an area under the ROC
-curve of 0.79 (FAR reports 0.69 for its difficulty scores~\cite{far}). The
-figure flatters the scores: they were not blind, and problems were attacked in
-order of difficulty, so the easy ones also got attention first. The table also
-shows why easy problems are easy: of the 37 rated easiest, 15 already had a
-published answer. Tao observed the same on the Erdős problems: those current
-tools can solve are ``precisely the category of nominally open problems that
-are most likely to have been solved in the literature''~\cite{tao-lowhanging}.
-The literature check also caught a problem recorded as resolved by a paper that
-had since been withdrawn.
+All counts in this section are a snapshot of the database on 14 October, taken
+before the audit of \cref{sec:audit}. The audit's findings are reported there
+and not folded into the tables. \Cref{tab:difficulty} gives the outcome of all
+373 problems by initial difficulty. A lower score went with being settled, with
+an area under the ROC curve of 0.79 (FAR reports 0.69 for its difficulty
+scores~\cite{far}). The figure flatters the scores: they were not blind, and
+problems were attacked in order of difficulty, so the easy ones also got
+attention first. The table also shows why easy problems are easy: of the 37
+rated easiest, 15 already had a published answer. Tao observed the same on the
+Erdős problems: those current tools can solve are ``precisely the category of
+nominally open problems that are most likely to have been solved in the
+literature''~\cite{tao-lowhanging}. The literature check also caught a problem
+recorded as resolved by a paper that had since been withdrawn.
 
 \begin{table}[ht]
   \centering
@@ -515,7 +561,9 @@ problems: 25 of its 66 answers were rated 4 or 5, and two are significant.
   \caption{Answers settled by our agents (30, 45 and 66), by when they were
     recorded and by initial difficulty. The first bar collects the directed
     work before the database existed; its dates come from the first
-    appearance of each write-up in the version history.}\label{fig:daily}
+    appearance of each write-up in the version history. Dates are Oslo time
+    (CEST), so the two significant results first reported late on 12 October
+    UTC (\cref{tab:timeline}) count for 13 October.}\label{fig:daily}
 \end{figure}
 
 \subsection{What kind of results}
@@ -545,18 +593,20 @@ of 82.
     obtained.}\label{tab:kind}
 \end{table}
 
-\subsection{Significance, graded twice}
+\subsection{Significance}
 Significance is judged by the mathematics alone: \emph{high} for an answer to a
 question of standing in the field, at the level of a paper; \emph{medium} for a
 full answer worth a short note; \emph{low} for a corollary, an elementary or
-conditional answer, or an answer to a question of little interest. The first
-grading was made during the work: the author chose the high results, six at the
-time and a seventh on 14 October, and an agent split the rest into medium and
-low from the records. The second was a blind re-read: five fresh agents, who
-had not seen the first grades, each graded about 28 records from the record and
-its solution sheet. Neither grading searched the literature for the standing of
-each question, so both measure how the results read to a model from our own
-records, not how a specialist would rank them.
+conditional answer, or an answer to a question of little interest. The author
+chose the high results by one criterion: a full answer to a question that
+someone else had posed formally, of enough standing that the answer would be a
+paper on its own. There are seven. An agent split the remaining answers into
+medium and low from the records. Two later passes by fresh agents, a blind
+re-read of every answer and a literature search on 16 boundary records, agree
+with this grading on 110 of the 141 answers and on four of the seven high
+results. Where they disagree, it is mostly about how much standing a question
+has in a small community (\cref{app:significance}). The grades are our
+estimates; the judgement of the askers and other specialists will inform them.
 
 \begin{table}[ht]
   \centering
@@ -579,36 +629,6 @@ records, not how a specialist would rank them.
     re-read.}\label{tab:sig}
 \end{table}
 
-The two gradings agree on 110 of the 141 answers (Cohen's $\kappa=0.59$). They
-agree on five of the seven high results. The re-read moves two of them to
-medium, the counterexample to Centner's conjecture and the answer to the
-question of Brevig, Grepstad and Instanes, and promotes three medium results to
-high: an answer to a question of Guo, Ni and Zhou that also settles a 1986
-question of Cole and Gamelin, a counterexample to Problem~2.3 of Saksman and
-Seip~\cite{saksman-seip}, and Suffridge's conjecture, which follows from the
-outer-extremals theorem and so double counts it. Elsewhere 16 answers drop from
-medium to low and 10 rise. No answer moves between high and low.
-
-Neither grading looked at how each question stands in its community, which is
-what an expert would judge first. Four further agents therefore examined 16
-boundary records: the ten graded high by either grading and six answers near
-the top of medium. For each record they read the source passage, counted
-citations of the source, and searched for restatements in surveys and later
-papers, for attempts by others and for later answers. They spent one to three
-minutes per record, so this is a second opinion informed by the literature, not
-a referee's judgement. They graded five records high: the Bernstein--Nikolskii
-limits, the only grade given with high confidence, since a survey from
-September 2026 lists the problem first among ten open ones; the $H^1$ partial
-sums; positive Nehari; the fractional functional; and the answer to Guo, Ni and
-Zhou, for its bearing on the question of Cole and Gamelin. They graded the
-outer-extremals theorem medium, because the conjecture is recent and lightly
-cited, along with the answers to Brevig, Grepstad and Instanes and to Centner,
-and none of the six medium answers rose. Four of our seven results are graded
-high in all three passes. The disagreements concern the standing of a question
-in a small community, where citation counts are low for every paper and say
-little. We keep our seven and report the other grades as a measure of the
-uncertainty, which only the askers can remove.
-
 \subsection{The seven significant results}
 \Cref{tab:six} lists them. Stated briefly: for $0<p<1$, every extremal of a
 nonzero bounded functional on $H^p$ is outer, which proves the Brevig--Saksman
@@ -620,33 +640,37 @@ partial-sum operator on the Hardy space $\mathcal H^1$ of Dirichlet series has
 norm of order $\log N/\log\log N$; a bounded nonnegative Helson matrix need not
 have a bounded symbol, so the positive Nehari theorem asked about by Perfekt
 and Pushnitski fails; Centner's conjecture on zeros of optimal polynomial
-approximants fails for every $p\ne2$; and the fractional functional $\sum a_n
-n^{-1/2}(\log n)^{-1/p}$ is bounded on the Hardy space $\mathcal H^p$ of
-Dirichlet series exactly when $p\le1$, as Bondarenko, Brevig, Saksman and Seip
-conjectured, with norm of order $(\log\log N)^{1-1/p}$ on polynomials of length
-$N$ when $p>1$; the case $p=1$ was proved independently in a recent preprint of
-Perfekt~\cite{perfekt-fr}. All seven answer a conjecture, problem or question
-that someone else had posed formally. None is yet on arXiv.
+approximants fails for every $1<p<\infty$ with $p\ne2$; and the fractional
+functional $\sum a_n n^{-1/2}(\log n)^{-1/p}$ is bounded on the Hardy space
+$\mathcal H^p$ of Dirichlet series exactly when $p\le1$, as Bondarenko, Brevig,
+Saksman and Seip conjectured, with norm of order $(\log\log N)^{1-1/p}$ on
+polynomials of length $N$ when $p>1$; the case $p=1$ was proved independently
+in a recent preprint of Perfekt~\cite{perfekt-fr}. All seven answer a
+conjecture, problem or question that someone else had posed formally. None is
+yet on arXiv.
 
 \begin{table}[ht]
   \centering
   \small
+  \setlength{\tabcolsep}{4pt}
   \begin{tabular}{llll}
     \toprule
-    Result                      & Question                                 & Checked by            & Askers told   \\
+    Result                      & Question                                 & Checked by            & Askers told           \\
     \midrule
-    Outer extremals, $0<p<1$    & See~\cite{brevigsaksman}*{Conj.~1}       & agent, Lean, coauthor & coauthor      \\
-    At most one zero            & See~\cite{bgi}*{Question~1}              & agents, Lean          & note prepared \\
-    Fractional functional       & See~\cite{bbss}*{\S3}                    & agent                 & note prepared \\
-    Bernstein--Nikolskii limits & See~\cite{ganzburgtikhonov}*{Conj.~1.10} & agent, not filed      & no            \\
-    $H^1$ partial sums          & See~\cite{saksman-seip}*{Problem~4.5}    & agent                 & note prepared \\
-    Positive Nehari fails       & See~\cite{perfektpushnitski}*{Rem.~4.11} & agents                & note prepared \\
-    Approximant zeros           & See~\cite{centner}*{Conj.~7.1}           & agent                 & no            \\
+    Outer extremals, $0<p<1$    & See~\cite{brevigsaksman}*{Conj.~1}       & agent, Lean, coauthor & coauthor              \\
+    At most one zero            & See~\cite{bgi}*{Question~1}              & agents, Lean          & queued                \\
+    Fractional functional       & See~\cite{bbss}*{\S3}                    & agent                 & queued                \\
+    Bernstein--Nikolskii limits & See~\cite{ganzburgtikhonov}*{Conj.~1.10} & agent, not filed      & no                    \\
+    $H^1$ partial sums          & See~\cite{saksman-seip}*{Problem~4.5}    & agent, Lean (part)    & queued, via colleague \\
+    Positive Nehari fails       & See~\cite{perfektpushnitski}*{Rem.~4.11} & agents                & queued, via colleague \\
+    Approximant zeros           & See~\cite{centner}*{Conj.~7.1}           & agent                 & no                    \\
     \bottomrule
   \end{tabular}
-  \caption{The seven significant results. ``Note prepared'' means the result
-    is in a note prepared for one of the askers, which has not yet been
-    sent.}\label{tab:six}
+  \caption{The seven significant results. ``Queued'' means the result is in a note
+    prepared for one of the askers that has not yet been sent; ``via
+    colleague'' means that note goes to a colleague of the askers rather than
+    to them. For the $H^1$ partial sums, Lean covers the finite-torus lower
+    bound (``part''), not the full asymptotic theorem.}\label{tab:six}
 \end{table}
 
 \subsection{How the question was posed}
@@ -676,8 +700,11 @@ is harvested.
 To estimate how far the counts can be trusted, we drew a random sample of 20 of
 the 141 claimed answers and 10 of the 64 problems marked as settled by others.
 Five fresh referee agents (Claude Opus 5.5) each took a group. They saw only
-the question as posed and the solution sheet or the cited paper, never the
-working notes or earlier verdicts, and spent 15 to 20 minutes on each.
+the question as posed and the solution sheet or the cited paper, not the
+working notes or earlier verdicts, and spent 15 to 20 minutes on each. The one
+exception: two referees briefly saw a line of an earlier review for three of
+the records, and re-derived those results anyway. The sample, its random seed
+and the verdicts are published with the data.
 
 Of the 20 answers, 18 were judged correct and complete, 2 correct but answering
 less than was asked, and none was flawed; with 20 answers this bounds the rate
@@ -749,12 +776,17 @@ attempts and refereeing, was the right split.
 The other requirements were these. A person with graduate-level familiarity
 with the area, to read every result before it went out, to recognise when a
 result mattered, and to contact the askers. A local paper collection, with
-library access for the papers not on arXiv. A repository with version control,
-a lint-gated LaTeX build and a validated record format; we publish ours with
-this paper. And time: the research phase took twelve days, after about six
-weeks of writing that built the collection and the vocabulary. The scarcest
-resource was not compute but the author's attention, which went into reading
-results, redirecting agents and writing to experts.
+library access for the papers not on arXiv. Someone without one can start from
+a list of five to ten active authors in the area, or an arXiv query: the
+harvesting tool in the process repository fetches their papers of the last
+decade with sources, extracts candidate questions, and the harvest playbook
+turns them into records, to which the papers they cite are added as a second
+round. A repository with version control, a lint-gated LaTeX build and a
+validated record format; we publish ours with this paper. And time: the
+research phase took twelve days, after about six weeks of writing that built
+the collection and the vocabulary. The scarcest resource was not compute but
+the author's attention, which went into reading results, redirecting agents and
+writing to experts.
 
 \sectionbreak
 \section{Related work}\label{sec:related}
@@ -768,16 +800,16 @@ meanings of ``resolved'' differ, and so does how far the results were verified.
   \small
   \begin{tabular}{p{0.2\textwidth}p{0.15\textwidth}p{0.14\textwidth}p{0.2\textwidth}p{0.17\textwidth}}
     \toprule
-    Study                                & Problems            & Directed by        & Outcome                              & Verification              \\
+    Study                                & Problems            & Directed by        & Outcome                              & Verification                        \\
     \midrule
-    Gemini on Erdős problems~\cite{feng} & 700 open            & expert team        & 13 addressed, 4 novel                & AI filter, experts        \\
-    Formal proof search~\cite{tsoukalas} & 353 Erdős; 492 OEIS & research team      & 9; 44 resolved                       & Lean                      \\
-    OEIS Open~\cite{adamczewski}         & 492 OEIS            & one researcher     & 147 resolved                         & Lean                      \\
-    Provers and verifiers~\cite{leduc}   & 66 conjectures      & research team      & about a third                        & verifier agents           \\
-    QED~\cite{qed}                       & 18 expert-chosen    & experts            & 5 original works                     & verifier, experts         \\
-    FAR pipeline~\cite{far}              & 4717 harvested      & research team      & 598 candidates                       & sent to authors           \\
-    UQ~\cite{uq}                         & 500 questions       & research team      & 15\% pass validation                 & validators, community     \\
-    This report                          & 373 harvested       & one non-specialist & 64 known; 141 claimed; 7 significant & agent referees; 2 in Lean \\
+    Gemini on Erdős problems~\cite{feng} & 700 open            & expert team        & 13 addressed, 4 novel                & AI filter, experts                  \\
+    Formal proof search~\cite{tsoukalas} & 353 Erdős; 492 OEIS & research team      & 9; 44 resolved                       & Lean                                \\
+    OEIS Open~\cite{adamczewski}         & 492 OEIS            & one researcher     & 147 resolved                         & Lean                                \\
+    Provers and verifiers~\cite{leduc}   & 66 conjectures      & research team      & about a third                        & verifier agents                     \\
+    QED~\cite{qed}                       & 18 expert-chosen    & experts            & 5 original works                     & verifier, experts                   \\
+    FAR pipeline~\cite{far}              & 4717 harvested      & research team      & 598 candidates                       & sent to authors                     \\
+    UQ~\cite{uq}                         & 500 questions       & research team      & 15\% pass validation                 & validators, community               \\
+    This report                          & 373 harvested       & one non-specialist & 64 known; 141 claimed; 7 significant & agent referees; 2 in Lean, 1 partly \\
     \bottomrule
   \end{tabular}
   \caption{AI systems run on lists of open problems: the list, who directed
@@ -844,12 +876,13 @@ including informal remarks and our own derived questions, which gives a broader
 and messier denominator than a fixed public list. The area resists
 formalization: Hardy spaces, Schatten classes and Dirichlet series in
 infinitely many variables are far from current formal libraries, so apart from
-two Lean formalizations our results rest on agent referees, certificates in
-exact arithmetic, and the people who asked the questions. And the director was
-not a specialist. The OEIS study was also run by one researcher; what differs
-here is that the author had no command of any problem in the database before
-the work, which is closer to how a graduate student or a mathematician from a
-neighbouring field would use these tools.
+two Lean formalizations, and a third of the finite-dimensional core of one
+proof, our results rest on agent referees, certificates in exact arithmetic,
+and the people who asked the questions. And the director was not a specialist.
+The OEIS study was also run by one researcher; what differs here is that the
+author had no command of any problem in the database before the work, which is
+closer to how a graduate student or a mathematician from a neighbouring field
+would use these tools.
 
 \sectionbreak
 \section{Limits}\label{sec:limits}
@@ -932,11 +965,11 @@ our best estimate until then, and we expect them to move.
 
 The work used Claude Code from Anthropic, with Claude Opus 5.5, Sonnet and
 Haiku, and Codex from OpenAI, with several GPT models; Python with mpmath,
-SymPy and cvxpy for numerics and certificates, Lean for two formalizations, and
-LaTeX built through a lint gate. This paper was drafted with Claude Code from
-the project's records and logs and revised by the author. The agent
-instructions, templates, tools and the anonymised data behind every count are
-available in the accompanying process repository.
+SymPy and cvxpy for numerics and certificates, Lean for three formalizations
+(one of them partial), and LaTeX built through a lint gate. This paper was
+drafted with Claude Code from the project's records and logs and revised by the
+author. The agent instructions, templates, tools and the anonymised data behind
+every count are available in the accompanying process repository.
 
 \appendix
 \sectionbreak
@@ -1085,8 +1118,9 @@ that quotes every cited result.\@
 
 \emph{Outcome labels}: known, new, fixed statement, or nothing~\cite{far};
 claimed answers split into flawed, technically correct and meaningfully
-correct~\cite{feng}; asymptotic results without explicit thresholds counted as
-partial~\cite{leduc}.\@
+correct~\cite{feng}; and an asymptotic answer counted as partial when the
+question requires all parameter values or an explicit effective threshold and
+those requirements remain unresolved~\cite{leduc}.\@
 
 \emph{Neutral briefs}: ``prove or disprove'', since an agent told to prove a
 false statement papers over the gap~\cite{woodruff}; and repeated narrowing to
@@ -1097,6 +1131,47 @@ progress~\cite{gowersblog}.\@
 statement matches the question~\cite{kallel}, writes or approves an exposition
 they understand~\cite{bloomchanges}, could give a talk on it~\cite{tao-age},
 and adds a disclosure section~\cite{leiden}.
+
+\sectionbreak
+\section{Significance gradings in detail}\label{app:significance}
+The grades are defined in \cref{sec:produced}. The first grading was made
+during the work: the author chose the high results, six at the time and a
+seventh on 14 October, and an agent split the rest into medium and low from the
+records. The second was a blind re-read: five fresh agents, who had not seen
+the first grades, each graded about 28 records from the record and its solution
+sheet. Neither grading searched the literature for the standing of each
+question, so both measure how the results read to a model from our own records,
+not how a specialist would rank them.
+
+The two gradings agree on 110 of the 141 answers (Cohen's $\kappa=0.59$). They
+agree on five of the seven high results. The re-read moves two of them to
+medium, the counterexample to Centner's conjecture and the answer to the
+question of Brevig, Grepstad and Instanes, and promotes three medium results to
+high: an answer to a question of Guo, Ni and Zhou that also settles a 1986
+question of Cole and Gamelin, a counterexample to Problem~2.3 of Saksman and
+Seip~\cite{saksman-seip}, and Suffridge's conjecture, which follows from the
+outer-extremals theorem and so double counts it. Elsewhere 16 answers drop from
+medium to low and 10 rise. No answer moves between high and low.
+
+Neither grading looked at how each question stands in its community, which is
+what an expert would judge first. Four further agents therefore examined 16
+boundary records: the ten graded high by either grading and six answers near
+the top of medium. For each record they read the source passage, counted
+citations of the source, and searched for restatements in surveys and later
+papers, for attempts by others and for later answers. They spent one to three
+minutes per record, so this is a second opinion informed by the literature, not
+a referee's judgement. They graded five records high: the Bernstein--Nikolskii
+limits, the only grade given with high confidence, since a survey from
+September 2026 lists the problem first among ten open ones; the $H^1$ partial
+sums; positive Nehari; the fractional functional; and the answer to Guo, Ni and
+Zhou, for its bearing on the question of Cole and Gamelin. They graded the
+outer-extremals theorem medium, because the conjecture is recent and lightly
+cited, along with the answers to Brevig, Grepstad and Instanes and to Centner,
+and none of the six medium answers rose. Four of our seven results are graded
+high in all three passes. The disagreements concern the standing of a question
+in a small community, where citation counts are low for every paper and say
+little. We keep our seven and report the other grades as a measure of the
+uncertainty, which review by the askers and other specialists will reduce.
 
 \sectionbreak
 \section{The results in the agents' words}\label{app:discoveries}
@@ -1124,7 +1199,8 @@ written, and recognised as the answer to a conjecture only later.
   \end{tabular}
   \caption{When the seven significant results were first reported. Each was
     later checked by at least one other agent; the first two are also
-    Lean-verified.}\label{tab:timeline}
+    Lean-verified, and the finite-torus lower bound behind the $H^1$ partial
+    sums is formalized. Times are UTC.}\label{tab:timeline}
 \end{table}
 
 \subsection*{Outer extremals}
