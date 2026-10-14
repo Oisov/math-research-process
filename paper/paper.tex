@@ -283,21 +283,22 @@ database, how many changed each field.
 \begin{center}
   \begin{tabular}{lr}
     \toprule
-    Field                     & Commits changing it \\
+    Field                                    & Commits changing it \\
     \midrule
-    State of play (prose)     & 615                 \\
-    Attempt log (prose)       & 566                 \\
-    Stage                     & 532                 \\
-    Session count and date    & about 400           \\
-    Failed approaches (prose) & 322                 \\
-    Related papers            & 319                 \\
-    Artifacts                 & 304                 \\
-    Literature evidence       & 275                 \\
-    Review                    & 273                 \\
-    Full or partial           & 230                 \\
+    State of play (prose)                    & 615                 \\
+    Attempt log (prose)                      & 566                 \\
+    Stage                                    & 532                 \\
+    Session count and date                   & about 400           \\
+    Failed approaches (prose)                & 322                 \\
+    Related papers                           & 319                 \\
+    Artifacts                                & 304                 \\
+    Literature evidence                      & 275                 \\
+    Review                                   & 273                 \\
+    Full or partial                          & 230                 \\
     \midrule
-    Origin, impact, tags      & 1--12               \\
-    Authors told              & 3                   \\
+    Origin, impact, tags                     & 1--12               \\
+    Authors told                             & 3                   \\
+    Claim basis, abandonment reason, aliases & 4 each              \\
     \bottomrule
   \end{tabular}
 \end{center}
@@ -307,8 +308,17 @@ were filled once in bulk. Two lessons were negative. The free-text
 justification of the scores was rewritten in 426 commits, because escalations
 were appended to it, and so it went stale. The field recording that the askers
 had been told was changed in only three commits, because nothing in the
-pipeline required it. The field we most missed was how the source poses the
-question, which we had to reconstruct for \cref{sec:results}.
+pipeline required it. Other fields that nothing in the pipeline depended on,
+such as a free-text relevance line and the minutes spent, were also hardly ever
+filled in. The lesson is that the prose memory between sessions, together with
+the handful of fields that move a problem through the pipeline, did the real
+work; a field that nothing reads or checks is not kept up to date. The field we
+most missed was how the source poses the question, which we had to reconstruct
+for \cref{sec:results}. The schema we now recommend keeps the working fields,
+freezes the score justification at triage and logs escalations in the attempt
+log instead, adds the form of the question, a verbatim quote, the reviewing
+model and a frozen initial difficulty, makes the publishing step refuse a
+result whose askers have not been told, and drops the unused fields.
 
 \section{Results}\label{sec:results}
 
