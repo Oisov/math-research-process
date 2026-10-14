@@ -6,7 +6,10 @@
 One row per problem record, anonymised: no identifiers, titles or sources.
 Columns:
 - outcome: others | ours | partial | open
-- significance: H | M | L, for answers settled by our agents
+- significance: H | M | L, for answers settled by our agents; the author's
+  grade (six chosen at the time, a seventh added on 14 October)
+- significance_reread: H | M | L, a blind re-read of each record by a fresh
+  agent that did not see the first grades and did not search the literature
 - result_kind: L = literature assembly, R = routine argument, C = construction
   or certificate, S = substantial argument
 - initial_difficulty: the first score each record received, before the
@@ -52,3 +55,11 @@ for name, g in [('unsettled', uns), ('settled by us', ours)]:
     ses = [int(r['sessions']) for r in g if r['sessions']]
     print(f'\n{name}: n={n}, initial 4-5: {hi}, external: {ext} ({100*ext/n:.0f}%), impact>=4: {imp} ({100*imp/n:.0f}%), '
           f'literature partial: {lit} ({100*lit/n:.0f}%), mean sessions {sum(ses)/len(ses):.2f}, sessions distribution {dict(sorted(collections.Counter(ses).items()))}')
+
+table('Significance: first grade by blind re-read (settled by us)', lambda r: r['significance'], lambda r: r['significance_reread'], ours, ['H', 'M', 'L'], ['H', 'M', 'L'])
+agree = sum(r['significance'] == r['significance_reread'] for r in ours)
+n = len(ours)
+pa = collections.Counter(r['significance'] for r in ours)
+pb = collections.Counter(r['significance_reread'] for r in ours)
+pe = sum(pa[g] * pb[g] for g in 'HML') / n ** 2
+print(f'\nre-read agreement {agree}/{n} ({100*agree/n:.0f}%), Cohen kappa {(agree/n - pe)/(1 - pe):.2f}')
