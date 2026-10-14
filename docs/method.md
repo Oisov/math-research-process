@@ -45,9 +45,8 @@ There were four sources, in this order.
    would be interesting", "we do not know" and "remains open". Each candidate
    was recorded with the paper, the exact location and a quote.
 2. **Second order: the references of those papers.** The same extraction on
-   the papers they cite, after downloading the missing ones (arXiv first; a
-   minority through a university library, which we would no longer do, see
-   below).
+   the papers they cite, after downloading the missing ones (arXiv first; some
+   through the human's university library access).
 3. **Synthesis passes.** Agents read the last decade of the core authors'
    papers "between the lines". This produced `implicit` questions (a remark
    suggests the question but does not pose it) and `inference` records:
@@ -132,10 +131,10 @@ so time was not the binding constraint; the depth of the attempt was.
   goes to arXiv. Several groups have been contacted. Groups at the same
   department are batched into one email.
 
-## Sources, and what we would not do again
+## Sources
 
-Most sources were arXiv preprints. Some books and paywalled articles were
-retrieved through a university library login, and some were OCR'd. They
-stayed private and were never published, but a reusable process should not
-depend on them. The tools in this repository fetch from arXiv only. Anything
-else must be supplied by the user from their own legitimate access.
+Most sources came from arXiv. Some papers and books were collected through
+the human's university library access. They stayed in the private
+repository and were never published. The reusable tools in this repository
+fetch from arXiv only; anything else is supplied by the user from their own
+access.

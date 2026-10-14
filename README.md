@@ -23,7 +23,7 @@ triages and works a problem database the same way.
   PDFs. This repository is about the process.
 - **Not a crawler for paywalled material.** The tools fetch from arXiv's
   public API only, at its requested rate. See
-  [Sources](docs/method.md#sources-and-what-we-would-not-do-again).
+  [Sources](docs/method.md#sources).
 
 ## The publication rule
 
