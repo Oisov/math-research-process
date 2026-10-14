@@ -13,10 +13,13 @@
 \usepackage[msc-links]{amsrefs}
 \usepackage[capitalize,nameinlink,noabbrev]{cleveref}
 
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\newcommand*{\dd}{\mathop{}\!\mathrm{d}}
+
 \begin{document}
 
-\title[Mapping a research area with AI agents]{A map of the range, not a way
-  up the wall: AI agents on 373 open problems in analysis}
+\title[Mapping a research area with AI agents]{Mapping a research area with AI
+  agents: 373 open problems in analysis}
 \author{Øistein Søvik}
 \date{\today}
 
@@ -26,33 +29,36 @@ find in one area of analysis: Hardy, Bergman and Dirichlet-series spaces,
 Hankel and Helson operators, and Nehari-type theorems. After a week of directed
 work on single problems, most of the campaign took two days. The agents
 collected 373 problems, found that 64 of them had already been settled by
-others, and produced answers to 141 more. We classify these answers by how they
-were obtained and by how much they matter. Most are easy in hindsight: short
-arguments from known tools, results assembled from the literature, or
+others, and produced claimed answers to 141 more. We classify these answers by
+how they were obtained and by how much they matter. Most are easy in hindsight:
+short arguments from known tools, results assembled from the literature, or
 counterexamples that are easy to check once found. Six are, in our judgement,
 of real significance. On the hardest problems, days of work by several agents
-produced maps of what fails rather than proofs. Unlike most comparable reports,
-the work was directed by one person with a master's degree rather than by a
-team of specialists. Our conclusion is that a non-specialist can now map a
-research area, clear its long tail and find questions worth working on, but
-that it still takes an expert to judge which results matter, and a hard problem
-stays hard. All results of ours are sketches until they appear on arXiv or in a
-journal; this is a living document, updated as the people who asked the
-questions respond.
+produced maps of what fails rather than proofs. The work was directed by one
+person with a master's degree in the area who is not a research specialist. Our
+conclusion is that such a person can now map a research area, clear its long
+tail and find questions worth working on, but that it still takes an expert to
+judge which results matter, and a hard problem stays hard. A blind audit of a
+random sample of 20 answers found no mathematical errors, but two that answer
+less than was asked. All results of ours are sketches until they appear on
+arXiv or in a journal; this is a living document, updated as the people who
+asked the questions respond.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
 
-Terence Tao has compared research mathematics to a mountain range, and current
-AI tools to small jumping robots:
-\begin{quote}
-  [\dots] a big mountain range with lots of tall mountains and lots of
-  foothills [\dots] parkour their way to the top of a 6-foot wall [\dots] the
-  little jumping robots are nowhere near the Mount Everests of math.
-  \hfill---Terence Tao, quoted in~\cite{quanta}
-\end{quote}
+Terence Tao has described research mathematics as climbing ``a big mountain
+range with lots of tall mountains and lots of foothills''~\cite{quanta}. Human
+mathematicians climb one step at a time, but they can plan a route to a distant
+summit. In his picture, current AI tools are small jumping robots: they can
+sometimes ``parkour their way to the top of a 6-foot wall'' that a human could
+not climb, but they cannot plan the long route to a summit, and ``the little
+jumping robots are nowhere near the Mount Everests of math''~\cite{quanta}. The
+robots are good at short, sharp obstacles, and the great problems remain out of
+reach.
+
 This paper is a field report on what such robots do when pointed at an entire
 range. In October 2026 we used Claude Code and Codex agents to find, sort and
 attack every open problem we could locate in one research area. A week of
@@ -80,25 +86,23 @@ for 142 problems, reductions of some 25 problems to three common hard cores,
 and written records of why each attempted route failed. These are new insights
 into the problems rather than solutions of them.
 
-The work was directed by one person with a master's degree in the area, not by
-a team of specialists, and this is the main difference from comparable reports
-(\cref{sec:compare}). It shows that someone outside a research career can now
-explore a field at its frontier. It also shows the limit of that: every result
-that mattered still needed an expert to recognise it, and the askers' judgement
-remains the only real test.
+The work was directed by one person with a master's degree in the area who is
+not a research specialist; most comparable reports come from teams of
+specialists (\cref{sec:compare}). Such a person can now explore a field at its
+frontier, but every result that mattered still needed an expert to recognise
+it, and for the most significant one the expert who asked the question became a
+coauthor. The askers' judgement remains the real test.
 
-Breadth explains the counts. Throw a hundred balls at a hundred baskets and
-some go in; that is useful, and different from getting better at the shot that
-matters. Tao's description of current tools as ``artificial general
-cleverness''~\cite{tao-cleverness} fits what we saw.
-
-We therefore present this method as the first step of a research project, not
-the last: a fast way to get to know a field and to find questions worth working
-on. \Cref{sec:map} describes how the problems were found and sorted,
-\cref{sec:workflow} the workflow, \cref{sec:results} the results and their
-classification, \cref{sec:walls} the hard problems, and \cref{sec:verification}
-verification and credit. \Cref{sec:related} places the work among other
-reports, and \cref{sec:limits} lists its limits.
+We therefore see this method as the first step of a research project: a fast
+way to get to know a field and to find questions worth working on.
+\Cref{sec:map} describes how the problems were found and sorted,
+\cref{sec:workflow} the workflow, \cref{sec:results} the results,
+\cref{sec:audit} a blind audit of a random sample, \cref{sec:unsettled} the
+problems that were not settled, and \cref{sec:verification} verification and
+credit. \Cref{sec:related,sec:compare} compare the work with other reports, and
+\cref{sec:limits} lists its limits. The appendices give a sample record, how
+the record fields were used, what version control and file handling taught us,
+and the practices we adopted from other studies.
 
 \section{Setting}
 
@@ -110,14 +114,30 @@ function can have zeros, or whether a bounded bilinear form has a bounded
 symbol. The active literature is a few hundred papers, much of it from a small
 number of research groups.
 
-One person directed the work. He chose targets, judged whether a result
-mattered, steered agents that were stuck, read everything before it went out,
-and handled all contact with other mathematicians. The agents were Claude Code
-(Claude Opus 5.5 as the main session, with smaller Claude models for cheap
-subtasks) and Codex (several GPT models), often running at the same time in the
-same repository. The record of the work is the version history, with about 1000
-commits, together with the logs: 14 Claude Code sessions with 393 subagents,
-and 586 Codex sessions, 420 of them subagents.
+A typical question, and one of the six we discuss below, comes from Brevig and
+Saksman~\cite{brevigsaksman}. For $0<p<1$ the Hardy space $H^p$ consists of the
+analytic functions $f$ on the unit disc for which
+$\sup_{r<1}\int_0^{2\pi}\abs{f(re^{it})}^p\,\dd t/2\pi$ is finite; for $p<1$ it
+is not a Banach space, and many standard tools fail. Among all $f$ in the unit
+ball of $H^p$, consider those that maximise the size of the $k$th Taylor
+coefficient. Brevig and Saksman conjectured that every such extremal function
+has no zeros in the disc. Zeros matter because a function without zeros can be
+written as a power $g^{2/p}$ of a function $g$ in the Hilbert space $H^2$,
+which turns the problem into a much better understood one. The conjecture is a
+precise, checkable statement, it had resisted the methods of its authors, and
+an answer would be noticed by the few dozen people who work on such problems.
+Most questions in our database are of this kind.
+
+The author directed the work. He holds a master's degree in this area and is
+not a research specialist. He chose targets, judged whether a result mattered,
+steered agents that were stuck, read everything before it went out, and handled
+all contact with other mathematicians. The agents were Claude Code (Claude Opus
+5.5 as the main session, with smaller Claude models for cheap subtasks) and
+Codex, with OpenAI models that Codex offered under the names GPT-6 Luna, GPT-6
+Astra and GPT-6.1 Sol, often running at the same time in the same repository.
+The record of the work is the version history, with about 1000 commits,
+together with the logs: 14 Claude Code sessions with 393 subagents, and 586
+Codex sessions, 420 of them subagents.
 
 \section{Building the map}\label{sec:map}
 
@@ -234,14 +254,15 @@ Problems were attacked in rounds by difficulty, from 1 upwards: ``start with
 the low-hanging fruit''. Within a round the orchestrating session picked open,
 unparked problems with the best impact relative to difficulty, mixing cheap
 problems with one or two of high impact, and skipping problems whose literature
-status was an unverified claim by others. Each problem had a session budget
-equal to its difficulty, from one session at difficulty 1 to four at difficulty
-4; difficulty 5 problems were worked only in dedicated rounds with a specific
-new idea. The protocol then moved problems mechanically: a problem at
-difficulty 1 to 4 that used its budget without a full answer was raised to
-difficulty 5, and a problem at difficulty 5, or after six sessions without even
-a partial result, was parked. Parked problems could be reopened only for a new
-idea, paper or tool.
+status was an unverified claim by others. Each problem had a budget of working
+sessions (one agent attempt, typically up to an hour) equal to its difficulty,
+from one session at difficulty 1 to four at difficulty 4; difficulty 5 problems
+were worked only in dedicated rounds with a specific new idea. The protocol
+then moved problems mechanically: a problem at difficulty 1 to 4 that used its
+budget without a full answer was raised to difficulty 5, and a problem was
+parked once it reached difficulty 5, or once it had used six sessions without
+even a partial result. Parked problems, which are removed from the queue, could
+be reopened only for a new idea, paper or tool.
 
 The public problem volume was a further selection: questions asked only
 internally were removed, leaving 308 questions and 58 answers.
@@ -254,79 +275,35 @@ plan. It ends by rewriting a short \emph{state of play} and appending one line
 to the \emph{attempt log}: the route, the outcome, the reason, and the next
 step. A claimed result had to become a \emph{solution sheet}: the problem as
 posed, the answer as a theorem, a complete proof with exact citations, and
-nothing else, built through a lint-gated LaTeX pipeline. A fresh agent with a
-fixed brief then refereed it. The referee re-read the question in its source,
-re-derived each step, reran any certificate, and decided whether the answer was
-full or partial.
+nothing else, built through a LaTeX pipeline that refuses to compile files that
+fail an automatic style check. A fresh agent with a fixed brief then refereed
+it. The referee re-read the question in its source, re-derived each step, reran
+any certificate, and decided whether the answer was full or partial.
 
-On hard problems several agents worked in parallel \emph{lanes}, each on one
-approach, with a coordinating session redirecting them. When lanes drifted into
-cataloguing obstructions, a \emph{prove-mode} brief told each to commit to one
+On hard problems several agents worked in parallel, each assigned one approach
+(we called these \emph{lanes}), while a coordinating session read their interim
+reports and redirected them. When the agents drifted into cataloguing
+obstructions, a stricter brief (\emph{prove mode}) told each to commit to one
 strategy and push it to a theorem, or to a proof complete except for one
 precisely stated lemma. The full instructions are published with this paper as
 a reusable set of agent playbooks.
 
-\subsection*{The record format, and what it was worth}
-The database replaced a set of catalogue files and a shared ranking that
-several workers appended to at once. Two failures forced it: agents repeated
-routes that had already failed, because the failures lived only in chat
-transcripts, and two tools with several subagents each needed to edit the list
-concurrently. Most fields were added one at a time over the following day, each
-answering a request from the director: a difficulty score ``to give us some
-starting points'', ``different levels of solved'' (the resolution tiers), a way
-to say which papers bear on a problem, and, a day later, whether we or someone
-else had asked the question.
-
-To see which fields mattered we counted, over all 772 commits that touched the
-database, how many changed each field.
-\begin{center}
-  \begin{tabular}{lr}
-    \toprule
-    Field                                    & Commits changing it \\
-    \midrule
-    State of play (prose)                    & 615                 \\
-    Attempt log (prose)                      & 566                 \\
-    Stage                                    & 532                 \\
-    Session count and date                   & about 400           \\
-    Failed approaches (prose)                & 322                 \\
-    Related papers                           & 319                 \\
-    Artifacts                                & 304                 \\
-    Literature evidence                      & 275                 \\
-    Review                                   & 273                 \\
-    Full or partial                          & 230                 \\
-    \midrule
-    Origin, impact, tags                     & 1--12               \\
-    Authors told                             & 3                   \\
-    Claim basis, abandonment reason, aliases & 4 each              \\
-    \bottomrule
-  \end{tabular}
-\end{center}
-The fields that carried the work were the prose memory between sessions and the
-few fields that move a problem through the pipeline. Scores, tags and origin
-were filled once in bulk. Two lessons were negative. The free-text
-justification of the scores was rewritten in 426 commits, because escalations
-were appended to it, and so it went stale. The field recording that the askers
-had been told was changed in only three commits, because nothing in the
-pipeline required it. Other fields that nothing in the pipeline depended on,
-such as a free-text relevance line and the minutes spent, were also hardly ever
-filled in. The lesson is that the prose memory between sessions, together with
-the handful of fields that move a problem through the pipeline, did the real
-work; a field that nothing reads or checks is not kept up to date. The field we
-most missed was how the source poses the question, which we had to reconstruct
-for \cref{sec:results}. The schema we now recommend keeps the working fields,
-freezes the score justification at triage and logs escalations in the attempt
-log instead, adds the form of the question, a verbatim quote, the reviewing
-model and a frozen initial difficulty, makes the publishing step refuse a
-result whose askers have not been told, and drops the unused fields.
+How each record field was used during the work, and which ones mattered, is
+analysed in \cref{app:fields}.
 
 \section{Results}\label{sec:results}
 
 \subsection{What the literature check found}
 
-The difficulty assigned to a problem before anyone attempted it predicted the
-outcome well (\cref{tab:difficulty}). It also showed why easy problems are
-easy: nine of the twelve problems first rated easiest already had a published
-answer. Tao observed the same correlation on the Erdős problems: the problems
+The initial difficulty score predicted the outcome (\cref{tab:difficulty}):
+over all 373 problems, a lower score went with being settled, with an area
+under the ROC curve of 0.79 (FAR reports 0.69 for its difficulty
+scores~\cite{far}). The figure flatters the scores. They were not blind, since
+many problems had been tried before they were scored, and problems were
+attacked in order of difficulty, so the easy ones also received attention
+first. The table also shows why easy problems are easy: of the 37 problems
+rated easiest, 15 already had a published answer and our agents settled the
+other 22. Tao observed the same correlation on the Erdős problems: the problems
 current tools can solve are ``precisely the category of nominally open problems
 that are most likely to have been solved in the
 literature''~\cite{tao-lowhanging}. The literature check also caught one
@@ -334,19 +311,22 @@ problem recorded as resolved by a paper that had since been withdrawn.
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{lrrrr}
+  \begin{tabular}{lrrrrr}
     \toprule
-    Initial difficulty & Settled by others & Settled by us & Partial & Open \\
+    Initial difficulty & Settled by others & Settled by us & Partial & Open & Total \\
     \midrule
-    1                  & 9                 & 3             & 0       & 0    \\
-    2                  & 4                 & 15            & 2       & 0    \\
-    3                  & 7                 & 27            & 19      & 7    \\
-    4                  & 4                 & 29            & 75      & 6    \\
-    5                  & 0                 & 3             & 15      & 3    \\
+    1                  & 15                & 22            & 0       & 0    & 37    \\
+    2                  & 12                & 34            & 2       & 0    & 48    \\
+    3                  & 20                & 50            & 32      & 8    & 110   \\
+    4                  & 10                & 32            & 91      & 12   & 145   \\
+    5                  & 7                 & 3             & 17      & 6    & 33    \\
+    \midrule
+    Total              & 64                & 141           & 142     & 26   & 373   \\
     \bottomrule
   \end{tabular}
-  \caption{Outcome by the difficulty assigned before any attempt, for the
-    275 records that had one.}\label{tab:difficulty}
+  \caption{Outcome of all 373 problems by the first difficulty score each
+    received (\cref{sec:map}). ``Settled by us'' counts claimed answers that
+    passed one agent referee.}\label{tab:difficulty}
 \end{table}
 
 \subsection{When the results came}
@@ -404,16 +384,19 @@ We classified each of the 141 answers along three axes.
                 to find and easy to check;
           \item 19 substantial new arguments.
         \end{itemize}
-  \item \emph{Significance}:
+  \item \emph{Significance}, judged by the mathematics alone:
         \begin{itemize}
-          \item 6 high: paper-level answers to someone else's question;
-          \item 62 medium: full answers worth a short note;
-          \item 73 low: our own questions, conditional or elementary answers,
-                and corollaries.
+          \item 6 high: an answer to a question of standing in the field, at
+                the level of a paper;
+          \item 62 medium: a full answer worth a short note;
+          \item 73 low: a corollary, an elementary or conditional answer, or
+                an answer to a question of little interest.
         \end{itemize}
 \end{itemize}
-The classification is ours and preliminary; \cref{tab:sign} gives the
-cross-tabulations.
+The author chose the six high-significance results. The split between medium
+and low is a preliminary classification made by an agent from the records and
+checked only by spot, so we use it only for broad comparisons.
+\Cref{tab:kind,tab:sig} give the cross-tabulations.
 
 \begin{table}[ht]
   \centering
@@ -426,8 +409,12 @@ cross-tabulations.
     Determination  & 3          & 14      & 0            & 0           & 17    \\
     \bottomrule
   \end{tabular}
+  \caption{The 141 claimed answers by sign and by how they were
+    obtained.}\label{tab:kind}
+\end{table}
 
-  \medskip
+\begin{table}[ht]
+  \centering
   \begin{tabular}{lrrrr}
     \toprule
                     & High & Medium & Low & Total \\
@@ -440,33 +427,70 @@ cross-tabulations.
     Asked by us     & 0    & 5      & 47  & 52    \\
     \bottomrule
   \end{tabular}
-  \caption{The 141 answers by sign and kind (top) and by sign, origin and
-    significance (bottom).}\label{tab:sign}
+  \caption{The 141 claimed answers by significance, split by sign (top) and
+    by who asked the question (bottom).}\label{tab:sig}
 \end{table}
 
-Three things stand out. Counterexamples are the natural strength of the agents:
-39 of the 42 counterexamples are explicit constructions or certificates.
-Searching a space of candidates and checking each one is exactly what agents do
-well, and what earlier work on machine-assisted discovery
-exploited~\cites{wagner,funsearch,alphaevolve}. Few proofs are substantial:
-only 17 of the 82 proofs needed a genuinely new argument, and the rest are
-routine or assembled from the literature. And the significant results needed
-direction. Of the six results we rate high, four are proofs and two are
-counterexamples, and three of the six came from focused sessions in which the
-human directed one problem with the asker's question in view, not from the bulk
-campaign over the database.
+Three things stand out. Counterexamples are where the agents are strongest: 39
+of the 42 counterexamples are explicit constructions or certificates. Searching
+a space of candidates and checking each one is exactly what agents do well, and
+what earlier work on machine-assisted discovery
+exploited~\cites{wagner,funsearch,alphaevolve}. Few proofs are substantial: 17
+of the 82 needed a genuinely new argument, 43 are routine, 17 are assembled
+from the literature and 5 rest on a construction. And the significant results
+came from directed work. Four of the six were obtained in the week of directed
+work before the database existed, while the author steered one problem at a
+time with the asker's question in view; the other two came from the campaign
+over the database.
 
-The six high-significance results are the following. Extremal functions for
-bounded linear functionals on $H^p$, $0<p<1$, are outer, which answers a
-published conjecture in a stronger form and was written jointly with the asker.
-Extremals in a prescribed-coefficient problem have at most one zero. The sharp
-Bernstein--Nikolskii constants have limits for finite exponents. The $H^1$
-norms of the partial-sum operators for Dirichlet series grow like $\log
-N/\log\log N$. A positive-symbol Nehari question has a negative answer, with a
-computer certificate in outward-rounded arithmetic. And optimal polynomial
-approximants in $H^p$ can vanish in the disc for every $p\neq2$. Each has been
-sent to the people who asked the question, or is being prepared for them. None
-is yet on arXiv.
+\subsection{The six significant results}
+\Cref{tab:six} lists the six results with their sources and their current
+status.
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{llll}
+    \toprule
+    Result                                 & Question                                   & Checked by            & Askers told \\
+    \midrule
+    Extremals on $H^p$, $0<p<1$, are outer & \cite{brevigsaksman}*{Conj.~1}             & agent, Lean, coauthor & coauthor    \\
+    At most one zero                       & \cite{bgi}*{Question~1}                    & agents, Lean          & yes         \\
+    Bernstein--Nikolskii limits            & \cite{ganzburgtikhonov}*{Conj.~1.10}       & agent, not filed      & no          \\
+    $H^1$ partial sums                     & \cite{saksman-seip}*{Problem~4.5}          & agent                 & no          \\
+    Positive Nehari fails                  & \cite{perfektpushnitski}*{after Rem.~4.11} & agents                & yes         \\
+    Approximant zeros                      & \cite{centner}*{Conj.~7.1}                 & agent                 & no          \\ % chktex 2
+    \bottomrule
+  \end{tabular}
+  \caption{The six significant results. ``Askers told'' means the result was
+    sent to an asker or, in one batched note, to a colleague in the askers'
+    department.}\label{tab:six}
+\end{table}
+
+Stated precisely:
+\begin{enumerate}
+  \item For $0<p<1$, every extremal function of a nonzero bounded linear
+        functional on $H^p$ is outer; in particular the extremals for the
+        coefficient problem of Brevig and Saksman have no zeros in the disc,
+        which answers their conjecture in a stronger form. This was written
+        jointly with Brevig.
+  \item For $0<p<1$, $k\geq1$ and $0\leq t\leq1$, every extremal for the
+        prescribed-coefficient problem of Brevig, Grepstad and Instanes has at
+        most one zero in the disc, counting multiplicity.
+  \item For $0<p<q<\infty$ and every $s\geq0$, the sharp
+        Bernstein--Nikolskii constants for the $s$th derivative of polynomials of degree $n$, suitably
+        normalised, converge as $n\to\infty$ to the corresponding constant for
+        entire functions of exponential type, for both complex and real
+        polynomials (Ganzburg and Tikhonov's conjecture).
+  \item The norm of the partial-sum operator $S_N$ on the Hardy space
+        $\mathcal H^1$ of Dirichlet series is of order $\log N/\log\log N$.
+  \item There is a bounded nonnegative Helson matrix without a bounded
+        symbol, so the positive-symbol version of Nehari's theorem asked about
+        by Perfekt and Pushnitski fails.
+  \item For every $1<p<\infty$ with $p\neq2$ there is an outer polynomial
+        target whose degree-one optimal polynomial approximant in $H^p$ has a
+        zero inside the disc, contrary to Centner's conjecture.
+\end{enumerate}
+None of the six is yet on arXiv.
 
 \subsection{How the question was posed}
 The database mixes questions of very different standing: conjectures, where an
@@ -603,6 +627,40 @@ The same logs show the agents assessing their limits frankly once challenged:
   \hfill---Claude Opus 5.5, 13 October
 \end{quote}
 
+\section{A blind audit of a random sample}\label{sec:audit}
+
+To estimate how far the counts can be trusted, we drew a random sample of 20 of
+the 141 claimed answers and 10 of the 64 problems marked as settled by others.
+Five fresh referee agents (Claude Opus 5.5) each took a group. They saw only
+the question as posed and the solution sheet or the cited paper, never the
+working notes or earlier verdicts, and spent 15 to 20 minutes on each answer.
+
+Of the 20 answers, 18 were judged correct and complete, 2 correct but answering
+less than was asked, and none was flawed. With 20 answers this bounds the rate
+of flawed answers by about 17\% at 95\% confidence. The two downgrades are
+typical of the scope problem we saw throughout. One answered one part of a
+two-part question, and the other is unconditional only for part of the
+parameter range, relying for the rest on an unrefereed preprint, as it
+discloses. Four of the 18 correct answers depend on unrefereed preprints and
+say so.
+
+The audit found more problems in the bookkeeping than in the mathematics. In
+five of the 20 records the metadata did not match the sheet: a dependency on
+another of our sheets was not listed, the listed write-up covered only a
+special case while the general proof sat in another file, two records left an
+unrefereed dependency out of the field meant to record it, and one record posed
+no explicit question. Of the 10 problems marked as settled by others, 8 were
+confirmed. Two are only partly settled by the cited work. In one the cited
+result covers part of the range and rests on a single-author preprint claiming
+a major open isoperimetric conjecture. In the other the problem is settled, but
+by papers the record does not cite.
+
+These numbers are encouraging but limited. The referees come from the same
+model family that produced many of the answers, 15 to 20 minutes is enough to
+re-derive a short argument but not to referee a long one, and the sample is
+small. The audit supports the claim that the arguments the workflow produces
+are usually sound; it does not replace review by people in the field.
+
 \section{What the agents did not settle}\label{sec:unsettled}
 
 Full answers are only half the picture. Of the 373 problems, 168 remain
@@ -627,17 +685,17 @@ state of play.
     \bottomrule
   \end{tabular}
 \end{center}
-The problems that resisted were not neglected: they received slightly more
-working sessions than the settled ones, and only four received none. They
-differ in kind. They were asked by others, they matter more, half of them had
-already been attacked in the literature, and they ask for a characterisation,
-an exact constant or a uniform estimate rather than a single construction. The
-settled problems, by contrast, include most of our own derived questions and
-most of the problems a counterexample could close. Themes rooted in number
-theory and probability (random multiplicative functions, Bohr radii, general
-Dirichlet series, Paley--Wiener extremals) were mostly unsettled; composition
-operators and the extremal problems around one published conjecture were mostly
-settled.
+Most unsettled problems received little work: 67 had one working session, 74
+had two, and only ten had four or more. The settled problems received about as
+much, so effort alone does not separate the two groups; they differ in kind.
+They were asked by others, they matter more, half of them had already been
+attacked in the literature, and they ask for a characterisation, an exact
+constant or a uniform estimate rather than a single construction. The settled
+problems, by contrast, include most of our own derived questions and most of
+the problems a counterexample could close. Themes rooted in number theory and
+probability (random multiplicative functions, Bohr radii, general Dirichlet
+series, Paley--Wiener extremals) were mostly unsettled; composition operators
+and the extremal problems around one published conjecture were mostly settled.
 
 \subsection{What blocked them}
 \begin{center}
@@ -685,20 +743,25 @@ but gives no uniform control away from it. This is the pattern the human
 director called ``filling $\mathbb R$ with $\mathbb Q$'': more and more special
 cases, none of which converges to the general statement.
 
-\section{Walls}\label{sec:walls}
-
-We attacked several problems on which experts have made partial progress, for
-days and with several agents. Two examples show the pattern. The first is an
-endpoint Schatten-class Nehari problem. Every route the agents found reduced to
-one square-function estimate in $L^1$ that is a theorem in its own right. They
-proved many special cases, wrote down equivalent reformulations, and catalogued
-exactly where each route failed, but found no proof, and the problem was handed
-back to the person who asked it. The second is a contractive restriction
-conjecture, for which the agents proved two natural families of cases and
-refuted a stronger statement that would have implied it; the general case did
-not move. In both cases the output was useful as a map. It is not progress on
-the wall itself, and we do not present it as such. The pattern matches Tao's
-image: some walls of six feet were climbed; the Everests were not approached.
+\subsection{Walls}\label{sec:walls}
+Only two problems received sustained work over several days. The first is the
+endpoint $p=4$ of Nehari's theorem in the Schatten class $S_p$ for Hankel
+operators on the Paley--Wiener space of the disc, which Bampouras singled out
+after proving the theorem for $p>4$~\cite{bampouras}. Over three days, up to
+seven agents worked on it in parallel, each assigned one approach. Every route
+reduced to one square-function estimate in $L^1$ that would be a theorem in its
+own right. The agents proved many special cases and wrote down equivalent
+reformulations, but no proof, and the problem was handed back to Bampouras with
+a note describing these reductions. The second is Ramberg's
+conjecture~\cites{ramberg,bbhop} that restricting a function on the bidisc to
+the diagonal is a contraction from the Hardy space $H^p$ of the bidisc to the
+Bergman space $A^p$ of the disc for every $p\geq2$; it is known for even $p$.
+In four sessions over three days the agents proved it for the functions whose
+diagonal is $z$ (and their Möbius images), for the diagonals $z^m$ when
+$p\geq4$, and refuted a natural strengthening in terms of convex order; the
+general case did not move. In both cases the output is a useful map of the
+problem. It matches Tao's image: some walls of six feet were climbed, and the
+Everests were not approached.
 
 \section{Verification and credit}\label{sec:verification}
 
@@ -1029,8 +1092,136 @@ the human set \texttt{ours.public} and \texttt{ours.told\_authors}. Validation
 by \texttt{make problems} rejected unknown fields, invalid values and
 inconsistent combinations, such as a resolution tier on a partial result.
 
+\section{How the record fields were used}\label{app:fields}
+The database replaced a set of catalogue files and a shared ranking that
+several workers appended to at once. Two failures forced it: agents repeated
+routes that had already failed, because the failures lived only in chat
+transcripts, and two tools with several subagents each needed to edit the list
+concurrently. Most fields were added one at a time over the following day, each
+answering a request from the director: a difficulty score ``to give us some
+starting points'', ``different levels of solved'' (the resolution tiers), a way
+to say which papers bear on a problem, and, a day later, whether we or someone
+else had asked the question.
+
+To see which fields mattered we counted, over all 772 commits that touched the
+database, how many changed each field.
+\begin{center}
+  \begin{tabular}{lr}
+    \toprule
+    Field                                    & Commits changing it \\
+    \midrule
+    State of play (prose)                    & 615                 \\
+    Attempt log (prose)                      & 566                 \\
+    Stage                                    & 532                 \\
+    Session count and date                   & about 400           \\
+    Failed approaches (prose)                & 322                 \\
+    Related papers                           & 319                 \\
+    Artifacts                                & 304                 \\
+    Literature evidence                      & 275                 \\
+    Review                                   & 273                 \\
+    Full or partial                          & 230                 \\
+    \midrule
+    Origin, impact, tags                     & 1--12               \\
+    Authors told                             & 3                   \\
+    Claim basis, abandonment reason, aliases & 4 each              \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+The fields that carried the work were the prose memory between sessions and the
+few fields that move a problem through the pipeline. Scores, tags and origin
+were filled once in bulk. Two lessons were negative. The free-text
+justification of the scores was rewritten in 426 commits, because escalations
+were appended to it, and so it went stale. The field recording that the askers
+had been told was changed in only three commits, because nothing in the
+pipeline required it. Other fields that nothing in the pipeline depended on,
+such as a free-text relevance line and the minutes spent, were also hardly ever
+filled in. The lesson is that the prose memory between sessions, together with
+the handful of fields that move a problem through the pipeline, did the real
+work; a field that nothing reads or checks is not kept up to date. The field we
+most missed was how the source poses the question, which we had to reconstruct
+for \cref{sec:results}. The schema we now recommend keeps the working fields,
+freezes the score justification at triage and logs escalations in the attempt
+log instead, adds the form of the question, a verbatim quote, the reviewing
+model and a frozen initial difficulty, makes the publishing step refuse a
+result whose askers have not been told, and drops the unused fields.
+
 \begin{bibdiv}
 \begin{biblist}
+
+\bib{bampouras}{article}{
+  author={Bampouras, K.},
+  title={Nehari's theorem and Hardy's inequality for Paley--Wiener spaces},
+  eprint={arXiv:2504.05986},
+  date={2025},
+}
+
+\bib{bbhop}{article}{
+  author={Bayart, F.},
+  author={Brevig, O. F.},
+  author={Haimi, A.},
+  author={Ortega-Cerdà, J.},
+  author={Perfekt, K.-M.},
+  title={Contractive inequalities for Bergman spaces and multiplicative Hankel forms},
+  journal={Trans. Amer. Math. Soc.},
+  volume={371},
+  date={2019},
+  pages={681\ndash 707},
+  doi={10.1090/tran/7290}, % chktex 8
+}
+
+\bib{bgi}{article}{
+  author={Brevig, O. F.},
+  author={Grepstad, S.},
+  author={Instanes, S.},
+  title={F.\ Wiener's trick and an extremal problem for $H^p$},
+  journal={Comput. Methods Funct. Theory},
+  volume={23},
+  date={2023},
+  pages={697\ndash 722},
+  doi={10.1007/s40315-022-00469-x}, % chktex 8
+}
+
+\bib{brevigsaksman}{article}{
+  author={Brevig, O. F.},
+  author={Saksman, E.},
+  title={Coefficient estimates for $H^p$ spaces with $0<p<1$},
+  journal={Proc. Amer. Math. Soc.},
+  volume={148},
+  date={2020},
+  pages={3911\ndash 3924},
+  eprint={arXiv:1905.09547},
+}
+
+\bib{centner}{article}{
+  author={Centner, R.},
+  title={Optimal polynomial approximants in $L^p$},
+  eprint={arXiv:2112.14002},
+  date={2021},
+}
+
+\bib{ganzburgtikhonov}{article}{
+  author={Ganzburg, M. I.},
+  author={Tikhonov, S. Yu.},
+  title={On sharp constants in Bernstein--Nikolskii inequalities},
+  journal={Constr. Approx.},
+  volume={45},
+  date={2017},
+  pages={449\ndash 466},
+  doi={10.1007/s00365-016-9363-1}, % chktex 8
+}
+
+\bib{perfektpushnitski}{article}{
+  author={Perfekt, K.-M.},
+  author={Pushnitski, A.},
+  title={On Helson matrices: moment problems, non-negativity, boundedness, and finite rank},
+  eprint={arXiv:1611.03772},
+  date={2016},
+}
+
+\bib{ramberg}{misc}{
+  author={Ramberg, B. D.}, title={Nehari's theorem for multiplicative Hankel matrices},
+  note={Student research report, NTNU, \url{https://www.math.ntnu.no/studforsk/ramberg_nehari.pdf}},
+}
 
 \bib{adamczewski}{article}{
   author={Adamczewski, T.},
