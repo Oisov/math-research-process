@@ -861,6 +861,80 @@ Tao~\cites{tao-good,tao-age} and Bessis~\cite{bessis}; journalism on the
 current state includes~\cite{quanta}, where Igor Pak notes that language models
 are ``fantastic in finding the right references''.
 
+\section{How the method differs}\label{sec:compare}
+
+\Cref{tab:methods} compares the design of our campaign with the closest
+studies. Three differences matter for reading our numbers.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{llll}
+    \toprule
+    Study                         & Problem source              & Who directed   & Checked by             \\
+    \midrule
+    Gemini, Erdős~\cite{feng}     & curated list                & expert team    & AI filter, experts     \\
+    Proof search~\cite{tsoukalas} & curated lists               & research team  & Lean                   \\
+    OEIS Open~\cite{adamczewski}  & formalized list             & one researcher & Lean                   \\
+    FAR~\cite{far}                & 5245 papers                 & research team  & sent to authors        \\
+    QED~\cite{qed}                & chosen by experts           & experts        & verifier agent         \\
+    This report                   & harvested, about 300 papers & one MSc holder & agent referees; askers \\
+    \bottomrule
+  \end{tabular}
+  \caption{How comparable studies chose their problems, who directed the
+    work, and how results were checked.}\label{tab:methods}
+\end{table}
+
+\emph{The problems were harvested, not curated.} The Erdős and OEIS lists are
+fixed, public and of known provenance. Ours was assembled by agents from
+papers, problem sessions and monographs, including informal remarks and our own
+derived questions, and it was scoped by a single sentence. This gives a broader
+and messier denominator; \cref{sec:results} shows how much the outcome depends
+on how a question was posed.
+
+\emph{The area resists formalization.} Most of the large studies verify in
+Lean, which works well for combinatorics and number theory, where substantive
+AI use is also concentrated~\cite{goldrush}. Hardy spaces, Schatten classes and
+Dirichlet series in infinitely many variables are far from current formal
+libraries. We formalized two results; everything else rests on agent referees,
+certificates in exact arithmetic, and the people who asked the questions. Our
+counts are therefore claims, not verified resolutions.
+
+\emph{One non-expert director.} The other studies are run by teams of
+specialists or by the developers of the models. Ours was directed by one person
+with a master's degree in the area, which is closer to how a graduate student
+or a mathematician from a neighbouring field would use these tools. Three of
+the six significant results came from sessions where he directed a single
+problem with its asker in view.
+
+\section{What else the work produced}\label{sec:byproducts}
+
+The proofs are the smallest part of what the campaign left behind. For a
+mathematician entering one of these problems, the other products are probably
+worth more:
+\begin{itemize}
+  \item \emph{A map of the area}: 373 problems with exact sources, of which
+        308 are published with their sources and evidence status.
+  \item \emph{A literature audit}: 64 problems found already solved, and one
+        recorded resolution that rested on a withdrawn paper.
+  \item \emph{A state of play for every problem}: what is known, the best
+        current route, and the exact open subgoal.
+  \item \emph{Records of failure}: 207 problems carry a list of routes that
+        were tried and the reason each failed. Mathematics has almost no
+        venue for such records, and Tao names ``the publication of negative
+        or partial results'' among the infrastructure the field now
+        needs~\cite{tao-age}.
+  \item \emph{Partial results} for 142 problems: special cases, correct
+        orders of growth, reductions, and counterexamples to stronger
+        statements.
+  \item \emph{Common cores}: about 25 problems reduce to three underlying
+        hard problems, so progress on one would move many.
+\end{itemize}
+These products are unverified in the same sense as the proofs, and the raw
+working files behind them, about 1300 notes, drafts and scripts, are of little
+use to anyone. Their value lies in the curated record of each problem. We would
+release that record per problem, labelled as a sketch, to anyone working on it.
+
 \section{Limits}\label{sec:limits}
 
 This is one person's experience in one area, over six weeks, without a control

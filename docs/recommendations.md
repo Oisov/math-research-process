@@ -64,6 +64,11 @@ The short version, in priority order. Each point comes from
 26. **Delete superseded drafts; don't archive them.** The version history
     keeps them.
 
+27. **Treat the per-problem record as a product.** The state of play, the
+    failed routes and the partial results are useful to anyone who works on
+    the problem next, but only in curated form; the raw working files are
+    not. Offer the record, labelled as a sketch, to the askers.
+
 ## Review
 
 14. **An adversarial referee re-reads the source and sets the scope.** The
