@@ -31,8 +31,8 @@ version of 173 cited arXiv papers and found that one.
 A Markdown file per problem, with YAML frontmatter checked by `make problems`
 (unknown keys, enums, duplicate ids, stage and tier consistency), let six or
 more agents and two different tools edit the database at once without
-corrupting it. The generated index (INDEX, GAPS, PEOPLE, CITED) gave the
-me a dashboard for free. Moving from a single JSON catalogue to this
+corrupting it. The generated index (INDEX, GAPS, PEOPLE, CITED) gave me a
+dashboard for free. Moving from a single JSON catalogue to this
 format on 12 October was the turning point in throughput.
 
 ### State of play plus attempt log
@@ -56,7 +56,7 @@ lint gate removed most typographic noise before I looked.
 
 Every claimed result got a fresh referee agent with a fixed brief: re-read the
 source question, re-derive every step, rerun certificates, check novelty, and
-assume the result is wrong. They found real problems. One example:
+assume the result is wrong. They found real problems, for example:
 
 - a displayed bound justified only for half the claimed range;
 - a lemma that needed a non-constant hypothesis;
@@ -83,9 +83,8 @@ After that we:
 - put the idea before the computation;
 - cut explanations of what an expert already knows.
 
-Telltale signs of machine-written mathematics were removed: many one-off
-variables, defensive commentary, and the same explanation repeated in
-several places.
+- removed the signs of machine-written mathematics: one-off variables,
+  defensive commentary, the same explanation in several places.
 
 ### Lean, faster than predicted
 
@@ -113,8 +112,8 @@ that helped:
 ### Cataloguing instead of proving
 
 Left alone, agents turn a hard problem into a map: what fails, three
-equivalent reformulations, a list of special cases. This looks like progress,
-and on one endpoint problem it absorbed two days. My phrase for
+equivalent reformulations, a list of special cases. It looks like progress;
+on one endpoint problem it absorbed two days. My phrase for
 proving more and more special classes was "filling ℝ with ℚ". The repair was
 an explicit *prove mode*: commit to one strategy, push it to a theorem or to
 a proof modulo one precisely stated lemma, and report only that. Failures get
@@ -128,7 +127,7 @@ The most common error was answering an easier question than the one asked:
 - "for some p" reported as "for every p";
 - a partial result reported as a solution.
 
-One agent's honest recount: "Against the original questions: 0 of these 4
+One agent's recount: "Against the original questions: 0 of these 4
 fully solved." The rule that fixed it is that the referee re-reads the
 question in the source, not in the record's paraphrase, and sets
 `result_scope` itself.
@@ -141,7 +140,7 @@ mandates, and a coordinator who reads interim reports and redirects.
 
 ### Unbounded numerics
 
-Background Python searches without time bounds or progress output. On one
+Background Python searches ran without time bounds or progress output. One
 night, 14 runaway processes used 19 GB of RAM and swap-thrashed the machine.
 Agents also reported sweeps that did not bear on any proof. The rule now:
 numerics are optimized, bounded to minutes, print progress, and must decide
@@ -155,25 +154,24 @@ against; a human or a second agent must sample the diffs.
 
 ### Difficulty as a lagging label
 
-Difficulty was re-scored after attempts (73 records went from 4 to 5). This
-made the final difficulty a record of failure rather than a prediction. Keep
-the initial score frozen and store the current one separately.
+Difficulty was re-scored after attempts (73 records went from 4 to 5), so the
+final number records failure rather than predicting it. Freeze the initial
+score.
 
 ### Session lengths, crashes and limits
 
-Many sessions ended early: model stream disconnects, context limits and
-five-hour usage windows. Every protocol rule about hand-over state exists
-because of this. A fixed handoff file per campaign was the only reliable
-recovery.
+Many sessions ended early: stream disconnects, context limits and five-hour
+usage windows. The hand-over rules exist because of this, and a handoff file
+per campaign was the only reliable recovery.
 
 ## Review is the weakest link
 
 Of the 141 results our agents settled, essentially all were checked by
 agents, most of them by the same model family that wrote them. Agent referees
 catch local errors well and global errors poorly. They rarely ask "is this
-the right claim?" or "did anyone try a different weight?". My own
-complaint at the time, accurately: "The audits check each step line by line but never ask
-whether the claim is the right one."
+the right claim?" or "did anyone try a different weight?". As I put it at the time: "The
+audits check each step line by line but never ask whether the claim is the
+right one."
 
 That is why everything stays *Sketch* until the asker or arXiv sees it.
 
@@ -186,14 +184,12 @@ Reading my side of the logs back, I made the same interventions again and again:
 - "partial results don't count";
 - "write it so an expert understands it, don't explain the obvious".
 
-Each of these became a written rule, in `WORKING.md`, the agent briefs or
-persistent memory, and the rule stuck better than the reminder. The same
-correction delivered repeatedly in conversation did not.
+Repeating a correction in conversation did not stick. Writing it into
+`WORKING.md`, the agent briefs or persistent memory did.
 
 ## Cost
 
 One month of Codex use was about $1,200 in API-equivalent terms, 68% of it
-cache reads; Claude Code was about $300 over the same month. Long-running orchestrator
-sessions that re-read large contexts dominate the cost. Cheap models for the
-literature and triage stages, and strong models only for attempts on
-promising targets, were the right split.
+cache reads; Claude Code was about $300. Long orchestrator sessions that
+re-read large contexts dominate the cost. Cheap models for literature and
+triage, strong models for attempts, was the right split.

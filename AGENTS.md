@@ -64,9 +64,8 @@ in `scripts/tex-style.yaml`; the targets are documented in
 ## Hard rules
 
 1. **Open sources only.** Fetch from arXiv's API (`tools/arxiv_harvest.py`)
-   at no more than one request every three seconds. Do not log in anywhere,
-   scrape publishers, or use library proxies. Paywalled papers are used only
-   if the user supplies them, and they never leave the private workspace.
+   at no more than one request every three seconds. Anything else comes
+   from the user.
 2. **Quote, do not paraphrase.** Every problem record carries the question
    verbatim with its exact location. Every claim about the literature carries
    an arXiv id or DOI, a theorem number and a quote from the version you

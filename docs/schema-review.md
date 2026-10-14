@@ -1,7 +1,7 @@
 # Schema review: which fields earned their place
 
-Fill rates are over the 373 records on 14 October 2026. Usefulness is our
-judgement after six weeks of agents, and me, reading these records.
+Fill rates are over the 373 records on 14 October 2026. Usefulness is my
+judgement after six weeks of working with them.
 
 ## Most useful
 

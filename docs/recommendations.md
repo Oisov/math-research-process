@@ -9,8 +9,7 @@ The short version, in priority order. Each point comes from
    people working on Hardy spaces of Dirichlet series would work on". Keep
    excluded candidates in a report instead of deleting them.
 2. **Open sources only.** Harvest from arXiv through its API, at its rate
-   limit. Anything else comes from the user's own legitimate access and never
-   leaves the private repository.
+   limit. Anything else comes from your own access.
 3. **Set the publication rule on day one.** All your results are *Sketch*
    until they are on arXiv or in a journal. Askers are contacted before
    anything goes to arXiv. Write it into the agents' instructions, because

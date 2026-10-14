@@ -11,9 +11,8 @@ item.
 | arXiv | Proof in a public preprint, not yet refereed |
 | **Sketch** | Everything of ours not on arXiv or in a journal, however it was checked |
 
-Our results are *Sketch* even when agent-refereed, certified by computer, or
-formalized. The label changes only when the work appears on arXiv or in a
-journal.
+Our results are *Sketch* however they were checked, until they appear on
+arXiv or in a journal.
 
 ## Writing for the asker
 
