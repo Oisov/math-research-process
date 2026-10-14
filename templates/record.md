@@ -19,6 +19,7 @@ literature:
   evidence: []                # "arXiv:… Thm 1.3 proves the case p>1", with a quote in the body
 ours:
   stage: untriaged            # untriaged | triaged | attacking | written | reviewed | public | abandoned
+  sign: null                  # proof | counterexample | determination (set when settled)
   result_scope: null          # full | partial (set by the referee)
   artifacts: []               # notes, sheets, certificates
   review: null                # {by, model, date, verdict}
@@ -28,7 +29,7 @@ resolution: null              # {tier: journal|arxiv|ours-public|ours-internal, 
 impact: null                  # 1-5
 difficulty_initial: null      # 1-5, set once at triage, never changed
 difficulty: null              # 1-5, current
-scores_note: null             # one line, written at triage
+scores_note: null             # one line at triage, never edited; log escalations in the Attempt log
 tags: []                      # 3-6 from TAGS.md
 effort: {sessions: 0, last: null, parked: false}
 related: []

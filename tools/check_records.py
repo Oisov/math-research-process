@@ -20,6 +20,7 @@ STAGE = ['untriaged', 'triaged', 'attacking', 'written', 'reviewed', 'public', '
 STATUS = {'open', 'partial', 'resolved', 'claimed', 'refuted'}
 TIER = {'journal', 'arxiv', 'ours-public', 'ours-internal'}
 SCOPE = {None, 'full', 'partial'}
+SIGN = {None, 'proof', 'counterexample', 'determination'}
 FORM = {'conjecture', 'problem', 'question', 'remark', 'ours'}
 REQUIRED = ['id', 'title', 'kind', 'origin', 'theme', 'literature', 'ours']
 
@@ -79,6 +80,8 @@ def check(path, seen):
     if stage not in STAGE:
         errors.append(f'ours.stage {stage!r} not in {STAGE}')
         return errors, warnings
+    if ours.get('sign') not in SIGN:
+        errors.append(f'ours.sign {ours.get("sign")!r} not proof/counterexample/determination/null')
     if ours.get('result_scope') not in SCOPE:
         errors.append(f'ours.result_scope {ours.get("result_scope")!r} not full/partial/null')
     for k in ('impact', 'difficulty', 'difficulty_initial'):

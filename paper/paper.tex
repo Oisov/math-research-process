@@ -267,6 +267,49 @@ strategy and push it to a theorem, or to a proof complete except for one
 precisely stated lemma. The full instructions are published with this paper as
 a reusable set of agent playbooks.
 
+\subsection*{The record format, and what it was worth}
+The database replaced a set of catalogue files and a shared ranking that
+several workers appended to at once. Two failures forced it: agents repeated
+routes that had already failed, because the failures lived only in chat
+transcripts, and two tools with several subagents each needed to edit the list
+concurrently. Most fields were added one at a time over the following day, each
+answering a request from the director: a difficulty score ``to give us some
+starting points'', ``different levels of solved'' (the resolution tiers), a way
+to say which papers bear on a problem, and, a day later, whether we or someone
+else had asked the question.
+
+To see which fields mattered we counted, over all 772 commits that touched the
+database, how many changed each field.
+\begin{center}
+  \begin{tabular}{lr}
+    \toprule
+    Field                     & Commits changing it \\
+    \midrule
+    State of play (prose)     & 615                 \\
+    Attempt log (prose)       & 566                 \\
+    Stage                     & 532                 \\
+    Session count and date    & about 400           \\
+    Failed approaches (prose) & 322                 \\
+    Related papers            & 319                 \\
+    Artifacts                 & 304                 \\
+    Literature evidence       & 275                 \\
+    Review                    & 273                 \\
+    Full or partial           & 230                 \\
+    \midrule
+    Origin, impact, tags      & 1--12               \\
+    Authors told              & 3                   \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+The fields that carried the work were the prose memory between sessions and the
+few fields that move a problem through the pipeline. Scores, tags and origin
+were filled once in bulk. Two lessons were negative. The free-text
+justification of the scores was rewritten in 426 commits, because escalations
+were appended to it, and so it went stale. The field recording that the askers
+had been told was changed in only three commits, because nothing in the
+pipeline required it. The field we most missed was how the source poses the
+question, which we had to reconstruct for \cref{sec:results}.
+
 \section{Results}\label{sec:results}
 
 \subsection{What the literature check found}
