@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+"""Report whether the tools used by the LaTeX workflow are available."""
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+TOOLS = [
+    ('latexmk', 'build', 'install latexmk (TeX Live)'),
+    ('pdflatex', 'build', 'install a TeX distribution'),
+    ('biber', 'bibliographies', 'install biber (only for biblatex documents)'),
+    ('latexindent', 'lint', 'install latexindent (TeX Live)'),
+    ('chktex', 'lint', 'install chktex'),
+    ('perl', 'lint', 'install perl'),
+    ('xdg-open', 'make view', 'install xdg-utils'),
+]
+
+
+def latexindent_runs():
+    env = os.environ.copy()
+    local = str(ROOT / '.tools/perl5/lib/perl5')
+    env['PERL5LIB'] = local + (os.pathsep + env['PERL5LIB'] if env.get('PERL5LIB') else '')
+    try:
+        return subprocess.run(['latexindent', '--version'], env=env, capture_output=True,
+                              timeout=30).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
+def main():
+    missing = 0
+    for tool, purpose, hint in TOOLS:
+        path = shutil.which(tool)
+        print(f'{"ok" if path else "MISSING":8} {tool:12} {purpose:15} {path or hint}')
+        missing += path is None
+    if shutil.which('latexindent'):
+        works = latexindent_runs()
+        print(f'{"ok" if works else "BROKEN":8} {"latexindent":12} {"Perl modules":15} '
+              f'{"loads" if works else "run make setup"}')
+        missing += not works
+    return 1 if missing else 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

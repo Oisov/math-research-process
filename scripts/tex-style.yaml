@@ -1,0 +1,107 @@
+defaultIndent: '  '
+indentPreamble: 0
+# Prose environments stay flush-left; display and list bodies are indented.
+noAdditionalIndent:
+  document: 1
+  abstract: 1
+  theorem: 1
+  lemma: 1
+  proposition: 1
+  corollary: 1
+  conjecture: 1
+  definition: 1
+  remark: 1
+  example: 1
+  question: 1
+  claim: 1
+  proof: 1
+  thebibliography: 1
+  bibdiv: 1
+  biblist: 1
+lookForAlignDelims:
+  align: 0
+  align*: 0
+  aligned: 0
+  split: 0
+  # Matrix and array columns are right-aligned; cases columns left-aligned.
+  matrix:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  pmatrix:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  bmatrix:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  Bmatrix:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  vmatrix:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  Vmatrix:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  smallmatrix:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  array:
+    delims: 1
+    justification: right
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+  cases:
+    delims: 1
+    justification: left
+    spacesBeforeAmpersand: 1
+    spacesAfterAmpersand: 1
+modifyLineBreaks:
+  preserveBlankLines: 1
+  condenseMultipleBlankLinesInto: 1
+  textWrapOptions:
+    columns: 0
+  environments:
+    equation:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+      EndFinishesWithLineBreak: 1
+    equation*:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+      EndFinishesWithLineBreak: 1
+    align:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+      EndFinishesWithLineBreak: 1
+    align*:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+      EndFinishesWithLineBreak: 1
+    gather:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+      EndFinishesWithLineBreak: 1
+    gather*:
+      BeginStartsOnOwnLine: 1
+      BodyStartsOnOwnLine: 1
+      EndStartsOnOwnLine: 1
+      EndFinishesWithLineBreak: 1

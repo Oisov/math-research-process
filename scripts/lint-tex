@@ -1,0 +1,1103 @@
+#!/usr/bin/env python3
+"""House style + latexindent + ChkTeX. See scripts/tex-lint.md."""
+import argparse
+import difflib
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+
+ROOT = Path(__file__).resolve().parent.parent
+CONFIG = ROOT / 'scripts/tex-style.yaml'
+COMMAND = re.compile(r'\\(?:[A-Za-z@]+\*?|[^\n])')
+LITERALS = {'verbatim', 'verbatim*', 'Verbatim', 'BVerbatim', 'lstlisting',
+            'minted', 'comment', 'filecontents', 'filecontents*', 'luacode', 'luacode*'}
+DEFINITIONS = {'newcommand', 'renewcommand', 'providecommand', 'DeclareRobustCommand',
+               'newenvironment', 'renewenvironment', 'DeclarePairedDelimiter',
+               'DeclarePairedDelimiterX', 'NewDocumentCommand', 'RenewDocumentCommand',
+               'ProvideDocumentCommand', 'NewDocumentEnvironment', 'def', 'gdef', 'edef', 'xdef'}
+DISPLAY = re.compile(r'^( *)\\(begin|end)\{(equation\*?|align\*?|gather\*?|multline\*?)\}')
+# ChkTeX warnings disabled globally:
+#   1  command terminated with space   (the chosen spacing style)
+#   3  enclose parenthesis with {}     (fires on every (1+x)^q and f^{(k)})
+#   25 put this between {}             (same false positive for f^{(k)}(0))
+#   46 use \( \) instead of $ $         ($...$ is the house choice)
+CHKTEX = ['chktex', '-q', '-I0', '-n1', '-n3', '-n25', '-n46', '-f%f:%l:%c: ChkTeX %n: %m\n']
+INLINE_MATH = re.compile(r'(?<![\\$])\$(?!\$)((?:\\.|[^$\\])+?)(?<!\\)\$(?!\$)|\\\((.+?)\\\)', re.S)
+WIDTH = 79  # Vim's gq width when 'textwidth' is 0
+SKIP_DIRS = {'build', 'archive', 'node_modules', '.git', '.jj'}
+
+
+def group_end(text, start):
+    """Read one literal brace/bracket group, skipping escaped chars and comments."""
+    opening = text[start]
+    closing = '}' if opening == '{' else ']'
+    depth, i = 1, start + 1
+    while i < len(text):
+        if text[i] == '\\':
+            i += 2
+            continue
+        if text[i] == '%':
+            i = text.find('\n', i)
+            if i < 0:
+                break
+        elif text[i] == opening:
+            depth += 1
+        elif text[i] == closing:
+            depth -= 1
+            if depth == 0:
+                return i + 1
+        i += 1
+    raise ValueError('unclosed brace/bracket group')
+
+
+def shield(text):
+    """Protect comments, literal examples, definitions and explicit opt-out regions.
+
+    This is a lexical guard, not a TeX macro expander. Custom catcodes require
+    an opt-out region; custom literal environments can be added to LITERALS.
+    """
+    if 'LINTTEXOPAQUE' in text:
+        raise ValueError('reserved placeholder LINTTEXOPAQUE occurs in input')
+    saved, out, i = [], [], 0
+
+    def save(start, end, comment=False):
+        marker = f'LINTTEXOPAQUE{len(saved)}TOKEN'
+        token = '% ' + marker if comment else r'\verb|' + marker + '|'
+        saved.append((token, text[start:end]))
+        out.append(token)
+        return end
+
+    while i < len(text):
+        if text.startswith('% lint-tex: off', i):
+            end = text.find('% lint-tex: on', i + 1)
+            if end < 0:
+                raise ValueError('missing % lint-tex: on')
+            end += len('% lint-tex: on')
+            i = save(i, end)
+        elif text[i] == '%':
+            end = text.find('\n', i)
+            end = len(text) if end < 0 else end
+            if text[i:end].strip() == '%':
+                out.append('%'); i = end
+            else:
+                i = save(i, end, comment=True)
+        elif text[i] == '\\':
+            match = COMMAND.match(text, i)
+            if not match:
+                out.append(text[i]); i += 1
+                continue
+            name = match[0][1:].rstrip('*')
+            end = match.end()
+            env = re.match(r'\s*\{([^}]+)\}', text[end:]) if name == 'begin' else None
+            if env and env[1] in LITERALS:
+                close = r'\end{' + env[1] + '}'
+                stop = text.find(close, end + len(env[0]))
+                if stop < 0:
+                    raise ValueError(f'unclosed literal environment {env[1]}')
+                i = save(i, stop + len(close))
+            elif name in {'verb', 'lstinline', 'mintinline'}:
+                while end < len(text) and text[end] in ' \t':
+                    end += 1
+                if end < len(text) and text[end] == '[':
+                    end = group_end(text, end)
+                if name == 'mintinline':
+                    while end < len(text) and text[end].isspace():
+                        end += 1
+                    end = group_end(text, end)  # language
+                    while end < len(text) and text[end].isspace():
+                        end += 1
+                if end >= len(text):
+                    raise ValueError('missing literal delimiter')
+                if text[end] == '{':
+                    stop = group_end(text, end)
+                else:
+                    stop = text.find(text[end], end + 1)
+                    if stop < 0 or '\n' in text[end:stop]:
+                        raise ValueError('unclosed inline literal')
+                    stop += 1
+                i = save(i, stop)
+            elif name in DEFINITIONS or name in {'url', 'path', 'href'}:
+                # Definitions and their arguments are intentionally not rewritten.
+                if name in {'def', 'gdef', 'edef', 'xdef'}:
+                    end = text.find('{', end)
+                    if end < 0:
+                        raise ValueError('missing macro body')
+                    end = group_end(text, end)
+                else:
+                    have_argument = False
+                    while True:
+                        pos = end
+                        while pos < len(text):
+                            if text[pos].isspace():
+                                pos += 1
+                            elif text[pos] == '%':
+                                newline = text.find('\n', pos)
+                                if newline < 0:
+                                    pos = len(text)
+                                    break
+                                pos = newline + 1
+                            else:
+                                break
+                        if pos < len(text) and text[pos] in '{[':
+                            end = group_end(text, pos)
+                            have_argument = True
+                        elif not have_argument and text[pos:pos+1] == '\\':
+                            arg = COMMAND.match(text, pos)
+                            if not arg:
+                                break
+                            end = arg.end()
+                            have_argument = True
+                        else:
+                            break
+                i = save(i, end)
+            elif name in {'catcode', 'ExplSyntaxOn'}:
+                raise ValueError('custom TeX syntax: surround it with % lint-tex: off/on')
+            else:
+                out.append(match[0]); i = end
+        else:
+            out.append(text[i]); i += 1
+    return ''.join(out), saved
+
+
+def delimiters(text):
+    """Convert only complete command-delimited math, never escaped backslashes."""
+    edits, stack = [], []
+    for match in COMMAND.finditer(text):
+        token = match[0]
+        if token in (r'\(', r'\['):
+            if stack:
+                raise ValueError('nested command-delimited math')
+            stack.append(token)
+            edits.append((match.start(), match.end(), '$' if token == r'\(' else r'\begin{equation*}'))
+        elif token in (r'\)', r'\]'):
+            if not stack or stack.pop() != (r'\(' if token == r'\)' else r'\['):
+                raise ValueError('mismatched math delimiters')
+            edits.append((match.start(), match.end(), '$' if token == r'\)' else r'\end{equation*}'))
+    if stack:
+        raise ValueError('unclosed math delimiter')
+    for start, end, replacement in reversed(edits):
+        text = text[:start] + replacement + text[end:]
+    return text
+
+
+def perl_env():
+    env = os.environ.copy()
+    local = str(ROOT / '.tools/perl5/lib/perl5')
+    env['PERL5LIB'] = local + (os.pathsep + env['PERL5LIB'] if env.get('PERL5LIB') else '')
+    return env
+
+
+def format_tex(source, sentences=False, width=WIDTH):
+    masked, saved = shield(source)
+    converted = delimiters(masked)
+    if converted != masked and r'\documentclass' in masked:
+        if r'\begin{equation*}' in converted and not re.search(r'\b(?:amsart|amsbook|amsproc|amsmath|mathtools)\b', masked):
+            raise ValueError('equation* requires amsmath; load it before converting displays')
+    with tempfile.TemporaryDirectory(prefix='tex-lint-') as tmp:
+        path = Path(tmp) / 'input.tex'
+        path.write_text(converted, encoding='utf-8')
+        command = ['latexindent', '-m', '-l=' + str(CONFIG)]
+        if sentences:
+            command += ['-y=modifyLineBreaks:oneSentencePerLine:manipulateSentences:1']
+        result = subprocess.run(command + [str(path)], cwd=tmp, env=perl_env(),
+                                capture_output=True, text=True, timeout=60)
+        if result.returncode:
+            raise ValueError('latexindent failed; run scripts/setup-tex-lint\n' + result.stderr.strip())
+    lines = result.stdout.splitlines()
+    out = []
+    for i, line in enumerate(lines):
+        display = DISPLAY.match(line)
+        if display and display[2] == 'begin' and (not out or out[-1].strip() != '%'):
+            out.append(display[1] + '%')
+        out.append(line.rstrip())
+        if display and display[2] == 'end' and (i+1 == len(lines) or lines[i+1].strip() != '%'):
+            out.append(display[1] + '%')
+    merged = []
+    for line in out:
+        # latexindent puts a display body on its own line; keep a leading label on \begin.
+        if (merged and DISPLAY.match(merged[-1]) and '\\begin' in merged[-1]
+                and re.fullmatch(r' *\\label\{[^{}]*\}', line)):
+            merged[-1] += line.strip()
+        else:
+            merged.append(line)
+    if width:
+        merged = reflow(merged, dict(saved), width, r'\documentclass' in masked)
+        merged = wrap_displays(merged, width)
+    formatted = '\n'.join(merged) + '\n'
+    for token, original in saved:
+        if formatted.count(token) != 1:
+            raise ValueError('formatter changed a protected placeholder; refusing to write')
+        formatted = formatted.replace(token, original)
+    return formatted
+
+
+# Environments whose lines are never refilled: displays, tables, lists, floats, code.
+NO_REFLOW = {
+    'equation', 'equation*', 'align', 'align*', 'gather', 'gather*', 'multline', 'multline*',
+    'flalign', 'flalign*', 'alignat', 'alignat*', 'eqnarray', 'eqnarray*', 'displaymath', 'math',
+    'array', 'tabular', 'tabular*', 'tabularx', 'longtable', 'table', 'table*', 'figure', 'figure*',
+    'itemize', 'enumerate', 'description', 'thebibliography', 'bibdiv', 'biblist', 'verbatim',
+    'Verbatim', 'lstlisting',
+    'minted', 'tikzpicture', 'center', 'flushleft', 'flushright', 'minipage', 'verse', 'quote',
+    'comment', 'filecontents', 'cases', 'matrix', 'pmatrix', 'bmatrix'}
+STRUCTURAL = re.compile(
+    r'\\(?:begin|end|item|(?:sub)*section|paragraph|subparagraph|part|chapter|label|caption|'
+    r'maketitle|bibitem|input|include|includegraphics|centering|noindent|medskip|smallskip|bigskip|'
+    r'vspace|vskip|newpage|clearpage|pagebreak|title|author|date|email|address|curraddr|subjclass|'
+    r'keywords|thanks|dedicatory|appendix|printbibliography|bibliography|bibliographystyle|'
+    r'tableofcontents|newcommand|renewcommand|usepackage|documentclass|hypersetup|qedhere)(?![A-Za-z])')
+
+
+def reflow(lines, saved, width, has_preamble):
+    """Refill prose paragraphs greedily to width, as Vim's gqip does.
+
+    A paragraph is a run of prose lines. Blank lines, `%` lines, comments,
+    structural commands, alignment marks and opaque multi-line regions end it;
+    displays, tables, lists, floats and the preamble are never refilled.
+    """
+    multiline = {token for token, original in saved.items() if '\n' in original}
+
+    def measure(word):
+        for token in re.findall(r'(?:% |\\verb\|)LINTTEXOPAQUE\d+TOKEN\|?', word):
+            word = word.replace(token, saved.get(token, token))
+        return len(word)
+
+    def prose(line):
+        stripped = line.strip()
+        return (stripped and not stripped.startswith('%') and not STRUCTURAL.match(stripped)
+                and not re.search(r'(?<!\\)%|\\\\|(?<!\\)&', stripped)
+                and not any(token in line for token in multiline))
+
+    def fill(block):
+        indent = re.match(r' *', block[0])[0]
+        words = ' '.join(line.strip() for line in block).split(' ')
+        words = [w for w in words if w]
+        # A trailing backslash is a control space (`cf.\ `): keep it with the next word.
+        glued = []
+        for word in words:
+            if glued and re.search(r'(?<!\\)(?:\\\\)*\\$', glued[-1]):
+                glued[-1] += ' ' + word
+            else:
+                glued.append(word)
+        out, current, size = [], [], len(indent)
+        for word in glued:
+            length = measure(word)
+            if current and size + 1 + length > width:
+                out.append(indent + ' '.join(current))
+                current, size = [], len(indent)
+            size += length + (1 if current else 0)
+            current.append(word)
+        if current:
+            out.append(indent + ' '.join(current))
+        return out
+
+    def balance(line):
+        line = re.sub(r'\\.', '', line)
+        return line.count('{') - line.count('}')
+
+    result, block, stack = [], [], []
+    body, pending = not has_preamble, 0  # pending: open braces of a structural command
+    for line in lines:
+        for kind, name in re.findall(r'\\(begin|end)\{([^{}]+)\}', line):
+            if name == 'document':
+                body = kind == 'begin'
+            elif kind == 'begin':
+                stack.append(name)
+            elif name in stack:
+                del stack[len(stack) - 1 - stack[::-1].index(name):]
+        frozen = not body or pending > 0 or any(name in NO_REFLOW for name in stack)
+        if pending > 0:
+            pending = max(0, pending + balance(line))
+        elif STRUCTURAL.match(line.strip()):
+            pending = max(0, balance(line))
+        if prose(line) and not frozen and not re.search(r'\\(?:begin|end)\{', line):
+            block.append(line)
+            continue
+        if block:
+            result += fill(block)
+            block = []
+        result.append(line)
+    if block:
+        result += fill(block)
+    return result
+
+
+WRAP_ENVS = {'equation', 'equation*', 'gather', 'gather*', 'multline', 'multline*', 'align', 'align*',
+             'flalign', 'flalign*', 'alignat', 'alignat*', 'displaymath'}
+RELATION = re.compile(r'&?(?:=|<|>|\\(?:le|ge|leq|geq|ne|neq|approx|sim|simeq|asymp|equiv|lesssim|gtrsim|'
+                      r'll|gg|subset|subseteq|supset|supseteq|coloneqq|to|mapsto|iff|implies|Longrightarrow)'
+                      r'(?![A-Za-z]))')
+OPENERS = re.compile(r'\\(?:left|[bB]igg?l)(?![A-Za-z])')
+CLOSERS = re.compile(r'\\(?:right|[bB]igg?r)(?![A-Za-z])')
+
+
+def break_points(body):
+    r"""(position, level) of top-level breaks in a display line, nothing inside
+    braces, brackets or sized pairs: level 0 before \quad/\qquad, 1 before a
+    relation, 2 before a binary + or -."""
+    points, depth, i = [], 0, 0
+    previous = ''
+    while i < len(body):
+        c = body[i]
+        if c == '\\':
+            word = re.match(r'\\(?:[A-Za-z]+|.)', body[i:])[0]
+            if OPENERS.fullmatch(word) or CLOSERS.fullmatch(word):
+                # A sized pair counts once; skip the delimiter it sizes.
+                depth += 1 if OPENERS.fullmatch(word) else -1
+                delimiter = re.match(r'\s*(?:\\(?:[A-Za-z]+|.)|.)', body[i + len(word):])
+                i += len(word) + (len(delimiter[0]) if delimiter else 0)
+                previous = word
+                continue
+            if depth == 0 and i > 0:
+                if word in ('\\quad', '\\qquad'):
+                    points.append((i, 0))
+                elif RELATION.match(body, i):
+                    points.append((i, 1))
+            i += len(word)
+            previous = word
+            continue
+        if c in '{([':
+            depth += 1
+        elif c in '})]':
+            depth -= 1
+        elif depth == 0 and i > 0:
+            if RELATION.match(body, i) and body[i - 1] not in '&<>!:':
+                points.append((i, 1))
+            elif c in '+-' and previous and previous[-1] not in '=<>(+-^_&,{' \
+                    and not RELATION.fullmatch(previous) and previous not in ('\\quad', '\\qquad'):
+                points.append((i, 2))
+        if not c.isspace():
+            previous = c
+        i += 1
+    return points
+
+
+ALIGNED_COLUMNS = {'matrix', 'pmatrix', 'bmatrix', 'Bmatrix', 'vmatrix', 'Vmatrix', 'smallmatrix',
+                   'array', 'cases', 'tabular'}  # latexindent aligns their columns; never rewrap rows
+MIN_PIECE = 12  # never leave a stub such as "=0 ." on a line of its own
+
+
+def split_at(text, cuts, merge_stubs=False):
+    pieces, start = [], 0
+    for cut in sorted(cuts) + [len(text)]:
+        if cut > start:
+            pieces.append(text[start:cut].strip())
+            start = cut
+    if not merge_stubs:
+        return pieces
+    merged = []
+    for piece in pieces:
+        if merged and len(piece) < MIN_PIECE:
+            merged[-1] += piece
+        else:
+            merged.append(piece)
+    return merged
+
+
+def wrap_line(line, width):
+    r"""Split one long display line: between equations at \quad/\qquad (filled
+    greedily), then before every relation of an equation that is still too long
+    (so each = starts a line), then greedily at binary + and -."""
+    indent = re.match(r' *', line)[0]
+    body = line[len(indent):].rstrip()
+    tail = ''
+    if body.endswith('\\\\'):
+        body, tail = body[:-2].rstrip(), '\\\\'
+    more = indent  # latexindent resets display lines to the environment indent
+
+    def fits(lead, text):
+        return len(lead) + len(text) <= width
+
+    def by_level(text, lead, level):
+        points = break_points(text)
+        if fits(lead, text) or level > 2:
+            return [text]
+        cuts = [p for p, kind in points if kind == level]
+        if not cuts:
+            return by_level(text, lead, level + 1)
+        pieces = split_at(text, cuts, merge_stubs=level == 1)
+        if level == 1:  # chain style: one relation per line
+            out = []
+            for n, piece in enumerate(pieces):
+                out += by_level(piece, lead if n == 0 else more, 2)
+            return out
+        out, current = [], ''
+        for piece in pieces:  # greedy fill
+            if current and not fits(lead if not out else more, current + piece):
+                out.append(current)
+                current = piece
+            else:
+                current += piece
+        out.append(current)
+        if level == 0:
+            return [x for n, chunk in enumerate(out) for x in by_level(chunk, lead if n == 0 else more, 1)]
+        return out
+
+    pieces = by_level(body, indent, 0)
+    lines = [indent + pieces[0]] + [more + piece for piece in pieces[1:]]
+    lines[-1] += tail
+    return lines
+
+
+def wrap_displays(lines, width):
+    """Break long source lines of displayed math; the typeset display is unchanged
+    because TeX treats a newline in math as a space."""
+    result, stack = [], []
+    for line in lines:
+        for kind, name in re.findall(r'\\(begin|end)\{([^{}]+)\}', line):
+            if kind == 'begin':
+                stack.append(name)
+            elif name in stack:
+                del stack[len(stack) - 1 - stack[::-1].index(name):]
+        inside = (any(name in WRAP_ENVS for name in stack)
+                  and not any(name in ALIGNED_COLUMNS for name in stack))
+        if (inside and len(line) > width and not re.search(r'(?<!\\)%|LINTTEXOPAQUE', line)
+                and not re.search(r'\\(?:begin|end|label|tag|intertext)', line)):
+            result += wrap_line(line, width)
+        else:
+            result.append(line)
+    return result
+
+
+OBSOLETE_PACKAGES = {
+    # l2tabu (CTAN info/l2tabu) and common successors.
+    'a4': 'geometry', 'a4wide': 'geometry', 'fullpage': 'geometry', 'doublespace': 'setspace',
+    'epsf': 'graphicx', 'epsfig': 'graphicx', 'psfig': 'graphicx', 'fancyheadings': 'fancyhdr',
+    'isolatin': 'inputenc', 'umlaut': 'inputenc', 't1enc': 'fontenc', 'times': 'newtxtext/newtxmath',
+    'mathptm': 'newtxmath', 'pslatex': 'fontenc and a modern font package', 'palatino': 'mathpazo',
+    'mathpple': 'mathpazo', 'euler': 'eulervm', 'subfigure': 'subcaption', 'subfig': 'subcaption',
+    'caption2': 'caption', 'scrpage': 'scrlayer-scrpage', 'scrpage2': 'scrlayer-scrpage',
+}
+REF_WORDS = (r'(?:(?i:theorem|lemma|proposition|corollary|remark|definition|conjecture|example|question|'
+             r'claim|hypothesis|assumption|problem|section|figure|table|equation|appendix|chapter)s?'
+             r'|(?:Thm|Lem|Prop|Cor|Rem|Def|Conj|Ex|Sec|Fig|Tab|Eqn?|Eqs|App|Ch)s?\.)')
+REF_LABEL = r'(?:\d+(?:\.\d+)*(?!\w|-[A-Za-z])|(?!I\b)[A-Z](?![a-z])|[IVX]{2,}(?![A-Za-z])|\(\d+(?:\.\d+)*\))'
+BREAK_OK = {'align', 'align*', 'aligned', 'alignat', 'alignat*', 'alignedat', 'gather', 'gather*', 'gathered',
+            'multline', 'multline*', 'split', 'array', 'tabular', 'tabular*', 'tabularx', 'longtable',
+            'matrix', 'pmatrix', 'bmatrix', 'Bmatrix', 'vmatrix', 'Vmatrix', 'smallmatrix', 'cases',
+            'dcases', 'eqnarray', 'eqnarray*', 'flushleft', 'flushright', 'center', 'verse', 'tikzpicture',
+            'thebibliography', 'bibdiv', 'biblist', 'subarray', 'substack'}
+BREAK_ARGS = {'title', 'author', 'address', 'thanks', 'shortstack', 'parbox', 'makecell', 'subjclass',
+              'keywords', 'date', 'email', 'curraddr', 'substack', 'caption', 'footnote', 'thanks'}
+DISPLAY_MATH = {'equation', 'equation*', 'align', 'align*', 'gather', 'gather*', 'multline', 'multline*',
+                'flalign', 'flalign*', 'alignat', 'alignat*', 'displaymath', 'math', 'eqnarray', 'eqnarray*'}
+
+GREEK = (r'alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|vartheta|iota|kappa|lambda|mu|nu|xi|'
+         r'pi|rho|varrho|sigma|tau|upsilon|phi|varphi|chi|psi|omega|Gamma|Lambda|Sigma|Omega|Theta|Phi|Psi')
+# A hand-written differential: d after a math space, a closing ) or }, or at the start of a
+# group (`\frac{d\theta}{2\pi}`), followed by one variable; the d over dx in `\frac{d}{dx}`;
+# or \mathrm{d}.
+DIFFERENTIAL = (r'(?:\\[,;:]\s*|(?<=[)}])|(?<=\{))d(?=(?:\\(?:' + GREEK + r')|[A-Za-z])(?![A-Za-z]))'
+                r'|(?<=\{)d(?=\}\s*\{\s*(?:\\dd(?![A-Za-z])|d))'  # the numerator of d/dx
+                r'|\\mathrm\s*\{d\}|\\textrm\s*\{d\}|\\operatorname\s*\{d\}')
+DD_DEFINITION = r'\newcommand*{\dd}{\mathop{}\!\mathrm{d}}'
+
+# (id, scope, pattern, message). scope: 'any', 'math' (inline or display) or 'text'.
+RULES = [
+    ('dollar-display', 'any', r'\$\$', 'plain-TeX $$ display: use an amsmath environment'),
+    ('eqnarray', 'any', r'\\begin\{eqnarray\*?\}', 'eqnarray spaces badly: use align/align*'),
+    ('old-font', 'any', r'\\(?:bf|it|rm|sc|tt|sf|sl|cal)(?![A-Za-z])',
+     'two-letter font switch: use \\textbf/\\emph/\\mathcal/... instead'),
+    ('tex-fraction', 'any', r'\\(?:over|atop|choose)(?![A-Za-z])', 'plain-TeX \\over/\\atop/\\choose: use \\frac/\\binom'),
+    ('ref', 'any', r'\\ref\{', 'consider \\cref/\\Cref (requires cleveref; review reference type)'),
+    ('norm', 'any', r'\\(?:\||lVert|rVert)(?![A-Za-z])', 'consider \\norm{...} (requires a macro definition)'),
+    ('tfrac', 'any', r'\\tfrac(?![A-Za-z])', 'never \\tfrac: write a/b inline, \\frac in displays'),
+    ('bigg', 'any', r'\\Bigg[lrm]?(?![A-Za-z])', 'delimiters no bigger than \\biggl/\\biggr'),
+    ('inline-left', 'inline', r'\\left(?![A-Za-z])',
+     '\\left...\\right in inline math stretches the line: use \\bigl/\\bigr or a display'),
+    ('inline-frac', 'inline', r'\\[dt]?frac(?![A-Za-z])', 'inline \\frac: write a/b inline, keep \\frac for displays'),
+    ('inline-display', 'inline', r'\\displaystyle(?![A-Za-z])', '\\displaystyle in inline math: use a display'),
+    ('mbox-math', 'math', r'\\mbox(?![A-Za-z])', '\\mbox in math: use \\text'),
+    ('ellipsis', 'any', r'(?<!\.)\.\.\.(?!\.)', 'three periods: use \\dots (\\ldots/\\cdots)'),
+    ('much-less', 'math', r'<<|>>', 'use \\ll/\\gg'),
+    ('coloneq', 'math', r'(?<!:):=', 'consider \\coloneqq (mathtools) for a vertically centred :='),
+    ('straight-quote', 'text', r'(?<!\\)"', 'straight double quote: use ``...\'\''),
+    ('centerline', 'any', r'\\centerline(?![A-Za-z])', '\\centerline is obsolete: use \\centering'),
+    ('sloppy', 'any', r'\\(?:sloppy|fussy)(?![A-Za-z])|\\begin\{sloppypar\}', 'improve the wording instead of \\sloppy'),
+    ('manual-break', 'text', r'\\(?:newline|linebreak|pagebreak|newpage|clearpage|enlargethispage)(?![A-Za-z])',
+     'manual line or page break: settle the prose first, then use local control'),
+    ('negative-space', 'any', r'\\(?:vspace|vskip|hspace)\*?\s*\{?\s*-', 'negative space is a layout patch'),
+    ('double-cite', 'any', r'\\cite\{[^{}]*\}\s*,?\s*(?:and\s+)?\\cite\{', 'combine as \\cite{a,b}'),
+    ('manual-number', 'text', r'\b' + REF_WORDS + r'(?:~|\s)?' + REF_LABEL,
+     'hard-coded number: \\cref for this document, \\cite[Lemma~4.1]{key} for another work'),
+    ('manual-number', 'text', r'§\s?\d|(?<![\w\\])\(\d+\.\d+\)',
+     'hard-coded section or equation number: \\cref/\\eqref, or \\cite[...]{key} for another work'),
+    ('half-open', 'math', r'(?<!\\left)(?<!\\bigl)\[[^\[\]()$]*,[^\[\]()$]*\)|(?<!\\left)\([^\[\]()$]*,[^\[\]()$]*\]',
+     'half-open interval with mismatched fences: define \\intco/\\intoc with \\DeclarePairedDelimiterX'),
+    ('half-open', 'math', r'\\lbrack(?:(?!\\rbrack)[^$])*?\\rparen|\\lparen(?:(?!\\rparen)[^$])*?\\rbrack',
+     'spelled-out half-open interval: use \\intco/\\intoc, which also space correctly'),
+    ('tie-comment', 'any', r'(?m)~%[ \t]*$',
+     'a tie before a comment hides the line break: keep word~\\cite{...} on one line (the formatter never splits at ~)'),
+    ('differential', 'math', DIFFERENTIAL,
+     'differential d by hand: use \\dd (\\newcommand*{\\dd}{\\mathop{}\\!\\mathrm{d}}); make differentials'),
+    ('tabular-rules', 'any', r'\\begin\{tabular\}\s*\{[^{}]*\|',
+     'vertical rules in tabular: consider booktabs (\\toprule/\\midrule/\\bottomrule)'),
+]
+
+
+def blank(text, start, end):
+    """Replace text[start:end] by spaces, keeping newlines and so line numbers."""
+    return text[:start] + re.sub(r'[^\n]', ' ', text[start:end]) + text[end:]
+
+
+def environment_spans(masked):
+    """(name, start, end) for every begin...end pair of an environment."""
+    spans, stack = [], []
+    for match in re.finditer(r'\\(begin|end)\s*\{([^{}]+)\}', masked):
+        if match[1] == 'begin':
+            stack.append((match[2], match.start()))
+        elif stack and stack[-1][0] == match[2]:
+            name, start = stack.pop()
+            spans.append((name, start, match.end()))
+    return spans
+
+
+def math_regions(masked, spans):
+    inline = [(m.start(), m.end()) for m in INLINE_MATH.finditer(masked)]
+    display = [(s, e) for name, s, e in spans if name in DISPLAY_MATH]
+    display += [(m.start(), m.end()) for m in re.finditer(r'\\\[.*?\\\]', masked, re.S)]
+    return inline, display
+
+
+def inside(position, regions):
+    return any(start <= position < end for start, end in regions)
+
+
+def enclosing_command(masked, position):
+    """Name of the command whose brace argument contains position, if any."""
+    depth = 0
+    for i in range(position - 1, -1, -1):
+        if masked[i] == '}' and masked[i - 1:i] != '\\':
+            depth += 1
+        elif masked[i] == '{' and masked[i - 1:i] != '\\':
+            if depth == 0:
+                name = re.search(r'\\([A-Za-z]+)\*?\s*(?:\[[^\]]*\])?\s*$', masked[:i])
+                return name[1] if name else None
+            depth -= 1
+    return None
+
+
+def cites_nearby(masked, position):
+    """Is there a \\cite in the sentence around position?"""
+    start = max(masked.rfind('. ', 0, position), masked.rfind('\n\n', 0, position), 0)
+    ends = [i for i in (masked.find('. ', position), masked.find('\n\n', position)) if i >= 0]
+    end = min(ends) if ends else len(masked)
+    return re.search(r'\\cite|arXiv', masked[start:end]) is not None
+
+
+def suppressed(source):
+    """{line: rule ids} from `% lint-tex: ignore=id1,id2` comments."""
+    found = {}
+    for number, line in enumerate(source.splitlines(), 1):
+        match = re.search(r'%\s*lint-tex:\s*ignore=([\w,-]+)', line)
+        if match:
+            found[number] = set(match[1].split(','))
+    return found
+
+
+def house_warnings(source):
+    """Yield (line, 'rule-id: message') for house-style findings."""
+    masked, saved = shield(source)
+    # Restore original line counts without exposing protected syntax to checks.
+    for token, original in saved:
+        masked = masked.replace(token, '\n' * original.count('\n'))
+    # Optional arguments of \cite (`[Lemma~3]`) name the cited work's numbering.
+    for match in reversed(list(re.finditer(r'\\cite[pt]?\s*(\[[^\]]*\])', masked))):
+        masked = blank(masked, match.start(1), match.end(1))
+    # The second argument of \\texorpdfstring is plain bookmark text.
+    for match in reversed(list(re.finditer(r'\\texorpdfstring\s*\{', masked))):
+        first = group_end(masked, match.end() - 1)
+        if first < len(masked) and masked[first] == '{':
+            masked = blank(masked, first, group_end(masked, first))
+    spans = environment_spans(masked)
+    inline, display = math_regions(masked, spans)
+    math = inline + display
+    bibliography = [(s, e) for name, s, e in spans if name in ('thebibliography', 'biblist')]
+    skip = suppressed(source)
+    found = []
+
+    def add(position, rule, message):
+        line = masked.count('\n', 0, position) + 1
+        if rule not in skip.get(line, ()):
+            found.append((position, line, f'{rule}: {message}'))
+
+    for rule, scope, pattern, message in RULES:
+        for match in re.finditer(pattern, masked):
+            at = match.start()
+            if scope == 'math' and not inside(at, math):
+                continue
+            if scope == 'inline' and not inside(at, inline):
+                continue
+            if scope == 'text' and inside(at, math):
+                continue
+            if rule == 'manual-number' and (cites_nearby(masked, at) or inside(at, bibliography)):
+                continue  # "Theorem 1.1 of [BS]" names the cited work's numbering
+            add(at, rule, message)
+
+    for match in re.finditer(r'\\usepackage\s*(?:\[[^\]]*\])?\s*\{([^{}]+)\}', masked):
+        for package in (name.strip() for name in match[1].split(',')):
+            if package in OBSOLETE_PACKAGES:
+                add(match.start(), 'obsolete-package',
+                    f'{package} is obsolete (l2tabu): use {OBSOLETE_PACKAGES[package]}')
+
+    # \\ ends a paragraph line only in alignments, tables, lists of lines and title data.
+    allowed = [(s, e) for name, s, e in spans if name in BREAK_OK]
+    for match in re.finditer(r'\\\\(?![A-Za-z])', masked):
+        at = match.start()
+        if not inside(at, allowed) and enclosing_command(masked, at) not in BREAK_ARGS:
+            add(at, 'prose-break', '\\\\ in running text: end the paragraph or rephrase')
+
+    # \label must follow \caption inside a float, or it refers to the section.
+    for name, start, end in spans:
+        if name.rstrip('*') in {'figure', 'table'}:
+            body = masked[start:end]
+            label, caption = body.find('\\label'), body.find('\\caption')
+            if label >= 0 and caption > label:
+                add(start + label, 'label-before-caption', '\\label must come after \\caption')
+            center = body.find('\\begin{center}')
+            if center >= 0:
+                add(start + center, 'float-center', 'use \\centering inside floats, not a center environment')
+
+    # \\cref cannot appear in PDF bookmarks; headings need \\texorpdfstring.
+    for match in re.finditer(r'\\(?:part|chapter|(?:sub)*section|paragraph)\*?\s*(?:\[[^\]]*\])?\s*\{', masked):
+        end = group_end(masked, match.end() - 1)
+        title = masked[match.end():end - 1]
+        if re.search(r'\\[cC]ref', title) and '\\texorpdfstring' not in title:
+            add(match.start(), 'cref-heading',
+                'wrap \\cref in a heading as \\texorpdfstring{\\cref{x}}{Theorem \\ref{x}} for the bookmark')
+
+    # One spelling per symbol.
+    for plain, variant in (('epsilon', 'varepsilon'), ('phi', 'varphi')):
+        a = [m.start() for m in re.finditer(rf'\\{plain}(?![A-Za-z])', masked)]
+        b = [m.start() for m in re.finditer(rf'\\{variant}(?![A-Za-z])', masked)]
+        if a and b:
+            minority = a if len(a) <= len(b) else b
+            add(minority[0], 'mixed-symbol', f'both \\{plain} and \\{variant} are used; pick one')
+
+    for _, line, message in sorted(found):
+        yield line, message
+
+
+def chktex(path):
+    """ChkTeX findings for path. ChkTeX exits 2 when it merely reports warnings,
+    and 0 for a missing file, so its output, not its status, decides."""
+    result = subprocess.run(CHKTEX + [str(path)], capture_output=True, text=True, timeout=30)
+    if result.stderr.strip() and not result.stdout.strip():
+        raise ValueError('chktex failed: ' + result.stderr.strip())
+    lines = path.read_text(encoding='utf-8', errors='replace').splitlines()
+    return [finding for finding in result.stdout.splitlines()
+            if finding.strip() and not false_positive(finding, lines)]
+
+
+def false_positive(finding, lines):
+    """Narrow ChkTeX false positives, each matched on the exact reported token:
+    40 on a factorial `!` that is the last character of inline math (`$k!$`);
+    2 on a space after punctuation, where no tie is needed (`$x$, \\eqref{a}`);
+    12 on the space before \\qed (`... a contradiction. \\qed`);
+    2 and 36 inside the plain-text bookmark argument of \\texorpdfstring; and
+    8 on a `--` with a capitalized name on both sides (`Cauchy--Schwarz`,
+    `Fej\\'er--Riesz`). Any other warning at those numbers is kept."""
+    match = re.match(r'.*?:(\d+):(\d+): ChkTeX (\d+):', finding)
+    if not match:
+        return False
+    line_no, column, number = map(int, match.groups())
+    if not 1 <= line_no <= len(lines):
+        return False
+    line, at = lines[line_no - 1], column - 1  # ChkTeX columns are 1-based
+    if number == 40:
+        return line[at:at + 2] == '!$' and at > 0 and (line[at - 1].isalnum() or line[at - 1] in ')}')
+    if number == 8:
+        name = r"(?:[A-Z]|\\[A-Za-z]+\{\})[\w\\'{}]*"
+        return (line[at:at + 2] == '--' and line[at + 2:at + 3] != '-'
+                and re.search(name + '$', line[:at]) is not None
+                and re.match(name, line[at + 2:]) is not None)
+    if number == 12:
+        return re.match(r'\s*\\qed(?![A-Za-z])', line[at:]) is not None
+    if number in (2, 36):
+        if number == 2 and before_punctuation(lines, line_no, at):
+            return True
+        for match in re.finditer(r'\\texorpdfstring\{(?:[^{}]|\{[^{}]*\})*\}\{(?:[^{}]|\{[^{}]*\})*\}', line):
+            second = match[0].index('}{', len('\\texorpdfstring')) + 2 + match.start()
+            if second <= at < match.end():
+                return True
+        return False
+    return False
+
+
+def before_punctuation(lines, line_no, at):
+    """A tie is needed after a word, not after punctuation: `$x\\in H^2$, \\eqref{a}`."""
+    line = lines[line_no - 1]
+    before = line[:at].rstrip() if at > 0 else (lines[line_no - 2].rstrip() if line_no > 1 else '')
+    return before[-1:] in (',', ';', ':')
+
+
+def root_documents(directories):
+    """Every .tex file with a \\documentclass under the given directories."""
+    for directory in directories:
+        if directory.is_file():
+            yield directory
+            continue
+        for path in sorted(directory.rglob('*.tex')):
+            if SKIP_DIRS.isdisjoint(path.relative_to(directory).parts[:-1]) and not path.is_symlink():
+                head = path.read_text(encoding='utf-8', errors='replace')[:4000]
+                if re.search(r'^\\documentclass', head, re.M):
+                    yield path
+
+
+SINGLE_NUMBER = ('equation', 'multline')
+ROW_NUMBERS = ('gather', 'align', 'flalign', 'alignat')
+REF_COMMAND = re.compile(r'\\[cC]refrange\*?(?:\s*\[[^\]]*\])?\s*\{([^{}]*)\}\s*\{([^{}]*)\}'
+                         r'|\\[A-Za-z@]*[Rr]ef\*?(?:\s*\[[^\]]*\])?\s*\{([^{}]*)\}')
+HYPERREF_LABEL = re.compile(r'\\hyperref\*?\s*\[([^\]]*)\]')
+LABEL_WRAPPER = re.compile(r'\\spaceitem\s*\{([^{}]*)\}')
+
+
+def without_comments(text):
+    """Comments blanked to spaces, so positions and line numbers are kept."""
+    return re.sub(r'(?<!\\)%.*', lambda m: ' ' * len(m[0]), text)
+
+
+def document_text(path, files=None):
+    """Return a document's literal input closure, keyed by resolved file path.
+
+    TeX resolves relative inputs from the document's source directory. A few
+    older fragments instead use paths relative to themselves, so try that
+    location only when the source-directory path does not exist.
+    """
+    root = Path(path).resolve()
+    source_cwd = root.parent
+    files = {} if files is None else files
+    visited = set(files)
+    pieces = []
+
+    def input_file(name, fragment):
+        name = Path(name.strip())
+        bases = (None,) if name.is_absolute() else (source_cwd, fragment.parent)
+        for base in bases:
+            candidate = name if base is None else base / name
+            options = [candidate]
+            if candidate.suffix == '':
+                options.append(candidate.with_name(candidate.name + '.tex'))
+            for option in options:
+                if option.is_file():
+                    return option.resolve()
+        return None
+
+    def visit(fragment):
+        fragment = Path(fragment).resolve()
+        if fragment in visited or not fragment.is_file():
+            return
+        visited.add(fragment)
+        source = fragment.read_text(encoding='utf-8', errors='replace')
+        files[fragment] = source
+        text = without_comments(source)
+        pieces.append(text)
+        for name in re.findall(r'\\(?:input|include)\s*\{([^{}]+)\}', text):
+            child = input_file(name, fragment)
+            if child is not None:
+                visit(child)
+
+    visit(root)
+    return '\n'.join(pieces)
+
+
+def cited_labels(text):
+    cited = set()
+    for match in REF_COMMAND.finditer(text):
+        for group in match.groups():
+            if group:
+                cited.update(label.strip() for label in group.split(','))
+    for match in HYPERREF_LABEL.finditer(text):
+        cited.update(label.strip() for label in match.group(1).split(','))
+    for match in LABEL_WRAPPER.finditer(text):
+        cited.update(label.strip() for label in match.group(1).split(','))
+    return cited
+
+
+def numbered_displays(text):
+    """(name, start, end, rows) for unnumbered-or-numbered display environments;
+    rows is a list of (labels, numbered) for each line of the display."""
+    names = '|'.join(re.escape(n) for n in SINGLE_NUMBER + ROW_NUMBERS)
+    for match in re.finditer(r'\\begin\{(' + names + r')(\*?)\}(.*?)\\end\{\1\2\}', text, re.S):
+        name, star, body = match[1], match[2], match[3]
+        if name in SINGLE_NUMBER:
+            rows = [body]
+        else:
+            rows, depth, start, i = [], 0, 0, 0
+            while i < len(body):
+                if body.startswith('\\begin{', i):
+                    depth += 1
+                elif body.startswith('\\end{', i):
+                    depth -= 1
+                elif body[i] == '{':
+                    depth += 1
+                elif body[i] == '}':
+                    depth -= 1
+                elif body.startswith('\\\\', i) and depth == 0:
+                    rows.append(body[start:i])
+                    start = i + 2
+                    i += 2
+                    continue
+                i += 1 if body[i] != '\\' else 2
+            rows.append(body[start:])
+            if len(rows) > 1 and not rows[-1].strip():
+                rows.pop()
+        described = [(re.findall(r'\\label\s*\{([^{}]*)\}', row),
+                      not star and not re.search(r'\\(?:nonumber|notag)(?![A-Za-z])', row)) for row in rows]
+        yield name + star, match.start(), match.end(), described
+
+
+def numbering_warnings(path, source):
+    """Numbered displays nobody cites, and labels in displays that have no number."""
+    text = without_comments(source)
+    cited = cited_labels(document_text(path))
+    skip = suppressed(source)
+    for name, start, _, rows in numbered_displays(text):
+        line = text.count('\n', 0, start) + 1
+        numbered = [labels for labels, has_number in rows if has_number]
+        uncited = [labels for labels in numbered if not any(label in cited for label in labels)]
+        if uncited and 'uncited-number' not in skip.get(line, ()):
+            what = 'its number is' if len(numbered) == 1 else f'{len(uncited)} of its {len(numbered)} numbers are'
+            yield line, (f'uncited-number: {name} is numbered but {what} never cited: '
+                         f'use {name.rstrip("*")}* (make unnumber) or \\eqref it')
+        if any(labels for labels, has_number in rows if not has_number) and \
+                'label-unnumbered' not in skip.get(line, ()):
+            yield line, f'label-unnumbered: \\label in an unnumbered line of {name} cannot be cited'
+
+
+def unnumber(path, source, cited=None, reports=None):
+    """Star wholly uncited displays; leave tagged and partly cited displays alone.
+
+    ``cited`` may be shared across every file in a selected document closure.
+    Changes to equation numbers are an explicit, separate fix.
+    """
+    text = without_comments(source)
+    cited = cited_labels(document_text(path)) if cited is None else cited
+    reports = [] if reports is None else reports
+    edits = []
+    for name, start, end, rows in numbered_displays(text):
+        numbered = [labels for labels, has_number in rows if has_number]
+        if name.endswith('*') or not numbered:
+            continue
+        line = text.count('\n', 0, start) + 1
+        block = source[start:end]
+        visible_block = without_comments(block)
+        if re.search(r'\\tag\*?(?![A-Za-z])', visible_block):
+            reports.append(f'{path}:{line}: left {name} unchanged because it has an explicit \\tag')
+            continue
+        cited_rows = [any(label in cited for label in labels) for labels in numbered]
+        if any(cited_rows) and not all(cited_rows):
+            reports.append(f'{path}:{line}: left partly cited {name} unchanged '
+                           f'({sum(cited_rows)} of {len(numbered)} equation numbers are cited)')
+            continue
+        if any(cited_rows):
+            continue
+        block = re.sub(r'^(\\begin\{' + name + r')\}', r'\1*}', block)
+        block = re.sub(r'\\end\{' + name + r'\}$', r'\\end{' + name + '*}', block)
+        # Use the comment-masked copy to find real labels, then remove them
+        # from the source. A standalone label line is removed as a whole so
+        # it cannot leave an empty paragraph inside the math environment.
+        visible_block = without_comments(block)
+        label_pattern = re.compile(r'\\label\s*\{[^{}]*\}')
+        label_edits = []
+        for label in label_pattern.finditer(visible_block):
+            line_start = visible_block.rfind('\n', 0, label.start()) + 1
+            line_end = visible_block.find('\n', label.end())
+            if line_end < 0:
+                line_end = len(visible_block)
+            before = block[line_start:label.start()]
+            after = block[label.end():line_end]
+            if not before.strip() and not after.strip():
+                remove_end = line_end + (line_end < len(block))
+                label_edits.append((line_start, remove_end))
+            else:
+                label_edits.append((label.start(), label.end()))
+        for label_start, label_end in reversed(label_edits):
+            block = block[:label_start] + block[label_end:]
+        if label_edits:
+            # Empty source lines become \par inside math. Collapse only this
+            # display's blank lines after deleting its labels.
+            newline = '\r\n' if '\r\n' in block else '\n'
+            block = re.sub(r'\r?\n[ \t]*(?:\r?\n)+', newline, block)
+        edits.append((start, end, block))
+    for start, end, block in reversed(edits):
+        source = source[:start] + block + source[end:]
+    return source, len(edits)
+
+
+def math_spans(text):
+    spans = environment_spans(text)
+    inline, display = math_regions(text, spans)
+    return sorted(inline + display)
+
+
+def differentials(source):
+    r"""Rewrite hand-written differentials as \dd and define \dd if needed.
+    Changes the typeset d (upright, operator spacing), so it is an explicit fix."""
+    text = without_comments(source)
+    regions = math_spans(text)
+    edits = []
+    for match in re.finditer(DIFFERENTIAL, text):
+        at = match.start()
+        if not inside(at, regions):
+            continue
+        # `\,d`, `)d`, `{d` and `\mathrm{d}` all become \dd, which brings its own operator space.
+        replacement, end = '\\dd', match.end()
+        following = text[end:end + 1]
+        if following.isalpha():
+            replacement += ' '
+        edits.append((at, end, replacement))
+    for start, end, replacement in reversed(edits):
+        source = source[:start] + replacement + source[end:]
+    defined = re.search(r'\\(?:newcommand|renewcommand|providecommand|DeclareRobustCommand|def)\*?\s*\{?\\dd(?![A-Za-z])', source)
+    if edits and not defined and r'\documentclass' in source:
+        lines = source.split('\n')
+        begin = next((i for i, line in enumerate(lines) if line.startswith('\\begin{document}')), None)
+        if begin is not None:
+            last = max((i for i in range(begin) if lines[i].startswith(('\\newcommand', '\\DeclarePairedDelimiter',
+                                                                        '\\DeclareMathOperator'))),
+                       default=begin - 1)
+            lines.insert(last + 1, DD_DEFINITION)
+            source = '\n'.join(lines)
+    return source, len(edits)
+
+
+def lint_file(path, args):
+    """Lint one file; return (format differs, style findings, chktex findings)."""
+    if path.is_symlink():
+        raise ValueError('pass the actual file rather than a symlink')
+    source = path.read_text(encoding='utf-8')
+    formatted = format_tex(source, args.sentences, args.width)
+    if args.diff:
+        sys.stdout.writelines(difflib.unified_diff(source.splitlines(True), formatted.splitlines(True),
+                                                 fromfile=str(path), tofile=str(path) + ' (formatted)'))
+    differs = source != formatted
+    if differs and args.fix:
+        path.write_text(formatted, encoding='utf-8')
+        print(f'{path}: formatted', file=sys.stderr)
+        differs = False
+    elif differs and not args.summary:
+        print(f'{path}: formatting differs (use --diff or --fix)', file=sys.stderr)
+    if args.format_only:
+        return differs, [], []
+    current = formatted if args.fix else source
+    warnings = list(house_warnings(current))
+    if args.numbering == 'cited':
+        warnings = sorted(warnings + list(numbering_warnings(path, current)))
+    style = [f'{path}:{line}: style: {warning}' for line, warning in warnings]
+    checks = chktex(path)
+    if not args.summary:
+        for line in style + checks:
+            print(line, file=sys.stderr)
+    return differs, style, checks
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--fix', action='store_true', help='write mechanical formatting changes')
+    mode.add_argument('--check', action='store_true', help='check without writing (default)')
+    parser.add_argument('--diff', action='store_true', help='show proposed unified diff')
+    parser.add_argument('--format-only', action='store_true', help='omit house warnings and ChkTeX')
+    parser.add_argument('--sentences', action='store_true', help='opt in to latexindent sentence reflow')
+    parser.add_argument('--width', type=int, default=WIDTH,
+                        help=f'refill prose paragraphs to this width (default {WIDTH}; 0 disables)')
+    parser.add_argument('--numbering', choices=('cited', 'all'), default='cited',
+                        help='cited (default): every numbered display must be cited; all: number freely')
+    parser.add_argument('--unnumber', action='store_true',
+                        help='star displays whose numbers are never cited (changes the PDF numbering)')
+    parser.add_argument('--differentials', action='store_true',
+                        help='rewrite hand-written differentials as \\dd (changes the PDF)')
+    parser.add_argument('--changed', metavar='REV',
+                        help='lint the .tex files changed in this jj revision (e.g. @) instead of FILES')
+    parser.add_argument('--roots', action='store_true',
+                        help='treat arguments as directories and lint every root document in them')
+    parser.add_argument('--summary', action='store_true',
+                        help='one line per file and a total; exit 0 unless a tool fails')
+    parser.add_argument('files', nargs='*', type=Path)
+    args = parser.parse_args()
+    if args.changed:
+        listed = subprocess.run(['jj', 'diff', '--name-only', '-r', args.changed], cwd=ROOT,
+                                capture_output=True, text=True)
+        if listed.returncode:
+            print(listed.stderr.strip(), file=sys.stderr)
+            return 2
+        args.files = [ROOT / name for name in listed.stdout.splitlines()
+                      if name.endswith('.tex') and (ROOT / name).is_file() and not (ROOT / name).is_symlink()]
+        if not args.files:
+            print(f'No changed .tex files in {args.changed}.', file=sys.stderr)
+            return 0
+        args.summary = args.summary or len(args.files) > 10
+    if not args.files:
+        parser.error('give FILES, --roots DIR or --changed REV')
+    paths = list(root_documents(args.files)) if args.roots else args.files
+    if args.differentials:
+        for path in paths:
+            source = path.read_text(encoding='utf-8')
+            result, count = differentials(source)
+            if count:
+                path.write_text(result, encoding='utf-8')
+            print(f'{path}: {count} differentials rewritten as \\dd', file=sys.stderr)
+        return 0
+    if args.unnumber:
+        status = 0
+        for path in paths:
+            files = {}
+            try:
+                closure = document_text(path, files)
+            except (OSError, ValueError) as error:
+                print(f'{path}: error: {error}', file=sys.stderr)
+                status = 2
+                continue
+            cited = cited_labels(closure)
+            reports = []
+            total = 0
+            for source_path, source in files.items():
+                if source_path.suffix != '.tex':
+                    continue
+                if (source_path.is_relative_to(ROOT / 'build') or
+                        'node_modules' in source_path.parts):
+                    reports.append(f'{source_path}: skipped generated input')
+                    continue
+                result, count = unnumber(source_path, source, cited, reports)
+                if count:
+                    try:
+                        source_path.write_text(result, encoding='utf-8')
+                    except OSError as error:
+                        print(f'{source_path}: error: {error}', file=sys.stderr)
+                        status = 2
+                        continue
+                    total += count
+                    print(f'{source_path}: {count} uncited displays unnumbered', file=sys.stderr)
+            print(f'{path}: {total} uncited displays unnumbered across {len(files)} input files',
+                  file=sys.stderr)
+            for report in reports:
+                print(f'warning: {report}', file=sys.stderr)
+        return status
+    status, totals, failed = 0, [0, 0, 0], 0
+    for path in paths:
+        try:
+            differs, style, checks = lint_file(path, args)
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            print(f'{path}: error: {error}', file=sys.stderr)
+            status, failed = 2, failed + 1
+            continue
+        counts = [int(differs), len(style), len(checks)]
+        totals = [a + b for a, b in zip(totals, counts)]
+        if args.summary:
+            label = 'clean' if not any(counts) else (
+                f'{"format, " if differs else ""}{len(style)} style, {len(checks)} chktex')
+            print(f'{label:32} {path}')
+        if any(counts) and (not args.summary or args.changed):
+            status = max(status, 1)  # lint-all only reports; lint-changed is a gate
+    if args.summary:
+        print(f'\n{len(paths)} documents: {totals[0]} need formatting, {totals[1]} style and '
+              f'{totals[2]} ChkTeX findings' + (f', {failed} could not be linted' if failed else ''))
+    return status
+
+
+if __name__ == '__main__':
+    sys.exit(main())

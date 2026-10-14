@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+"""Compile one TeX document into build/<path>/; see scripts/tex-lint.md.
+
+Usage: TEX=path/to/file.tex build-tex [--clean | --publish | --view | --watch]
+"""
+import hashlib
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+LATEXMK = ['latexmk', '-pdf', '-interaction=nonstopmode', '-halt-on-error', '-file-line-error']
+MODES = {'--clean', '--publish', '--view', '--watch'}
+
+
+def output_dir(source):
+    """build/<path without .tex>/, or build/external/<hash>/<stem>/ outside the repo."""
+    try:
+        key = source.relative_to(ROOT).with_suffix('')
+    except ValueError:
+        key = Path('external') / hashlib.sha256(str(source).encode()).hexdigest()[:16] / source.stem
+    return ROOT / 'build' / key
+
+
+def compile_pdf(source, output, extra=()):
+    # TeX writes a separate .aux for each \include and does not create its parent.
+    text = re.sub(r'(?m)(?<!\\)%.*$', '', source.read_text(encoding='utf-8'))
+    for name in re.findall(r'\\include\s*\{([^{}]+)\}', text):
+        relative = Path(name)
+        if relative.is_absolute() or '..' in relative.parts:
+            raise ValueError(f'Include path must stay within the source directory: {name}')
+        (output / relative.parent).mkdir(parents=True, exist_ok=True)
+    result = subprocess.run(LATEXMK + list(extra) + ['-outdir=' + str(output), source.name],
+                            cwd=source.parent)
+    return result.returncode
+
+
+def problems(log):
+    """Overfull boxes, undefined references and LaTeX warnings left in the final log."""
+    if not log.exists():
+        return []
+    keys = ('Overfull', 'undefined', 'LaTeX Warning:')
+    return [line for line in log.read_text(errors='replace').splitlines() if any(k in line for k in keys)]
+
+
+def main(argv):
+    mode = argv[0] if argv else None
+    if len(argv) > 1 or (mode and mode not in MODES):
+        print(__doc__.strip(), file=sys.stderr)
+        return 2
+    source = Path(os.environ['TEX']).resolve()
+    if source.suffix != '.tex' or not source.is_file():
+        print(f'Not a TeX file: {source}', file=sys.stderr)
+        return 2
+    output = output_dir(source)
+    output.mkdir(parents=True, exist_ok=True)
+    pdf = output / (source.stem + '.pdf')
+
+    if mode == '--clean':
+        return subprocess.run(['latexmk', '-c', '-outdir=' + str(output), source.name],
+                              cwd=source.parent).returncode
+    if mode == '--watch':
+        # -pvc keeps recompiling on save; the viewer is left to the user.
+        return compile_pdf(source, output, ['-pvc', '-view=none'])
+    if mode == '--view':
+        if not pdf.exists() and compile_pdf(source, output):
+            return 1
+        subprocess.Popen(['xdg-open', str(pdf)], stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL, start_new_session=True)
+        print(f'Opened {pdf}')
+        return 0
+
+    status = compile_pdf(source, output)
+    if status:
+        return status
+    found = problems(output / (source.stem + '.log'))
+    for line in found:
+        print(f'warning: {line}', file=sys.stderr)
+    print(f'PDF: {pdf}' + (f' ({len(found)} log warnings)' if found else ''))
+    if mode == '--publish':
+        target = source.with_suffix('.pdf')
+        shutil.copy2(pdf, target)
+        print(f'Copied to {target}')
+    return 0
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except (OSError, KeyError, ValueError) as error:
+        print(f'Build error: {error}', file=sys.stderr)
+        sys.exit(2)

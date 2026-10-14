@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Install only latexindent's missing Perl runtime modules, locally to this repo.
+set -euo pipefail
+repo_dir=$(cd -- "$(dirname -- "$0")/.." && pwd)
+install_dir=$(mktemp -d)
+trap 'rm -rf -- "$install_dir"' EXIT
+curl -fsSL --max-time 60 https://cpanmin.us/ -o "$install_dir/cpanm"
+PERL_CPANM_HOME="$install_dir/cache" perl "$install_dir/cpanm" \
+  --local-lib-contained "$repo_dir/.tools/perl5" \
+  --mirror https://cpan.metacpan.org --mirror-only --notest \
+  YAML::Tiny@1.76 File::Which@1.27 File::HomeDir@1.006
+PERL5LIB="$repo_dir/.tools/perl5/lib/perl5${PERL5LIB:+:$PERL5LIB}" latexindent --version

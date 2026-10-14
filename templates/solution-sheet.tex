@@ -1,0 +1,61 @@
+\documentclass[11pt]{amsart}
+
+% Solution sheet: copy to solutions/<ID>.tex and fill in. It records one
+% resolution precisely; it is not a paper. Keep it as short as the proof
+% allows, in the asker's notation. Build with: make pdf TEX=solutions/<ID>.tex
+
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[english]{babel}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage[msc-links]{amsrefs}
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\newcommand*{\dd}{\mathop{}\!\mathrm{d}}
+
+\begin{document}
+\title{Solution: PROBLEM-ID (Sketch)}
+\date{\today}
+\maketitle
+
+\begin{problem}[{Authors~\cite{SRC}*{Problem~N}}]
+The problem exactly as posed, with the notation defined.
+\end{problem}
+
+\begin{theorem}
+The answer.
+\end{theorem}
+
+\begin{proof}
+The complete argument. Cite every external result with its exact number.
+\end{proof}
+
+\begin{remark}
+Optional: what is conditional (for example on an unrefereed preprint), what
+remains open, and prior partial results.
+\end{remark}
+
+\begin{bibdiv}
+\begin{biblist}
+\bib{SRC}{article}{
+  author={Author, A.},
+  title={Title},
+  eprint={arXiv:0000.00000},
+  date={2026},
+}
+\end{biblist}
+\end{bibdiv}
+
+\end{document}
