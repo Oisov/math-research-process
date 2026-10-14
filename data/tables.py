@@ -10,6 +10,9 @@ Columns:
   grade (six chosen at the time, a seventh added on 14 October)
 - significance_reread: H | M | L, a blind re-read of each record by a fresh
   agent that did not see the first grades and did not search the literature
+- significance_deep: H | M | L, for 16 boundary records only (graded high by
+  either grading, plus six upper-medium answers): an agent pass that searched
+  the literature for the standing of each question
 - result_kind: L = literature assembly, R = routine argument, C = construction
   or certificate, S = substantial argument
 - initial_difficulty: the first score each record received, before the
@@ -63,3 +66,7 @@ pa = collections.Counter(r['significance'] for r in ours)
 pb = collections.Counter(r['significance_reread'] for r in ours)
 pe = sum(pa[g] * pb[g] for g in 'HML') / n ** 2
 print(f'\nre-read agreement {agree}/{n} ({100*agree/n:.0f}%), Cohen kappa {(agree/n - pe)/(1 - pe):.2f}')
+
+deep = [r for r in ours if r['significance_deep']]
+table('Deep pass (16 boundary records): first grade by deep grade', lambda r: r['significance'], lambda r: r['significance_deep'], deep, ['H', 'M', 'L'], ['H', 'M', 'L'])
+table('Deep pass: re-read by deep grade', lambda r: r['significance_reread'], lambda r: r['significance_deep'], deep, ['H', 'M', 'L'], ['H', 'M', 'L'])
