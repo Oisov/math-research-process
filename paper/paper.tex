@@ -37,15 +37,15 @@ honestly if three acts are kept apart. Finding a result is now cheap, and
 agents do most of it. Sharing a result can be done without claiming it: saying
 what is known and how much stands behind it, and leaving anyone free to develop
 it. Vouching for a result, standing behind it as correct, new and worth
-reading, requires understanding the field the result belongs to, not only its
-proof. Agents shorten the path to understanding a proof; they do not shorten
-the path to understanding a field. The evidence is a workflow used in October
-2026, described as it was used, with the failures that changed it. The agents
-collected 373 problems, found that 64 had already been answered by others, and
-produced answers to 141 more. Most are easy in hindsight, seven we judged
-significant, and the hardest problems did not move. A blind audit of 20 answers
-found no mathematical errors and two that answer less than was asked. We also
-record where the project fell short of its own position.
+reading, requires understanding the field it belongs to. Agents make it
+possible to find and understand a proof before acquiring that broader
+expertise. The evidence is a workflow used in October 2026, described as it was
+used, with the failures that changed it. The agents collected 373 problems,
+found that 64 had already been answered by others, and produced answers to 141
+more. Most are easy in hindsight, seven we judged significant, and the hardest
+problems did not move. A blind audit of 20 answers found no mathematical errors
+and two that answer less than was asked. We also record where the project fell
+short of its own position.
 \end{abstract}
 
 \maketitle
@@ -153,22 +153,43 @@ its assumptions, say what it extends and whether it is new, and defend its
 scope. A practical test is Tao's: whether one could give a clear, expert-level
 talk on the result and answer the audience's questions~\cite{tao-age}. This is
 a requirement of understanding, not of credentials, and it can be acquired
-through the work. But most of it is understanding of the field rather than of
-the proof. Studying one fish closely for a few weeks can teach everything about
-the fish and nothing about its place in the ocean. The agents made the proofs
-quick to understand. They did not make the field quick to understand: knowing
-which results a new one extends, what it implies and why it matters to the
-people working nearby takes years of reading, and a master's degree supplies
-the vocabulary, not the map.
+through the work.
 
-The author could therefore not vouch for most of the results in this paper. He
-read every proof, but for most of them he had not developed enough command of
-the surrounding literature and methods to take responsibility for a research
-paper, and doing so would take months for each corner of the field. He shared
-them with an account of how they were checked and left them for specialists to
-develop. For the outer-extremals theorem the division was visible: the author
-understood the proof, and the specialist who checked it supplied the knowledge
-of the field, which is why the right form was a joint paper.
+Most of that understanding concerns the field rather than the proof. A few
+weeks with one fish teaches a lot about the fish and a little about the ocean.
+Agents speed up both kinds of understanding, but unevenly, and the time needed
+to produce a result has fallen much faster than the time needed to become its
+responsible author.
+\begin{center}
+  \small
+  \begin{tabular}{p{0.24\textwidth}p{0.33\textwidth}p{0.33\textwidth}}
+    \toprule
+    Task                                    & What agents change                                        & What is still needed                                        \\
+    \midrule
+    Find and understand a particular proof  & Greatly shorten the search and the explanation            & Checking the argument and its assumptions                   \\
+    Develop command of its research context & Help locate literature, connections and failed approaches & Judgement about novelty, scope and significance             \\
+    Take responsibility for a paper         & Help prepare and scrutinise it                            & That command, acquired oneself or brought by a collaborator \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+Hence a warning. Having understood a proof, or even having found it, is not the
+same as understanding the field it belongs to. Before a result is published,
+someone has to take the time to understand its importance, how it should be
+formulated and framed, and what it means to the people who work nearby: the
+person who found it, through further study, or a specialist who works with
+them. A result produced in two days and published as a paper without that
+understanding is exactly what the declaration complains of.
+
+Agents brought many of the results in this paper within reach before the author
+had acquired command of their research context. He read every proof, but for
+most of them he had not developed enough command of the surrounding literature
+and methods to take responsibility for a research paper. He could acquire that
+understanding through further study, or collaborate with a specialist who
+brings it. In this project he generally chose collaboration, or openly sharing
+the checked material, rather than treating quick access to a proof as
+sufficient preparation to publish it himself. For the outer-extremals theorem
+the division of work was visible: the author understood the proof, and the
+specialist who checked it supplied the knowledge of the field.
 
 \subsection*{Sharing without claiming}
 The results can still be shared. Robert Merton described the findings of
@@ -1019,11 +1040,11 @@ formalization: Hardy spaces, Schatten classes and Dirichlet series in
 infinitely many variables are far from current formal libraries, so apart from
 two Lean formalizations, and a third of the finite-dimensional core of one
 proof, our results rest on agent referees, certificates in exact arithmetic,
-and the people who asked the questions. And the director was not a specialist.
-The OEIS study was also run by one researcher; what differs here is that the
-author had no command of any problem in the database before the work, which is
-closer to how a graduate student or a mathematician from a neighbouring field
-would use these tools.
+and the people who asked the questions. And the director had no research
+expertise in the area. The OEIS study was also run by one researcher; what
+differs here is that the author had no command of any problem in the database
+before the work, which is closer to how a graduate student or a mathematician
+from a neighbouring field would use these tools.
 
 \sectionbreak
 \section{Limits}\label{sec:limits}
@@ -1080,22 +1101,23 @@ asker; several groups have been contacted.
 
 \subsection*{Three ways to hand over a result}
 A result found this way can reach the literature in three ways, and which one
-fits depends on the person directing the work. A specialist who has checked a
-result with colleagues can publish it under their own name, with a disclosure
-of how it was found. A non-specialist can write it up with an expert who checks
-it and takes responsibility for the mathematics; coauthorship is then partly a
-courtesy the expert extends, since the expert carries the judgement that the
-result is correct and that it matters. Or the results can be shown to the
-people who asked the questions, with no claim of ownership beyond an
+fits depends on the person directing the work. Someone with expertise in the
+result's field who has checked it with colleagues can publish it under their
+own name, with a disclosure of how it was found. Someone who has not yet
+acquired that expertise can write it up with a specialist, each supplying what
+the paper needs: one the result and its proof, the other the judgement of
+whether it is correct, new and worth reading. Or the results can be shown to
+the people who asked the questions, with no claim of ownership beyond an
 acknowledgement, leaving them free to use the results in their own work. All
-three are reasonable. The author is not a specialist, so the first was not open
-to him. For the outer-extremals result the second happened: one of the askers,
-the author's former master's supervisor, proposed writing it up together. For
-other results the askers thanked us for the notes without proposing a
-collaboration, which is the third. The choice belongs to the expert, and the
-workflow should make each route easy: a self-contained solution sheet in the
-asker's notation, an honest account of how it was checked, and no expectation
-attached.
+three are reasonable. The author had not acquired enough expertise in most of
+these problems to take sole responsibility for their publication, so the first
+was not open to him. For the outer-extremals result the second happened: one of
+the askers, the author's former master's supervisor, proposed writing it up
+together. For other results the askers thanked us for the notes without
+proposing a collaboration, which is the third. The choice belongs to the
+expert, and the workflow should make each route easy: a self-contained solution
+sheet in the asker's notation, an honest account of how it was checked, and no
+expectation attached.
 
 The next stage of this work is that review. The people who asked the questions
 will decide which answers are correct, which are new, and which matter, and

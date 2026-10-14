@@ -91,14 +91,21 @@ questions. (After Bloom's change to the Erdős problems site, 6 October 2026.)
 Which route fits depends on the user's standing in the field, and the user
 decides. Do not push for one.
 
-1. **Publish it yourself.** For a user who is a specialist and has checked the
-   result with colleagues. Add a disclosure of how it was found.
-2. **Write it up with an expert.** For a non-specialist whose result an expert
-   has checked and wants to develop. Coauthorship is then partly a courtesy
-   the expert extends; the expert carries the judgement that the result is
-   correct and that it matters.
+1. **Publish it yourself.** For a user with expertise in the result's field
+   who has checked it with colleagues. Add a disclosure of how it was found.
+2. **Write it up with an expert.** For a user who has not yet acquired
+   expertise in the result's field, with a specialist who has checked the
+   result and wants to develop it. Each supplies what the paper needs: the
+   result and its proof, and the judgement of whether it is correct, new and
+   worth reading.
 3. **Show it to the askers and claim nothing.** Send the solution sheet,
    leave them free to use it, and expect at most an acknowledgement.
+
+Having found or understood a proof is not the same as understanding its
+field. Before route 1, the user takes the time to understand the result's
+importance, formulation and framing, and what it means to the people who work
+nearby; a fast result is not readiness to publish. Without that, use route 2
+or 3.
 
 All three are reasonable. Prepare every external result so that any of them
 is easy: a self-contained sheet in the asker's notation, an honest account of
