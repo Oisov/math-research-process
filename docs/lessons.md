@@ -168,8 +168,8 @@ per campaign was the only reliable recovery.
 
 jj recorded 2,409 operations and 1,007 commits. Of the operations, 1,944
 fall on 12–13 October, after the rule "update the record in the same commit
-as the work" came in. The directed work of 3–11 October, which produced four
-of the six significant results, left only 136 operations. Its results can
+as the work" came in. The directed work of 3–11 October, which produced five
+of the seven significant results, left only 136 operations. Its results can
 be dated only by when their write-ups first appeared. Everything quantitative
 in our report comes from the fine-grained part of the history:
 - when each problem was settled;

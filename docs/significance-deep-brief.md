@@ -4,7 +4,7 @@ You assess how significant our answer to each of four open problems is, as a
 specialist in the field would judge it. A quick blind grading has already been
 done from the records alone. This pass must use the literature.
 
-Repository: /home/oisov/git/github.com/nehari-thesis (read-only for you).
+Repository: the research repository (read-only for you).
 Each record is at research/problems/<theme>/<ID>.md; find it with
 `ls research/problems/*/<ID>.md`. Its `ours.artifacts` lists the solution
 sheets (.tex). Its `source` names the paper that posed the question.

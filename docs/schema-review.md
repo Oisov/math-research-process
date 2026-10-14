@@ -66,7 +66,7 @@ alone.
 - **`source.form`**: whether the source poses the question as a conjecture,
   a numbered problem or question, an informal remark, or as our own derived
   question. We had to recover it from the location strings afterwards. It
-  turned out to predict which answers mattered: all six significant results
+  turned out to predict which answers mattered: all seven significant results
   answer a formally posed question.
 - **`source.quote`**: the question verbatim. The rework of the public volume
   found altered quotations; a quote is cheaper to check than a page number.

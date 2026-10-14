@@ -11,7 +11,7 @@ in [lessons.md](lessons.md).
   reading the papers before they went out, and doing all contact with other
   mathematicians.
 - **Claude Code** (Opus 5.5 as the main session; Sonnet and Haiku for cheap
-  subagents) and **Codex** (GPT-5.6 Luna and Sol, GPT-6 Astra, later 6.1 Sol)
+  subagents) and **Codex** (GPT-5.6 Luna and Sol, then mainly GPT-6 Luna, GPT-6 Astra and GPT-6.1 Sol)
   running in the same repository, often at the same time on disjoint folders.
   I relayed between them; neither could message the other.
 - A single private repository under Jujutsu (`jj`), LaTeX built through a

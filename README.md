@@ -1,9 +1,11 @@
 # Harvesting and attacking open problems with AI agents
 
-For about six weeks in autumn 2026 I worked through the open problems of one
+In October 2026 I spent twelve days working through the open problems of one
 research area with Claude Code and Codex agents: Hardy, Bergman and
 Dirichlet-series spaces, Hankel and Helson operators, and Nehari-type
-theorems. I have a master's degree in the area and directed the work.
+theorems. Before that I spent about six weeks writing a monograph on the area
+with the same agents. I have a master's degree in the area and directed the
+work.
 
 This repository records how we did it, what worked and what did not. The
 [`AGENTS.md`](AGENTS.md) file turns the recommended version into instructions
