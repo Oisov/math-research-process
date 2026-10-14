@@ -751,8 +751,9 @@ by when their write-ups first appeared. Everything quantitative in this report
 (when problems were settled, how difficulty scores moved, which record fields
 were used) comes from the fine-grained part of the history. Jujutsu's automatic
 snapshots meant that no edit by an agent was ever lost, and cheap small commits
-kept changes per record. We recommend committing per problem from the first
-day, with any version control system.
+kept changes per record. Our playbooks therefore default to Jujutsu with a git
+backend, so that git-based hosting keeps working, and require a commit per
+problem from the first day.
 
 \emph{Failed attempts sprawled.} The rule that TeX files hold results only,
 with failures recorded in one line of the problem record, was adopted but not

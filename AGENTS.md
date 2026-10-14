@@ -101,10 +101,18 @@ on, and do not present it as doing so.
 
 ## Version control and files
 
-- Use version control as the research log. Commit each record together with
-  the work it describes, one problem or task per commit, with a message that
-  says what changed. jj is recommended: it snapshots automatically and makes
-  small commits cheap. With git, commit just as often.
+- **Default to Jujutsu with a git backend.** In a new workspace run
+  `jj git init --colocate` (in an existing git repository, run it in place),
+  and use `jj` for every version-control operation. The colocated `.git`
+  keeps the repository usable by git-based tools and hosts such as GitHub,
+  but agents never run `git` themselves.
+- Jujutsu snapshots the working copy automatically and records every
+  operation (`jj op log`), so no agent edit is lost and progress can be
+  reconstructed later.
+- Use it as the research log: commit each record together with the work it
+  describes, one problem or task per commit, with a message that says what
+  changed (`jj commit <paths> -m "…"`).
+- Use git directly only if the user asks for it.
 - Write at most one notes file per problem, `notes/<ID>.md`, and append dated
   sections to it. Do not create a new file per attempt, per agent or per idea.
 - Scratch work belongs in the session scratchpad, outside the repository:

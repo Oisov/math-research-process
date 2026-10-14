@@ -55,6 +55,17 @@ authors who asked the question.
 sheet and one agent referee pass. [Lessons: review](docs/lessons.md#review-is-the-weakest-link)
 says what that is worth.
 
+## Getting started
+
+```sh
+git clone <this repository> process   # or download it
+mkdir my-field && cd my-field
+jj git init --colocate                # Jujutsu with a git backend: the default
+cp -r ../process/{AGENTS.md,Makefile,scripts,tools,templates,playbooks} .
+```
+
+Then ask your agent to read `AGENTS.md` and start the harvest.
+
 ## Contents
 
 | File | What it is |

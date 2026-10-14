@@ -49,10 +49,12 @@ The short version, in priority order. Each point comes from
 
 ## Files and history
 
-24. **Use version control as the research log from day one.** Commit each
-    problem's record together with the work it describes, with a message
-    that says what changed. jj is a good fit: it snapshots automatically and
-    makes small commits cheap. Our early work, done without this, cannot be
+24. **Use Jujutsu with a git backend, and use it as the research log from
+    day one** (`jj git init --colocate`). It snapshots every agent edit
+    automatically, records every operation, and makes small per-record
+    commits cheap, while the git backend keeps GitHub and other tools
+    working. Commit each problem's record together with the work it
+    describes. Our early work, done without this discipline, cannot be
     dated.
 25. **One notes file per problem**, `notes/<ID>.md`, with dated sections
     that later sessions append to. Failed routes get one line in the record.
