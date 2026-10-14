@@ -72,6 +72,17 @@ cartography, not in climbing:
         the agents produced reformulations, special cases and catalogues of
         obstructions, not proofs.
 \end{itemize}
+These numbers need to be read with care. We did not solve 141 problems in the
+sense a mathematician would mean. The database mixes interesting questions from
+the field, questions at its research frontier, and questions we derived
+ourselves; many of the answers are to the last kind, or to questions that
+turned out to be easy once someone looked. Of almost 400 problems, about six of
+real significance were solved. What the agents added beyond that is partial:
+special cases and correct orders of growth for 142 problems, reductions of some
+25 problems to three common hard cores, and written records of why each
+attempted route failed. These are new insights into the problems, not solutions
+of them.
+
 Breadth explains the counts. Throw a hundred balls at a hundred baskets and
 some go in; that is useful, and different from getting better at the shot that
 matters. Tao's description of current tools as ``artificial general
@@ -137,11 +148,17 @@ Moving from a single catalogue file to one file per problem let several agents
 and two different tools edit the database at once.
 
 \subsection*{How difficulty was scored}
-Each problem received an impact score and a difficulty score from 1 to 5. On 12
-October three Claude Opus 5.5 subagents scored the database, each taking a
-group of themes, under a common brief. The brief defined difficulty as ``effort
-for us with current tools'', to be scored against a fixed rubric with an anchor
-problem at each level so that the numbers meant the same across agents:
+Each problem received a difficulty score from 1 to 5, in two rounds. On 10 and
+11 October, 194 problems from the first catalogue were assessed by cheap Codex
+agents (GPT-6 Luna), each with about ten minutes: a literature check, a short
+attempt, and a ``speculative difficulty score and confidence'' on the scale 1 =
+routine deduction or literature reconciliation, 2 = focused tractable project,
+3 = substantial specialist project, 4 = probably requires a major new idea, 5 =
+longstanding frontier problem. Their brief warned that ``a ten-minute failure
+to prove a statement is not evidence for a high score''. On 12 October three
+Claude Opus 5.5s scored the whole database, each taking a group of themes,
+under a common brief that defined difficulty as ``effort for us with current
+tools'' and fixed an anchor problem at each level:
 \begin{center}
   \begin{tabular}{cl}
     \toprule
@@ -157,12 +174,19 @@ problem at each level so that the numbers meant the same across agents:
 \end{center}
 Each score came with a one-line justification. The agents read each record's
 statement, literature status and evidence, and the source where the statement
-was unclear; resolved problems were scored as originally posed. These scores
-replaced rougher ``tractability'' guesses made by cheaper models during an
-earlier triage. Over all 373 problems the initial scores were distributed as
-37, 48, 110, 145 and 33 for difficulty 1 to 5. Later attempts led the agents to
-re-score some problems, mostly upwards; we use the initial scores throughout,
-because the re-scored ones record failure rather than predict it.
+was unclear; resolved problems were scored as originally posed. For the 189
+problems that already had a score from the first round, the Opus agents kept it
+unchanged; they scored the rest from scratch. Over all 373 problems the initial
+scores were distributed as 37, 48, 110, 145 and 33 for difficulty 1 to 5. The
+scores moved during the work. After the scoring pass, 145 of the 168 problems
+that remained unsettled were re-rated, almost always upwards (127 by one level
+and 23 by two), as attempts failed; following the protocol, a problem that
+resisted its sessions was moved up. Of the 141 problems our agents settled, 38
+were re-rated, mostly downwards. The final scores therefore record the outcome
+rather than predict it, and we use the initial scores of 12 October throughout.
+Even these are not blind: they were assigned after the directed work of 3 to 11
+October, so for problems attempted then the score already reflects that
+attempt.
 
 \section{The workflow}\label{sec:workflow}
 
@@ -343,6 +367,115 @@ The six high-significance results are:
 \end{itemize}
 Each has been sent to the people who asked the question, or is being prepared
 for them. None is yet on arXiv.
+
+\section{Six discoveries, in the agents' words}\label{sec:discoveries}
+
+The session logs record what each agent wrote when it reported a result. We
+quote them verbatim, with model and time (UTC); trims are marked [\dots] and
+our insertions are in square brackets. \Cref{tab:timeline} gives the order.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    Result                      & First reported & Found by            & Sign       \\
+    \midrule
+    Outer extremals             & 8 Oct, 13:56   & Claude Opus 5.5     & proof      \\
+    At most one zero            & 8 Oct, 20:49   & GPT-6 Luna (Codex)  & proof      \\
+    Approximant zeros           & 10 Oct, 21:46  & GPT-6.1 Sol; Claude & counterex. \\
+    Bernstein--Nikolskii limits & 11 Oct, 19:13  & Claude Opus 5.5     & proof      \\
+    $H^1$ partial sums          & 12 Oct, 22:21  & GPT-6.1 Sol (Codex) & proof      \\
+    Positive Nehari             & 12 Oct, 22:44  & GPT-6 Astra         & counterex. \\
+    \bottomrule
+  \end{tabular}
+  \caption{When the six high-significance results were first reported. Each was later checked by at least one other agent; the first two are also Lean-verified.}\label{tab:timeline}
+\end{table}
+
+\subsection*{Outer extremals}
+The first claim came after the director told the agent that its numerical
+sweeps did not get closer to a proof:
+\begin{quote}
+  I believe I've proved [the nonvanishing conjecture of Brevig and Saksman]: for $0<p<1$, every extremal for $C(k,p)$ has no zeros in the disc. [\dots] Only I have checked the proof, plus numerics at $k=2$; no one else has.
+  \hfill---Claude Opus 5.5, 8 October, 13:56
+\end{quote}
+Two hours later a subagent extended it from one coefficient to every bounded
+linear functional, including singular inner factors. The next evening a Codex
+agent estimated that a Lean formalization would take ``months, potentially
+longer''; it was finished overnight:
+\begin{quote}
+  Done---the full theorem is now Lean-verified: every extremal for a nonzero bounded complex-linear functional on $H^p$, for every real $0<p<1$, is outer.
+  \hfill---GPT-6.1 Sol, 10 October, 00:54
+\end{quote}
+
+\subsection*{At most one zero}
+A Codex subagent found the key step; the deciding idea was to fix one
+perturbation phase rather than average over phases:
+\begin{quote}
+  The full real-direction Hessian yields a direct contradiction for any extremal with at least two zeros. [\dots] I checked the projections, the cancellation of the [\dots] terms, and admissibility of the perturbation. I found no gap in the argument.
+  \hfill---GPT-6 Luna, 8 October, 20:49
+\end{quote}
+The idea was relayed to the Claude session within minutes, which then reported
+that it had ``reached the same conclusion independently''. We cannot verify
+that claim, and we credit the Codex subagent.
+
+\subsection*{Zeros of optimal polynomial approximants}
+This story took one evening. At 21:58 the director asked how close the agents
+were to the full result:
+\begin{quote}
+  We're not close to the full result if that means interior zeros for every $p\neq2$. What we have is solid for $p$ close to 1, and nothing yet for $p$ near 2 or above it.
+  \hfill---Claude Opus 5.5, 10 October, 21:58
+\end{quote}
+Twenty-seven minutes later a subagent reported ``there is no obstruction'', and
+the main session wrote:
+\begin{quote}
+  Outer targets now work for $p>2$ as well. Agent A found the construction, and I checked it independently. So for every $p\neq2$ there is an outer target (even a polynomial one) whose degree-one OPA has a zero in $\mathbb D$.
+  \hfill---Claude Opus 5.5, 10 October, 22:25
+\end{quote}
+
+\subsection*{Bernstein--Nikolskii limits}
+\begin{quote}
+  [The finite-$q$ problem] is proved: for every $s\geq0$ and $0<p<q<\infty$, $\lim A^{(s)}_{p,q,n}=D^{(s)}_{p,q}$, and the real version holds too. I checked the proof step by step; it has not been refereed.
+  \hfill---Claude Opus 5.5, 11 October, 19:13
+\end{quote}
+A second subagent then checked priority and found the problem still listed as
+open in a survey from two weeks earlier.
+
+\subsection*{\texorpdfstring{$H^1$}{H1} partial sums}
+\begin{quote}
+  The draft now proves a lower bound of order $\log N/\log\log N$ for every sufficiently large $N$, matching the published upper bound. The key step is turning product entropy into the missing $L^1$ output bound [\dots] subject to independent review.
+  \hfill---GPT-6.1 Sol, 12 October, 22:21
+\end{quote}
+A Claude referee later judged it ``a genuine full-order answer to the $p=1$
+case of [an open problem of] Saksman--Seip''~\cite{saksman-seip}*{Problem~4.5}.
+
+\subsection*{Positive Nehari}
+The same agent declined to count a numerical candidate before it had a
+certificate, and four minutes later had one:
+\begin{quote}
+  I'm not counting the new [\dots] numerical candidate as a breakthrough---it still needs a rigorous certificate.
+  \hfill---GPT-6 Astra, 12 October, 22:40
+\end{quote}
+\begin{quote}
+  [The record] now has a rigorous counterexample certificate. For an explicit measure on two points in the real three-dimensional cube, the certified scalar norm exceeds the full Hilbert embedding norm. [\dots] This is a proved candidate awaiting independent review, rather than an `almost proved' lead.
+  \hfill---GPT-6 Astra, 12 October, 22:44
+\end{quote}
+A Claude referee reran the certificate the next morning and found it ``correct,
+no fixes''.
+
+\subsection*{The agents on their own work}
+The same logs show the agents assessing their limits frankly once challenged:
+\begin{quote}
+  I did a bounded first pass, not an all-out attempt. [\dots] I tested one route per open problem, often a relatively elementary construction, and usually stopped when it failed. [\dots] 14 failed routes do not demonstrate that I seriously exhausted the mathematical possibilities.
+  \hfill---GPT-6 Astra, 13 October
+\end{quote}
+\begin{quote}
+  Against the original questions: 0 of these 4 fully solved. I made substantive partial progress, but selected easier subproblems instead of problems I could plausibly finish.
+  \hfill---GPT-6 Astra, 13 October
+\end{quote}
+\begin{quote}
+  When everything you try collapses onto the same estimate, it usually means the problem needs a new idea, not more effort.
+  \hfill---Claude Opus 5.5, 13 October
+\end{quote}
 
 \section{What the agents did not settle}\label{sec:unsettled}
 
@@ -709,6 +842,14 @@ repository.
   journal={Quanta Magazine},
   date={2026},
   note={\url{https://www.quantamagazine.org/the-ai-revolution-in-math-has-arrived-20260413/}},
+}
+
+\bib{saksman-seip}{article}{
+  author={Saksman, E.},
+  author={Seip, K.},
+  title={Some open questions in analysis for Dirichlet series},
+  eprint={arXiv:1601.01616},
+  date={2016},
 }
 
 \bib{tao-age}{article}{
