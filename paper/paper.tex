@@ -16,72 +16,76 @@
 \begin{document}
 
 \title[Mapping a research area with AI agents]{A map of the range, not a way
-  up the wall: six weeks of AI agents on 373 open problems in analysis}
+  up the wall: AI agents on 373 open problems in analysis}
 \author{Øistein Søvik}
 \date{\today}
 
 \begin{abstract}
-For six weeks, one mathematician with a master's degree directed AI coding
-agents at every open problem that could be found in one area of analysis:
-Hardy, Bergman and Dirichlet-series spaces, Hankel and Helson operators, and
-Nehari-type theorems. The agents collected 373 problems, found that 64 of them
-had already been settled by others, and produced answers to 141 more. We
-classify these answers by how they were obtained and by how much they matter.
-Most are easy in hindsight: short arguments from known tools, results assembled
-from the literature, or counterexamples that are easy to check once found. Six
-are, in our judgement, of real significance. On the hardest problems, days of
-work by several agents produced maps of what fails, not proofs. We conclude
-that current agents are very good at mapping a field and clearing its long
-tail, and that a hard problem stays hard. All results of ours are sketches
-until they appear on arXiv or in a journal; this is a living document, updated
-as the people who asked the questions respond.
+In October 2026 we directed AI coding agents at every open problem we could
+find in one area of analysis: Hardy, Bergman and Dirichlet-series spaces,
+Hankel and Helson operators, and Nehari-type theorems. After a week of directed
+work on single problems, most of the campaign took two days. The agents
+collected 373 problems, found that 64 of them had already been settled by
+others, and produced answers to 141 more. We classify these answers by how they
+were obtained and by how much they matter. Most are easy in hindsight: short
+arguments from known tools, results assembled from the literature, or
+counterexamples that are easy to check once found. Six are, in our judgement,
+of real significance. On the hardest problems, days of work by several agents
+produced maps of what fails rather than proofs. Unlike most comparable reports,
+the work was directed by one person with a master's degree rather than by a
+team of specialists. Our conclusion is that a non-specialist can now map a
+research area, clear its long tail and find questions worth working on, but
+that it still takes an expert to judge which results matter, and a hard problem
+stays hard. All results of ours are sketches until they appear on arXiv or in a
+journal; this is a living document, updated as the people who asked the
+questions respond.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
 
-Terence Tao has described research mathematics as a range of mountains:
+Terence Tao has compared research mathematics to a mountain range, and current
+AI tools to small jumping robots:
 \begin{quote}
-  Tao gave the analogy of mathematicians trying to climb ``a big mountain
-  range with lots of tall mountains and lots of foothills''. Humans can only
-  climb one step at a time, but they can plan a route to the top of a
-  mountain like Everest. Meanwhile, Tao said, current AIs are like jumping
-  robots. They can sometimes ``parkour their way to the top of a 6-foot
-  wall'' that a human couldn't climb. But they can't do long-term strategic
-  planning. Those 6 feet might become 10 feet, or 100, Tao imagines, but
-  ``the little jumping robots are nowhere near the Mount Everests of
-  math''~\cite{quanta}.
+  [\dots] a big mountain range with lots of tall mountains and lots of
+  foothills [\dots] parkour their way to the top of a 6-foot wall [\dots] the
+  little jumping robots are nowhere near the Mount Everests of math.
+  \hfill---Terence Tao, quoted in~\cite{quanta}
 \end{quote}
 This paper is a field report on what such robots do when pointed at an entire
-range. Over six weeks in autumn 2026 we used Claude Code and Codex agents to
-find, sort and attack every open problem we could locate in one research area.
-The agents found 373 problems in papers, problem lists and monographs. They
-established that 64 were already solved, and they produced answers to 141
-others.
+range. In October 2026 we used Claude Code and Codex agents to find, sort and
+attack every open problem we could locate in one research area. A week of
+directed work on single problems came first; the bulk of the campaign, over the
+whole database, took two days. The agents found 373 problems in papers, problem
+lists and monographs, established that 64 were already solved, and produced
+answers to 141 others.
 
-The answers need careful reading. Our main finding is that the gain was in
-cartography, not in climbing:
-\begin{itemize}
-  \item The agents were very good at mapping a field: finding problems,
-        classifying them, checking the literature, and clearing problems that
-        were easy but had received little attention.
-  \item Most of their answers are low-hanging fruit. Of the 141, we classify
-        6 as significant, 62 as useful, and 73 as minor.
-  \item On problems where experts had made partial progress and stopped,
-        the agents produced reformulations, special cases and catalogues of
-        obstructions, not proofs.
-\end{itemize}
-These numbers need to be read with care. We did not solve 141 problems in the
-sense a mathematician would mean. The database mixes interesting questions from
-the field, questions at its research frontier, and questions we derived
-ourselves; many of the answers are to the last kind, or to questions that
-turned out to be easy once someone looked. Of almost 400 problems, about six of
-real significance were solved. What the agents added beyond that is partial:
-special cases and correct orders of growth for 142 problems, reductions of some
-25 problems to three common hard cores, and written records of why each
-attempted route failed. These are new insights into the problems, not solutions
-of them.
+The answers need careful reading. The agents were very good at mapping the
+field: finding problems, classifying them, checking the literature, and
+clearing problems that were easy but had received little attention. Most of
+their answers are low-hanging fruit; of the 141 we classify 6 as significant,
+62 as useful and 73 as minor. On problems where experts had made partial
+progress and stopped, the agents produced reformulations, special cases and
+catalogues of obstructions rather than proofs. The gain was in cartography, not
+in climbing.
+
+We did not solve 141 problems in the sense a mathematician would mean. The
+database mixes interesting questions from the field, questions at its research
+frontier, and questions we derived ourselves; many of the answers are to the
+last kind, or to questions that turned out to be easy once someone looked. Of
+almost 400 problems, about six of real significance were solved. What the
+agents added beyond that is partial: special cases and correct orders of growth
+for 142 problems, reductions of some 25 problems to three common hard cores,
+and written records of why each attempted route failed. These are new insights
+into the problems rather than solutions of them.
+
+The work was directed by one person with a master's degree in the area, not by
+a team of specialists, and this is the main difference from comparable reports
+(\cref{sec:compare}). It shows that someone outside a research career can now
+explore a field at its frontier. It also shows the limit of that: every result
+that mattered still needed an expert to recognise it, and the askers' judgement
+remains the only real test.
 
 Breadth explains the counts. Throw a hundred balls at a hundred baskets and
 some go in; that is useful, and different from getting better at the shot that
@@ -174,19 +178,14 @@ deleted.
     so the rows do not add up exactly.}\label{tab:funnel}
 \end{table}
 
-Each problem became one Markdown file with validated metadata. The metadata
-records:
-\begin{itemize}
-  \item the theme, the kind (298 stated, 55 implicit, 20 inferences) and the
-        origin (289 asked by others, 84 by us);
-  \item tags, an impact score and a difficulty score;
-  \item a dated literature check with quoted evidence;
-  \item the stage reached in our own work;
-  \item once anyone settled the problem, how far the resolution is trusted:
-        journal, arXiv, or our own.
-\end{itemize}
-Moving from a single catalogue file to one file per problem let several agents
-and two different tools edit the database at once.
+Each problem became one Markdown file with validated metadata: its theme, its
+kind (298 stated, 55 implicit, 20 inferences) and origin (289 asked by others,
+84 by us), tags, impact and difficulty scores, a dated literature check with
+quoted evidence, the stage reached in our own work, and, once anyone settled
+the problem, how far the resolution is trusted. \Cref{app:record} shows a
+complete record and which fields the agents filled at each stage. Moving from a
+single catalogue file to one file per problem let several agents and two
+different tools edit the database at once.
 
 \subsection*{How difficulty was scored}
 Each problem received a difficulty score from 1 to 5, in two rounds. On 10 and
@@ -445,40 +444,29 @@ cross-tabulations.
     significance (bottom).}\label{tab:sign}
 \end{table}
 
-Three things stand out.
-\begin{itemize}
-  \item \emph{Counterexamples are the natural strength.} Thirty-nine of the
-        42 counterexamples are explicit constructions or certificates. Searching
-        a space of candidates and checking each one is exactly what agents do
-        well, and what earlier work on machine-assisted discovery exploited
-        \cites{wagner,funsearch,alphaevolve}.
-  \item \emph{Few proofs are substantial.} Only 17 of the 82 proofs needed
-        a genuinely new argument; the rest are routine or assembled from the
-        literature.
-  \item \emph{The significant results needed direction.} Of the six results
-        we rate high, four are proofs and two are counterexamples. Three of the
-        six came from focused sessions in which the human directed one problem
-        with the asker's question in view, not from the bulk campaign over the
-        database.
-\end{itemize}
+Three things stand out. Counterexamples are the natural strength of the agents:
+39 of the 42 counterexamples are explicit constructions or certificates.
+Searching a space of candidates and checking each one is exactly what agents do
+well, and what earlier work on machine-assisted discovery
+exploited~\cites{wagner,funsearch,alphaevolve}. Few proofs are substantial:
+only 17 of the 82 proofs needed a genuinely new argument, and the rest are
+routine or assembled from the literature. And the significant results needed
+direction. Of the six results we rate high, four are proofs and two are
+counterexamples, and three of the six came from focused sessions in which the
+human directed one problem with the asker's question in view, not from the bulk
+campaign over the database.
 
-The six high-significance results are:
-\begin{itemize}
-  \item that extremal functions for bounded linear functionals on $H^p$,
-        $0<p<1$, are outer, answering a published conjecture in a stronger
-        form, written jointly with the asker;
-  \item a sharp bound on the number of zeros of extremals in a
-        prescribed-coefficient problem;
-  \item the finite-exponent limits of sharp Bernstein--Nikolskii constants;
-  \item the exact order of growth of the $H^1$ norms of partial-sum
-        operators for Dirichlet series;
-  \item a counterexample to a positive-symbol Nehari question, with a
-        computer certificate in outward-rounded arithmetic;
-  \item that optimal polynomial approximants in $H^p$ can vanish in the
-        disc for every $p\neq2$.
-\end{itemize}
-Each has been sent to the people who asked the question, or is being prepared
-for them. None is yet on arXiv.
+The six high-significance results are the following. Extremal functions for
+bounded linear functionals on $H^p$, $0<p<1$, are outer, which answers a
+published conjecture in a stronger form and was written jointly with the asker.
+Extremals in a prescribed-coefficient problem have at most one zero. The sharp
+Bernstein--Nikolskii constants have limits for finite exponents. The $H^1$
+norms of the partial-sum operators for Dirichlet series grow like $\log
+N/\log\log N$. A positive-symbol Nehari question has a negative answer, with a
+computer certificate in outward-rounded arithmetic. And optimal polynomial
+approximants in $H^p$ can vanish in the disc for every $p\neq2$. Each has been
+sent to the people who asked the question, or is being prepared for them. None
+is yet on arXiv.
 
 \subsection{How the question was posed}
 The database mixes questions of very different standing: conjectures, where an
@@ -700,22 +688,17 @@ cases, none of which converges to the general statement.
 \section{Walls}\label{sec:walls}
 
 We attacked several problems on which experts have made partial progress, for
-days and with several agents. Two examples, described without the technical
-details:
-\begin{itemize}
-  \item \emph{An endpoint Schatten-class Nehari problem.} Every route the
-        agents found reduced to one square-function estimate in $L^1$ that is a
-        theorem in its own right. They proved many special cases, wrote down
-        equivalent reformulations, and catalogued exactly where each route
-        failed. They did not find a proof, and the problem was handed back to
-        the person who asked it.
-  \item \emph{A contractive restriction conjecture.} The agents proved the
-        conjecture for two natural families of functions and refuted a stronger
-        statement that would have implied it. The general case did not move.
-\end{itemize}
-In both cases the output was useful as a map. It is not progress on the wall
-itself, and we do not present it as such. The pattern matches Tao's image: some
-walls of six feet were climbed; the Everests were not approached.
+days and with several agents. Two examples show the pattern. The first is an
+endpoint Schatten-class Nehari problem. Every route the agents found reduced to
+one square-function estimate in $L^1$ that is a theorem in its own right. They
+proved many special cases, wrote down equivalent reformulations, and catalogued
+exactly where each route failed, but found no proof, and the problem was handed
+back to the person who asked it. The second is a contractive restriction
+conjecture, for which the agents proved two natural families of cases and
+refuted a stronger statement that would have implied it; the general case did
+not move. In both cases the output was useful as a map. It is not progress on
+the wall itself, and we do not present it as such. The pattern matches Tao's
+image: some walls of six feet were climbed; the Everests were not approached.
 
 \section{Verification and credit}\label{sec:verification}
 
@@ -916,73 +899,67 @@ problem with its asker in view.
 
 The proofs are the smallest part of what the campaign left behind. For a
 mathematician entering one of these problems, the other products are probably
-worth more:
-\begin{itemize}
-  \item \emph{A map of the area}: 373 problems with exact sources, of which
-        308 are published with their sources and evidence status.
-  \item \emph{A literature audit}: 64 problems found already solved, and one
-        recorded resolution that rested on a withdrawn paper.
-  \item \emph{A state of play for every problem}: what is known, the best
-        current route, and the exact open subgoal.
-  \item \emph{Records of failure}: 207 problems carry a list of routes that
-        were tried and the reason each failed. Mathematics has almost no
-        venue for such records, and Tao names ``the publication of negative
-        or partial results'' among the infrastructure the field now
-        needs~\cite{tao-age}.
-  \item \emph{Partial results} for 142 problems: special cases, correct
-        orders of growth, reductions, and counterexamples to stronger
-        statements.
-  \item \emph{Common cores}: about 25 problems reduce to three underlying
-        hard problems, so progress on one would move many.
-\end{itemize}
-These products are unverified in the same sense as the proofs, and the raw
-working files behind them, about 1300 notes, drafts and scripts, are of little
-use to anyone. Their value lies in the curated record of each problem. We would
-release that record per problem, labelled as a sketch, to anyone working on it.
+worth more. The first is a map of the area: 373 problems with exact sources,
+308 of them published with their sources and evidence status. The second is a
+literature audit, which found 64 problems already solved and one recorded
+resolution that rested on a withdrawn paper. The third is a state of play for
+every problem, giving what is known, the best current route and the exact open
+subgoal. The fourth is a record of failure: 207 problems carry a list of the
+routes tried and the reason each failed. Mathematics has almost no venue for
+such records, and Tao names ``the publication of negative or partial results''
+among the infrastructure the field now needs~\cite{tao-age}. The fifth is the
+partial results for 142 problems: special cases, correct orders of growth,
+reductions, and counterexamples to stronger statements. The last is a set of
+common cores: about 25 problems reduce to three underlying hard problems, so
+progress on one would move many. These products are unverified in the same
+sense as the proofs, and the raw working files behind them, about 1300 notes,
+drafts and scripts, are of little use to anyone. Their value lies in the
+curated record of each problem. We would release that record per problem,
+labelled as a sketch, to anyone working on it.
 
 \section{What the literature changed in our process}\label{sec:adopted}
 
 We read the closest studies in full and changed our playbooks where they had
-learned something we had not. The main changes are:
-\begin{itemize}
-  \item \emph{Read the question before answering it.} Copy the source's
-        conventions into the record, check a restatement against known
-        special cases, and treat an easy answer as a sign of misreading:
-        most technically correct answers in the Gemini study were
-        vacuous~\cite{feng}, and AlphaProof's agents proved variants the
-        askers had not meant~\cite{tsoukalas}.
-  \item \emph{Blind, cross-family referees.} The referee first sees only
-        the question and the proof, as in QED, whose verifier accepted 17
-        of 214 candidate proofs and had all 17 confirmed by
-        experts~\cite{qed}; same-family validators overrate their own
-        answers~\cite{uq}. Review is capped at two rounds, after which the
-        problem goes to the human, since revisions converge on errors the
-        reviewer can no longer see~\cite{comathematician}.
-  \item \emph{A word-by-word statement check}, with a list of the ways a
-        proved statement drifts from the posed one~\cites{qed,kallel},
-        and a citation audit that quotes every cited result.
-  \item \emph{Outcome labels and honest reporting}: known, new, fixed
-        statement, or nothing~\cite{far}; claimed answers split into
-        flawed, technically correct and meaningfully
-        correct~\cite{feng}; asymptotic results without explicit
-        thresholds counted as partial~\cite{leduc}.
-  \item \emph{Neutral briefs}: ``prove or disprove'', since an agent told to
-        prove a false statement papers over the gap~\cite{woodruff}; and
-        repeated narrowing to a smaller question without a new idea counts
-        as no progress~\cite{gowersblog}.
-  \item \emph{Human sign-off before release}: the human confirms that the
-        statement matches the question~\cite{kallel}, writes or approves an
-        exposition they understand~\cite{bloomchanges}, could give a talk
-        on it~\cite{tao-age}, and adds a disclosure section~\cite{leiden}.
-\end{itemize}
+learned something we had not. The main changes are the following.
+
+\emph{Read the question before answering it.} Copy the source's conventions
+into the record, check a restatement against known special cases, and treat an
+easy answer as a sign of misreading: most technically correct answers in the
+Gemini study were vacuous~\cite{feng}, and AlphaProof's agents proved variants
+the askers had not meant~\cite{tsoukalas}.
+
+\emph{Blind, cross-family referees.} The referee first sees only the question
+and the proof, as in QED, whose verifier accepted 17 of 214 candidate proofs
+and had all 17 confirmed by experts~\cite{qed}; same-family validators overrate
+their own answers~\cite{uq}. Review is capped at two rounds, after which the
+problem goes to the human, since revisions converge on errors the reviewer can
+no longer see~\cite{comathematician}.
+
+\emph{A word-by-word statement check}, with a list of the ways a proved
+statement drifts from the posed one~\cites{qed,kallel}, and a citation audit
+that quotes every cited result.
+
+\emph{Outcome labels and honest reporting}: known, new, fixed statement, or
+nothing~\cite{far}; claimed answers split into flawed, technically correct and
+meaningfully correct~\cite{feng}; asymptotic results without explicit
+thresholds counted as partial~\cite{leduc}.
+
+\emph{Neutral briefs}: ``prove or disprove'', since an agent told to prove a
+false statement papers over the gap~\cite{woodruff}; and repeated narrowing to
+a smaller question without a new idea counts as no progress~\cite{gowersblog}.
+
+\emph{Human sign-off before release}: the human confirms that the statement
+matches the question~\cite{kallel}, writes or approves an exposition they
+understand~\cite{bloomchanges}, could give a talk on it~\cite{tao-age}, and
+adds a disclosure section~\cite{leiden}.
 
 \section{Limits}\label{sec:limits}
 
-This is one person's experience in one area, over six weeks, without a control
-group. The difficulty and significance scores were assigned by the same agents
-and by the author, not by independent experts. Correctness has not been audited
-on a random sample; we intend to do so, and the counts above should be read as
-counts of claimed answers. The models will be superseded within months.
+This is one person's experience in one area, over a few weeks, without a
+control group. The difficulty and significance scores were assigned by the same
+agents and by the author, not by independent experts. Correctness has not been
+audited on a random sample; we intend to do so, and the counts above should be
+read as counts of claimed answers. The models will be superseded within months.
 Finally, the area has a dense literature of recent preprints, which made the
 literature check unusually productive.
 
@@ -995,6 +972,62 @@ LaTeX built through a lint gate. This paper was drafted with Claude Code from
 the project's records and logs and revised by the author. The agent
 instructions, templates and tools are available in the accompanying process
 repository.
+
+\appendix
+\section{A problem record}\label{app:record}
+
+Each problem is one Markdown file whose YAML header holds the data and whose
+body holds the memory between sessions. This is the record of a question of
+Bayart and Yao, abridged; long fields are cut with [\dots].
+\begin{verbatim}
+id: BY-8.7
+title: "Minimal commutant for phi = lambda z^p psi (p>=2) on H^2(D):
+  can the zero-free assumption on psi in Corollary 8.5 be dropped?"
+kind: stated                      # stated | implicit | inference
+origin: external                  # external | ours
+theme: composition
+source:
+  paper: "arXiv:2406.19737"
+  location: "Question 8.7, p. 33"
+  posed_by: [Bayart, Yao]
+literature:
+  status: open
+  checked: 2026-10-13
+  evidence: ["arXiv:2406.19737v1 (only version) [...]"]
+ours:
+  stage: public
+  result_scope: full
+  sign: proof
+  artifacts: [research/composition/solutions/BY-8.7.tex]
+  review: "independent agent referee 2026-10-13: correct [...]"
+  public: papers/bayart-yao-questions.pdf
+  told_authors: null
+resolution: {tier: ours-public, ref: "BY-8.7.tex, Theorem 1",
+             checked: true, conditional_on: []}
+impact: 2
+difficulty: 2
+scores_note: "[...] difficulty 3->2 after split from BY-8.11 [...]:
+  short argument (local Boettcher coordinate [...])"
+tags: [setting:disc, space:hardy, object:composition,
+       type:existence, method:construction]
+effort: {sessions: 1, last: 2026-10-13, parked: false}
+\end{verbatim}
+The body has four sections: \emph{Statement} (the question with notation
+defined), \emph{State of play} (rewritten each session), \emph{Failed
+approaches} (one line per dead route, with its reason) and an \emph{Attempt
+log} (one line per session: route, outcome, reason, next step).
+
+The fields were filled at different stages and by different hands. At harvest
+an agent filled the identity and the source: \texttt{id}, \texttt{title},
+\texttt{kind}, \texttt{origin}, \texttt{theme} and \texttt{source}. At triage a
+cheap agent filled \texttt{literature} and the scores, \texttt{impact},
+\texttt{difficulty}, \texttt{scores\_note} and \texttt{tags}. During attacks
+the working agent updated \texttt{ours.stage}, \texttt{ours.artifacts},
+\texttt{ours.sign}, the \texttt{effort} counters and the body. A referee set
+\texttt{ours.review}, \texttt{ours.result\_scope} and \texttt{resolution}. Only
+the human set \texttt{ours.public} and \texttt{ours.told\_authors}. Validation
+by \texttt{make problems} rejected unknown fields, invalid values and
+inconsistent combinations, such as a resolution tier on a partial result.
 
 \begin{bibdiv}
 \begin{biblist}

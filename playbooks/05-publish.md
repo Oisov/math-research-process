@@ -25,8 +25,15 @@ asked the question:
 - nothing an expert already knows; outline routine steps rather than spell
   them out;
 - self-contained, except for results cited with exact numbers;
-- no telltale signs of machine writing: one-off variables, defensive asides,
-  the same point explained twice, or headings that narrate.
+- no telltale signs of machine writing:
+  - one-off variables;
+  - defensive asides;
+  - the same point explained twice;
+  - headings that narrate;
+  - bullet lists where prose would do;
+  - negative parallelism, that is, a claim followed by a stack of "No X." fragments and a closing "Just Y.". State the point once, in full sentences;
+  - colons used for drama;
+  - "quietly" and "silently".
 
 Then ask a second-model referee to read it as the asker would.
 
