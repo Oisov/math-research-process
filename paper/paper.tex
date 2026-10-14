@@ -15,6 +15,7 @@
 
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \newcommand*{\dd}{\mathop{}\!\mathrm{d}}
+\newcommand*{\sectionbreak}{\clearpage} % lint-tex: ignore=manual-break (prose final; each section starts a page)
 
 \begin{document}
 
@@ -101,6 +102,7 @@ sample record, an analysis of the record fields, notes on version control and
 files, the practices we adopted from other studies, and the agents' own reports
 of the main results.
 
+\sectionbreak
 \section{The starting point}\label{sec:start}
 
 Three kinds of competence are easy to conflate.\@ \emph{Familiarity with a
@@ -136,6 +138,7 @@ research phase ran from 3 to 14 October 2026. Its record is the version
 history, with about 1000 commits, and the session logs: 14 Claude Code sessions
 with 393 subagents, and 586 Codex sessions, 420 of them subagents.
 
+\sectionbreak
 \section{Building the map}\label{sec:map}
 
 The problems came from four sources, in this order.
@@ -230,6 +233,7 @@ by a mechanical rule (\cref{sec:directing}), so the final scores record
 outcomes; we use the initial scores of 12 October throughout. Even these are
 not blind, since they were assigned after the directed work of 3 to 11 October.
 
+\sectionbreak
 \section{Directing the work}\label{sec:directing}
 
 The author's part of the work was a small set of decisions, made again and
@@ -293,6 +297,7 @@ would itself be a theorem, and further sessions only added special cases, the
 author stopped and wrote the reduction up for the person who had asked the
 question (\cref{sec:episodes}).
 
+\sectionbreak
 \section{Continuity: the record as memory}\label{sec:continuity}
 
 Agent sessions end often: at a context limit, a usage window, a dropped
@@ -338,6 +343,7 @@ functions that have zeros. No session repeated an earlier route, and each began
 where the previous log line pointed. The conjecture is still open, and the
 record is now a precise account of where it stands.
 
+\sectionbreak
 \section{Failure modes and corrections}\label{sec:failures}
 
 The workflow above is the version we ended with. It was not the version we
@@ -385,6 +391,7 @@ common error the referees caught was an answer to a special case reported as an
 answer to the question. Others we could not, since the rule came too late to
 compare before and after on the same problems.
 
+\sectionbreak
 \section{Three episodes}\label{sec:episodes}
 
 \subsection*{Outer extremals: from sweeps to a proof, and from a proof to a paper}
@@ -433,6 +440,7 @@ happened after.} The database separates 141 full answers from 142 partial
 results, and the audit found two answers whose scope still had to be
 downgraded.
 
+\sectionbreak
 \section{What the method produced}\label{sec:produced}
 
 \subsection{Counts}
@@ -726,6 +734,7 @@ and Tao names ``the publication of negative or partial results'' among the
 infrastructure the field now needs~\cite{tao-age}. We would release the record
 for any problem, labelled as a sketch, to anyone working on it.
 
+\sectionbreak
 \section{Costs and requirements}\label{sec:costs}
 
 Our cost data are rough. For the billing month from 8 September to 8 October,
@@ -747,6 +756,7 @@ weeks of writing that built the collection and the vocabulary. The scarcest
 resource was not compute but the author's attention, which went into reading
 results, redirecting agents and writing to experts.
 
+\sectionbreak
 \section{Related work}\label{sec:related}
 
 Several groups have run AI systems over whole lists of open problems in the
@@ -841,6 +851,7 @@ here is that the author had no command of any problem in the database before
 the work, which is closer to how a graduate student or a mathematician from a
 neighbouring field would use these tools.
 
+\sectionbreak
 \section{Limits}\label{sec:limits}
 
 This is one person's experience in one area, over twelve days of research after
@@ -871,6 +882,7 @@ figures cover a billing month, not the campaign.\@
 has a dense literature of recent preprints, which made the literature check
 unusually productive.
 
+\sectionbreak
 \section{Next stage: expert review}\label{sec:next}
 
 Producing a candidate proof was cheap; checking it was the bottleneck. This
@@ -927,6 +939,7 @@ instructions, templates, tools and the anonymised data behind every count are
 available in the accompanying process repository.
 
 \appendix
+\sectionbreak
 \section{A problem record}\label{app:record}
 
 Each problem is one Markdown file whose YAML header holds the data and whose
@@ -976,6 +989,7 @@ the author set \texttt{ours.public} and \texttt{ours.told\_authors}. Validation
 by \texttt{make problems} rejected unknown fields, invalid values and
 inconsistent combinations, such as a resolution tier on a partial result.
 
+\sectionbreak
 \section{How the record fields were used}\label{app:fields}
 Most fields were added one at a time over 12 October, each answering a request
 from the author: a difficulty score ``to give us some starting points'',
@@ -1021,6 +1035,7 @@ logs escalations in the attempt log, adds the form of the question, a verbatim
 quote, the reviewing model and a frozen initial difficulty, and makes the
 publishing step refuse a result whose askers have not been told.
 
+\sectionbreak
 \section{Version control and files}\label{app:history}
 
 \emph{Version control was the research log, but only once we used it.} The
@@ -1045,6 +1060,7 @@ require one notes file per problem, scratch work outside the repository,
 scripts in the repository only when a claim depends on them, and deletion of
 superseded drafts, which the history keeps.
 
+\sectionbreak
 \section{What the literature changed in our process}\label{app:adopted}
 
 We read the closest studies in full and changed our playbooks where they had
@@ -1082,6 +1098,7 @@ statement matches the question~\cite{kallel}, writes or approves an exposition
 they understand~\cite{bloomchanges}, could give a talk on it~\cite{tao-age},
 and adds a disclosure section~\cite{leiden}.
 
+\sectionbreak
 \section{The results in the agents' words}\label{app:discoveries}
 
 The session logs record what each agent wrote when it reported a result. We
