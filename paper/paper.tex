@@ -1,0 +1,612 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[english]{babel}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage[a4paper,margin=28mm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage[msc-links]{amsrefs}
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+
+\begin{document}
+
+\title[Mapping a research area with AI agents]{A map of the range, not a way
+  up the wall: six weeks of AI agents on 373 open problems in analysis}
+\author{Øistein Søvik}
+\date{\today}
+
+\begin{abstract}
+For six weeks, one mathematician with a master's degree directed AI coding
+agents at every open problem that could be found in one area of analysis:
+Hardy, Bergman and Dirichlet-series spaces, Hankel and Helson operators, and
+Nehari-type theorems. The agents collected 373 problems, found that 64 of them
+had already been settled by others, and produced answers to 141 more. We
+classify these answers by how they were obtained and by how much they matter.
+Most are easy in hindsight: short arguments from known tools, results assembled
+from the literature, or counterexamples that are easy to check once found. Six
+are, in our judgement, of real significance. On the hardest problems, days of
+work by several agents produced maps of what fails, not proofs. We conclude
+that current agents are very good at mapping a field and clearing its long
+tail, and that a hard problem stays hard. All results of ours are sketches
+until they appear on arXiv or in a journal; this is a living document, updated
+as the people who asked the questions respond.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Terence Tao has described research mathematics as a range of mountains:
+\begin{quote}
+  Tao gave the analogy of mathematicians trying to climb ``a big mountain
+  range with lots of tall mountains and lots of foothills''. Humans can only
+  climb one step at a time, but they can plan a route to the top of a
+  mountain like Everest. Meanwhile, Tao said, current AIs are like jumping
+  robots. They can sometimes ``parkour their way to the top of a 6-foot
+  wall'' that a human couldn't climb. But they can't do long-term strategic
+  planning. Those 6 feet might become 10 feet, or 100, Tao imagines, but
+  ``the little jumping robots are nowhere near the Mount Everests of
+  math''~\cite{quanta}.
+\end{quote}
+This paper is a field report on what such robots do when pointed at an entire
+range. Over six weeks in autumn 2026 we used Claude Code and Codex agents to
+find, sort and attack every open problem we could locate in one research area.
+The agents found 373 problems in papers, problem lists and monographs. They
+established that 64 were already solved, and they produced answers to 141
+others.
+
+The answers need careful reading. Our main finding is that the gain was in
+cartography, not in climbing:
+\begin{itemize}
+  \item The agents were very good at mapping a field: finding problems,
+        classifying them, checking the literature, and clearing problems that
+        were easy but had received little attention.
+  \item Most of their answers are low-hanging fruit. Of the 141, we classify
+        6 as significant, 62 as useful, and 73 as minor.
+  \item On problems where experts had made partial progress and stopped,
+        the agents produced reformulations, special cases and catalogues of
+        obstructions, not proofs.
+\end{itemize}
+Breadth explains the counts. Throw a hundred balls at a hundred baskets and
+some go in; that is useful, and different from getting better at the shot that
+matters. Tao's description of current tools as ``artificial general
+cleverness''~\cite{tao-cleverness} fits what we saw.
+
+We therefore present this method as the first step of a research project, not
+the last: a fast way to get to know a field and to find questions worth working
+on. \Cref{sec:map} describes how the problems were found and sorted,
+\cref{sec:workflow} the workflow, \cref{sec:results} the results and their
+classification, \cref{sec:walls} the hard problems, and \cref{sec:verification}
+verification and credit. \Cref{sec:related} places the work among other
+reports, and \cref{sec:limits} lists its limits.
+
+\section{Setting}
+
+The area is the theory of Hardy and Bergman spaces on the disc and on the
+infinite polydisc, Dirichlet series viewed as functions on the infinite torus,
+and the Hankel, Helson and composition operators acting on them. A typical
+question asks for the sharp constant in an inequality, whether an extremal
+function can have zeros, or whether a bounded bilinear form has a bounded
+symbol. The active literature is a few hundred papers, much of it from a small
+number of research groups.
+
+One person directed the work. He chose targets, judged whether a result
+mattered, steered agents that were stuck, read everything before it went out,
+and handled all contact with other mathematicians. The agents were Claude Code
+(Claude Opus 5.5 as the main session, with smaller Claude models for cheap
+subtasks) and Codex (several GPT models), often running at the same time in the
+same repository. The record of the work is the version history, with about 1000
+commits, together with the logs: 14 Claude Code sessions with 393 subagents,
+and 586 Codex sessions, 420 of them subagents.
+
+\section{Building the map}\label{sec:map}
+
+The problems came from four sources, in this order.
+\begin{enumerate}
+  \item \emph{Stated problems in a local paper collection.} Agents searched
+        each paper for environments labelled Conjecture, Question, Problem or
+        Open problem, and for phrases such as ``remains open'' and ``it would be
+        interesting to''. Each candidate was recorded with the paper, the exact
+        location, and a quote.
+  \item \emph{The papers those cite}, with the same extraction.
+  \item \emph{Synthesis passes.} Agents read the recent papers of the core
+        authors ``between the lines''. This produced \emph{implicit} questions,
+        which a remark suggests without posing, and \emph{inferences}: paper A
+        proves one statement and paper B another, so a third should follow.
+  \item \emph{Problem lists and monographs}: workshop problem sessions, a
+        classical problem book, and the open-problem sections of two monographs.
+\end{enumerate}
+
+Each problem became one Markdown file with validated metadata. The metadata
+records:
+\begin{itemize}
+  \item the theme, the kind (298 stated, 55 implicit, 20 inferences) and the
+        origin (289 asked by others, 84 by us);
+  \item tags, an impact score and a difficulty score;
+  \item a dated literature check with quoted evidence;
+  \item the stage reached in our own work;
+  \item once anyone settled the problem, how far the resolution is trusted:
+        journal, arXiv, or our own.
+\end{itemize}
+Moving from a single catalogue file to one file per problem let several agents
+and two different tools edit the database at once.
+
+\section{The workflow}\label{sec:workflow}
+
+Each problem was worked in sessions. A session begins by reading the record,
+the source passage and the log of earlier attempts, and by writing a three-line
+plan. It ends by rewriting a short \emph{state of play} and appending one line
+to the \emph{attempt log}: the route, the outcome, the reason, and the next
+step. A claimed result had to become a \emph{solution sheet}: the problem as
+posed, the answer as a theorem, a complete proof with exact citations, and
+nothing else, built through a lint-gated LaTeX pipeline. A fresh agent with a
+fixed brief then refereed it. The referee re-read the question in its source,
+re-derived each step, reran any certificate, and decided whether the answer was
+full or partial.
+
+On hard problems several agents worked in parallel \emph{lanes}, each on one
+approach, with a coordinating session redirecting them. When lanes drifted into
+cataloguing obstructions, a \emph{prove-mode} brief told each to commit to one
+strategy and push it to a theorem, or to a proof complete except for one
+precisely stated lemma. The full instructions are published with this paper as
+a reusable set of agent playbooks.
+
+\section{Results}\label{sec:results}
+
+\subsection{What the literature check found}
+
+The difficulty assigned to a problem before anyone attempted it predicted the
+outcome well (\cref{tab:difficulty}). It also showed why easy problems are
+easy: nine of the twelve problems first rated easiest already had a published
+answer. Tao observed the same correlation on the Erdős problems: the problems
+current tools can solve are ``precisely the category of nominally open problems
+that are most likely to have been solved in the
+literature''~\cite{tao-lowhanging}. The literature check also caught one
+problem recorded as resolved by a paper that had since been withdrawn.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lrrrr}
+    \toprule
+    Initial difficulty & Settled by others & Settled by us & Partial & Open \\
+    \midrule
+    1                  & 9                 & 3             & 0       & 0    \\
+    2                  & 4                 & 15            & 2       & 0    \\
+    3                  & 7                 & 27            & 19      & 7    \\
+    4                  & 4                 & 29            & 75      & 6    \\
+    5                  & 0                 & 3             & 15      & 3    \\
+    \bottomrule
+  \end{tabular}
+  \caption{Outcome by the difficulty assigned before any attempt, for the
+    275 records that had one.}\label{tab:difficulty}
+\end{table}
+
+\subsection{What kind of results were these?}
+
+We classified each of the 141 answers along three axes.
+\begin{itemize}
+  \item \emph{Sign}: 82 proofs, 42 counterexamples, and 17 determinations
+        of a value, set or order.
+  \item \emph{Kind}, meaning how the answer was obtained:
+        \begin{itemize}
+          \item 20 assembled from the literature;
+          \item 58 routine new arguments;
+          \item 44 explicit constructions or certificates, which are the work
+                to find and easy to check;
+          \item 19 substantial new arguments.
+        \end{itemize}
+  \item \emph{Significance}:
+        \begin{itemize}
+          \item 6 high: paper-level answers to someone else's question;
+          \item 62 medium: full answers worth a short note;
+          \item 73 low: our own questions, conditional or elementary answers,
+                and corollaries.
+        \end{itemize}
+\end{itemize}
+The classification is ours and preliminary; \cref{tab:sign} gives the
+cross-tabulations.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lrrrrr}
+    \toprule
+                   & Literature & Routine & Construction & Substantial & Total \\
+    \midrule
+    Proof          & 17         & 43      & 5            & 17          & 82    \\
+    Counterexample & 0          & 1       & 39           & 2           & 42    \\
+    Determination  & 3          & 14      & 0            & 0           & 17    \\
+    \bottomrule
+  \end{tabular}
+
+  \medskip
+  \begin{tabular}{lrrrr}
+    \toprule
+                    & High & Medium & Low & Total \\
+    \midrule
+    Proof           & 4    & 33     & 45  & 82    \\
+    Counterexample  & 2    & 24     & 16  & 42    \\
+    Determination   & 0    & 5      & 12  & 17    \\
+    \midrule
+    Asked by others & 6    & 57     & 26  & 89    \\
+    Asked by us     & 0    & 5      & 47  & 52    \\
+    \bottomrule
+  \end{tabular}
+  \caption{The 141 answers by sign and kind (top) and by sign, origin and
+    significance (bottom).}\label{tab:sign}
+\end{table}
+
+Three things stand out.
+\begin{itemize}
+  \item \emph{Counterexamples are the natural strength.} Thirty-nine of the
+        42 counterexamples are explicit constructions or certificates. Searching
+        a space of candidates and checking each one is exactly what agents do
+        well, and what earlier work on machine-assisted discovery exploited
+        \cites{wagner,funsearch,alphaevolve}.
+  \item \emph{Few proofs are substantial.} Only 17 of the 82 proofs needed
+        a genuinely new argument; the rest are routine or assembled from the
+        literature.
+  \item \emph{The significant results needed direction.} Of the six results
+        we rate high, four are proofs and two are counterexamples. Three of the
+        six came from focused sessions in which the human directed one problem
+        with the asker's question in view, not from the bulk campaign over the
+        database.
+\end{itemize}
+
+The six high-significance results are:
+\begin{itemize}
+  \item that extremal functions for bounded linear functionals on $H^p$,
+        $0<p<1$, are outer, answering a published conjecture in a stronger
+        form, written jointly with the asker;
+  \item a sharp bound on the number of zeros of extremals in a
+        prescribed-coefficient problem;
+  \item the finite-exponent limits of sharp Bernstein--Nikolskii constants;
+  \item the exact order of growth of the $H^1$ norms of partial-sum
+        operators for Dirichlet series;
+  \item a counterexample to a positive-symbol Nehari question, with a
+        computer certificate in outward-rounded arithmetic;
+  \item that optimal polynomial approximants in $H^p$ can vanish in the
+        disc for every $p\neq2$.
+\end{itemize}
+Each has been sent to the people who asked the question, or is being prepared
+for them. None is yet on arXiv.
+
+\section{Walls}\label{sec:walls}
+
+We attacked several problems on which experts have made partial progress, for
+days and with several agents. Two examples, described without the technical
+details:
+\begin{itemize}
+  \item \emph{An endpoint Schatten-class Nehari problem.} Every route the
+        agents found reduced to one square-function estimate in $L^1$ that is a
+        theorem in its own right. They proved many special cases, wrote down
+        equivalent reformulations, and catalogued exactly where each route
+        failed. They did not find a proof, and the problem was handed back to
+        the person who asked it.
+  \item \emph{A contractive restriction conjecture.} The agents proved the
+        conjecture for two natural families of functions and refuted a stronger
+        statement that would have implied it. The general case did not move.
+\end{itemize}
+In both cases the output was useful as a map. It is not progress on the wall
+itself, and we do not present it as such. The pattern matches Tao's image: some
+walls of six feet were climbed; the Everests were not approached.
+
+\section{Verification and credit}\label{sec:verification}
+
+Producing a candidate proof was cheap; checking it was the bottleneck. This
+matches Tao's analysis of the problem-solving pipeline, in which generation is
+followed by verification, exposition, acceptance and absorption into the
+standard theory, and in which AI threatens ``proof
+indigestion''~\cite{tao-age}. Our answers were checked by agent referees, in
+some cases by a second model family, and in a few cases by Lean formalization
+or exact-arithmetic certificates. Agent referees caught real errors: a bound
+used outside its range, a missing hypothesis, and above all overstated scope,
+where an answer to a special case was reported as an answer to the question.
+They rarely asked whether the claim was the right one.
+
+For this reason every result of ours is labelled a \emph{sketch} until it
+appears on arXiv or in a journal, however it was checked. Before anything is
+posted, the people who asked the question are told; this follows the
+recommendations of the Leiden Declaration on attribution, disclosure and the
+humanity of authorship~\cite{leiden}. The questions belong to those who asked
+them. The proofs and computations were produced by AI agents and checked by the
+author. Following Tao's rule of thumb~\cite{tao-age}, no result should be
+published until a human can give a clear, expert-level talk on it.
+
+\section{Related work}\label{sec:related}
+
+\emph{Machine-assisted discovery.} Machine learning has guided human intuition
+in knot theory and representation theory~\cite{davies}, and reinforcement
+learning has found counterexamples to conjectures in
+combinatorics~\cite{wagner}. Language models coupled with evaluators have found
+new constructions~\cites{funsearch,alphaevolve}, and have been applied to many
+problems at once~\cite{georgiev}. Our counterexamples are of this kind:
+constructions that are hard to find and easy to check.
+
+\emph{Formal proof.} Language models for theorem proving date back at least
+to~\cites{polu,htps}; olympiad geometry has been solved without human
+demonstrations~\cite{alphageometry}. The mathlib library~\cite{mathlib}
+underlies much of this, and Avigad discusses the wider ``formal
+turn''~\cite{avigad}.
+
+\emph{Evaluation.} Early evaluations of language models on mathematics
+include~\cites{frieder,collins}. Benchmarks with unpublished
+problems~\cites{frontiermath,hle} and the First Proof project, which has
+experts referee AI solutions to unpublished research
+problems~\cite{firstproof}, measure capability under controlled conditions. Our
+report is neither controlled nor a benchmark; it is one practitioner's account
+of a whole area.
+
+\emph{Research practice.} Experiments with frontier models as research
+assistants are collected in~\cite{bubeck}. The Erdős problems
+database~\cite{erdos} and its AI wiki~\cite{erdos-wiki} are the closest
+analogue to our problem database; the wiki warns that ``absence of past
+progress may reflect obscurity rather than difficulty''. On the goals of
+mathematics beyond problem solving we follow Thurston~\cite{thurston},
+Gowers~\cite{gowers}, Tao~\cites{tao-good,tao-age} and Bessis~\cite{bessis}.
+Journalism on the current state of the field includes~\cite{quanta}, where Igor
+Pak notes that language models are ``fantastic in finding the right
+references''.
+
+\section{Limits}\label{sec:limits}
+
+This is one person's experience in one area, over six weeks, without a control
+group. The difficulty and significance scores were assigned by the same agents
+and by the author, not by independent experts. Correctness has not been audited
+on a random sample; we intend to do so, and the counts above should be read as
+counts of claimed answers. The models will be superseded within months.
+Finally, the area has a dense literature of recent preprints, which made the
+literature check unusually productive.
+
+\section*{Tool and computational resource disclosure}
+
+The work used Claude Code from Anthropic, with Claude Opus 5.5, Sonnet and
+Haiku, and Codex from OpenAI, with several GPT models; Python with mpmath,
+SymPy and cvxpy for numerics and certificates, Lean for one formalization, and
+LaTeX built through a lint gate. This paper was drafted with Claude Code from
+the project's records and logs and revised by the author. The agent
+instructions, templates and tools are available in the accompanying process
+repository.
+
+\begin{bibdiv}
+\begin{biblist}
+
+\bib{alphaevolve}{article}{
+  author={Novikov, A.},
+  author={others},
+  title={AlphaEvolve: a coding agent for scientific and algorithmic
+      discovery},
+  eprint={arXiv:2506.13131},
+  date={2025},
+}
+
+\bib{alphageometry}{article}{
+  author={Trinh, T. H.},
+  author={Wu, Y.},
+  author={Le, Q. V.},
+  author={He, H.},
+  author={Luong, T.},
+  title={Solving olympiad geometry without human demonstrations},
+  journal={Nature},
+  volume={625},
+  date={2024},
+  pages={476\ndash 482},
+  doi={10.1038/s41586-023-06747-5}, % chktex 8
+}
+
+\bib{avigad}{article}{
+  author={Avigad, J.},
+  title={Mathematics and the formal turn},
+  journal={Bull. Amer. Math. Soc. (N.S.)},
+  volume={61},
+  date={2024},
+  pages={225\ndash 240},
+  doi={10.1090/bull/1832}, % chktex 8
+}
+
+\bib{bessis}{misc}{
+  author={Bessis, D.},
+  title={The fall of the theorem economy},
+  date={2026},
+  note={\url{https://davidbessis.substack.com/p/the-fall-of-the-theorem-economy}},
+}
+
+\bib{bubeck}{article}{
+  author={Bubeck, S.},
+  author={others},
+  title={Early science acceleration experiments with GPT-5},
+  eprint={arXiv:2511.16072},
+  date={2025},
+}
+
+\bib{collins}{article}{
+  author={Collins, K. M.},
+  author={others},
+  title={Evaluating language models for mathematics through
+      interactions},
+  eprint={arXiv:2306.01694},
+  date={2023},
+}
+
+\bib{davies}{article}{
+  author={Davies, A.},
+  author={others},
+  title={Advancing mathematics by guiding human intuition with AI},
+  journal={Nature},
+  volume={600},
+  date={2021},
+  pages={70\ndash 74},
+  doi={10.1038/s41586-021-04086-x}, % chktex 8
+}
+
+\bib{erdos}{misc}{
+  author={Bloom, T.},
+  title={Erdős problems},
+  note={\url{https://www.erdosproblems.com}},
+}
+
+\bib{erdos-wiki}{misc}{
+  title={AI contributions to Erdős problems, and Disclaimers and
+      caveats},
+  note={Wiki of the Erdős problems repository,
+      \url{https://github.com/teorth/erdosproblems/wiki}},
+}
+
+\bib{firstproof}{article}{
+  author={Abouzaid, M.},
+  author={Srivastava, N.},
+  author={others},
+  title={First Proof second batch},
+  eprint={arXiv:2606.18119},
+  date={2026},
+}
+
+\bib{frieder}{article}{
+  author={Frieder, S.},
+  author={others},
+  title={Mathematical capabilities of ChatGPT},
+  eprint={arXiv:2301.13867},
+  date={2023},
+}
+
+\bib{frontiermath}{article}{
+  author={Glazer, E.},
+  author={others},
+  title={FrontierMath: a benchmark for evaluating advanced mathematical
+      reasoning in AI},
+  eprint={arXiv:2411.04872},
+  date={2024},
+}
+
+\bib{funsearch}{article}{
+  author={Romera-Paredes, B.},
+  author={others},
+  title={Mathematical discoveries from program search with large
+      language models},
+  journal={Nature},
+  volume={625},
+  date={2024},
+  pages={468\ndash 475},
+  doi={10.1038/s41586-023-06924-6}, % chktex 8
+}
+
+\bib{georgiev}{article}{
+  author={Georgiev, B.},
+  author={Gómez-Serrano, J.},
+  author={Tao, T.},
+  author={Wagner, A. Z.},
+  title={Mathematical exploration and discovery at scale},
+  eprint={arXiv:2511.02864},
+  date={2025},
+}
+
+\bib{gowers}{misc}{
+  author={Gowers, W. T.},
+  title={The two cultures of mathematics},
+  note={\url{https://www.dpmms.cam.ac.uk/~wtg10/2cultures.pdf}},
+}
+
+\bib{hle}{article}{
+  author={Phan, L.},
+  author={others},
+  title={Humanity's last exam},
+  eprint={arXiv:2501.14249},
+  date={2025},
+}
+
+\bib{htps}{article}{
+  author={Lample, G.},
+  author={others},
+  title={HyperTree proof search for neural theorem proving},
+  eprint={arXiv:2205.11491},
+  date={2022},
+}
+
+\bib{leiden}{misc}{
+  title={The Leiden Declaration on Artificial Intelligence and
+      Mathematics},
+  date={2026},
+  note={\url{https://leidendeclaration.ai/},
+      doi:10.5281/zenodo.20302944},
+}
+
+\bib{mathlib}{inproceedings}{
+  author={{The mathlib Community}},
+  title={The Lean mathematical library},
+  booktitle={Proceedings of the 9th ACM SIGPLAN International Conference
+      on Certified Programs and Proofs},
+  date={2020},
+  pages={367\ndash 381},
+  doi={10.1145/3372885.3373824}, % chktex 8
+}
+
+\bib{polu}{article}{
+  author={Polu, S.},
+  author={Sutskever, I.},
+  title={Generative language modeling for automated theorem proving},
+  eprint={arXiv:2009.03393},
+  date={2020},
+}
+
+\bib{quanta}{article}{
+  author={Kakaes, K.},
+  title={The AI revolution in math has arrived},
+  journal={Quanta Magazine},
+  date={2026},
+  note={\url{https://www.quantamagazine.org/the-ai-revolution-in-math-has-arrived-20260413/}},
+}
+
+\bib{tao-age}{article}{
+  author={Tao, T.},
+  title={Mathematics in the age of AI},
+  eprint={arXiv:2608.16753},
+  date={2026},
+}
+
+\bib{tao-cleverness}{misc}{
+  author={Tao, T.},
+  title={Post on artificial general cleverness},
+  date={2025},
+  note={Mathstodon, \url{https://mathstodon.xyz/@tao/115722360006034040}},
+}
+
+\bib{tao-good}{article}{
+  author={Tao, T.},
+  title={What is good mathematics?},
+  journal={Bull. Amer. Math. Soc. (N.S.)},
+  volume={44},
+  date={2007},
+  pages={623\ndash 634},
+  eprint={arXiv:math/0702396},
+}
+
+\bib{tao-lowhanging}{misc}{
+  author={Tao, T.},
+  title={Post on AI solutions to Erdős problems},
+  date={2025},
+  note={Mathstodon, \url{https://mathstodon.xyz/@tao/115788262274999408}},
+}
+
+\bib{thurston}{article}{
+  author={Thurston, W. P.},
+  title={On proof and progress in mathematics},
+  journal={Bull. Amer. Math. Soc. (N.S.)},
+  volume={30},
+  date={1994},
+  pages={161\ndash 177},
+  eprint={arXiv:math/9404236},
+}
+
+\bib{wagner}{article}{
+  author={Wagner, A. Z.},
+  title={Constructions in combinatorics via neural networks},
+  eprint={arXiv:2104.14516},
+  date={2021},
+}
+
+\end{biblist}
+\end{bibdiv}
+
+\end{document}

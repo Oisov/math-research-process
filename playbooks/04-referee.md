@@ -36,7 +36,7 @@ record which model you are.
   - for a full result, set `resolution` (tier `ours-internal`, ref, `checked: true`).
 - **Real errors:** do not repair the proof yourself. Leave the stage at
   `written`, describe the error and any repair you see under State of play,
-  and report it.
+  and report it. If the error sinks the claim, delete `discoveries/<ID>.md`.
 - Add a review entry to the attempt log, and run the record check.
 
 ## Report

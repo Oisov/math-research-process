@@ -43,6 +43,7 @@ problems/INDEX.md            generated; never edit by hand
 sources/<arxiv-id>/          fetched arXiv sources and extracted text
 notes/<ID>.md                longer derivations (results only)
 solutions/<ID>.tex           solution sheets (templates/solution-sheet.tex)
+discoveries/<ID>.md          the claiming model's verbatim response, model and date
 code/                        certificates that check claims
 ```
 
@@ -83,7 +84,11 @@ in `scripts/tex-style.yaml`; the targets are documented in
    posed or it is `partial`. The solver never marks its own work reviewed.
 8. **Bounded numerics.** Every computation has a time bound, prints
    progress, and decides one named quantity. Kill what you start.
-9. **Leave hand-over state.** Sessions end without warning. Update the
+9. **Archive discoveries.** When a model claims to have settled a problem,
+   save its response verbatim in `discoveries/<ID>.md` with the model name,
+   the date and time, and the session. If verification shows the claim is
+   false, delete the file and keep one line in the attempt log.
+10. **Leave hand-over state.** Sessions end without warning. Update the
    record's State of play before anything else when in doubt.
 
 ## What to expect

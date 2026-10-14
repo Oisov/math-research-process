@@ -25,7 +25,7 @@ working for days produced maps of what fails, not proofs. A hard problem
 stayed hard. We use this method as the first step of research, to get to know
 a field and find questions worth working on, not as a way to break hard
 problems. Terence Tao has made the same observation about the Erdős problems;
-see [docs/paper.md](docs/paper.md).
+see the [paper](paper/paper.pdf).
 
 ## Credit
 
@@ -61,14 +61,14 @@ says what that is worth.
 |---|---|
 | [`AGENTS.md`](AGENTS.md) | Entry point for agents: the pipeline and the hard rules |
 | [`playbooks/`](playbooks/) | One file per stage: harvest, triage, attack, referee, publish, orchestrate |
-| [`templates/`](templates/) | Problem record, solution sheet, referee brief |
+| [`templates/`](templates/) | Problem record, solution sheet, referee brief, discovery archive |
 | [`tools/`](tools/) | `arxiv_harvest.py` (candidate extraction from arXiv sources), `check_records.py` (record validator) |
 | [`Makefile`](Makefile), [`scripts/`](scripts/) | The lint-gated LaTeX build (`make pdf TEX=…`), house-style linter, and tests (`make test`) |
 | [`docs/method.md`](docs/method.md) | **Our method and process**: what we actually did, in order, with numbers |
 | [`docs/lessons.md`](docs/lessons.md) | What worked and what did not, with the evidence |
 | [`docs/schema-review.md`](docs/schema-review.md) | Which record fields earned their place |
 | [`docs/recommendations.md`](docs/recommendations.md) | **What we recommend** |
-| [`docs/paper.md`](docs/paper.md) | Draft framing and outline for a paper on this work |
+| [`paper/`](paper/) | The paper (LaTeX, built with `make pdf TEX=paper/paper.tex`) |
 
 The evidence behind these documents is the version history of the working
 repository (about 1,000 commits), 14 Claude Code sessions with 393 subagents,

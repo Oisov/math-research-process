@@ -41,6 +41,15 @@ reason you can state.
 - Decide honestly whether your result is full or partial. Name the open part.
 - Search once more for prior work on exactly your statement.
 
+## Archiving the claim
+
+The moment a model claims a result, before any rewriting, save its response
+verbatim to `discoveries/<ID>.md` using
+[`templates/discovery.md`](../templates/discovery.md): model, date and time,
+session, the prompt it answered, and the response. If the result is later
+published, this records who found what and when. If verification shows the
+claim is false, the file is deleted.
+
 ## Writing it up
 
 A claimed result becomes a **solution sheet**
