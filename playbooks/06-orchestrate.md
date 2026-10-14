@@ -35,6 +35,12 @@ lane, what counts as success, what not to touch, and the hard rules from
 - Report to the user against the original questions: full, partial or no
   progress. Partial results are not solutions.
 
+## When lanes stall
+
+- When a lane is blocked, send the user one concrete question rather than
+  re-briefing the lane again (AI co-mathematician, arXiv:2605.06651, §2).
+- Briefs say "prove or disprove" unless the user chose prove-mode.
+
 ## Hand-over
 
 Keep `problems/HANDOFF.md` current: which agents are running on what, what

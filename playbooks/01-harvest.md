@@ -53,6 +53,12 @@ and record the printed location: "Conjecture 9.2, p. 31", "Question after
 Theorem 22". Copy the statement verbatim from the PDF into `source.quote`,
 with the notation defined in the record body if the quote depends on it.
 
+Also copy the source's conventions into the record body: normalizations,
+the definition of every term, and the range of every parameter. Misreading a
+convention is the commonest way to "solve" the wrong problem; one large
+study found most technically correct AI solutions were vacuous for this
+reason (Feng et al., arXiv:2601.22401, §1.1).
+
 ## 4. Inferences (optional, after stated problems)
 
 Read the core authors' papers "between the lines". When paper A proves X and

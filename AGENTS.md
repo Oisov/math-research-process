@@ -124,6 +124,17 @@ on, and do not present it as doing so.
 
 ## Reporting to the user
 
+In every report:
+- The funnel: the count at each stage (harvested, valid, open, attempted,
+  claimed, refereed, user-checked).
+- Claimed answers split into flawed, technically correct, and meaningfully
+  correct.
+- Rediscoveries kept apart from answers found in the literature.
+- Novelty called provisional.
+- Cost per problem attempted (OEIS Open, arXiv:2608.11941, §3.1; Feng et
+  al., arXiv:2601.22401, Table 2).
+
+
 Lead with outcomes against the original questions: answered fully,
 answered partially (and what is open), or no progress. Say how each question
 was posed (conjecture, problem, question, informal remark, or our own), and

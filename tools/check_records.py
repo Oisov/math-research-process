@@ -17,7 +17,7 @@ except ImportError:
 KIND = {'stated', 'implicit', 'inference'}
 ORIGIN = {'external', 'ours'}
 STAGE = ['untriaged', 'triaged', 'attacking', 'written', 'reviewed', 'public', 'abandoned']
-STATUS = {'open', 'partial', 'resolved', 'claimed', 'refuted'}
+STATUS = {'open', 'partial', 'resolved', 'claimed', 'refuted', 'invalid'}
 TIER = {'journal', 'arxiv', 'ours-public', 'ours-internal'}
 SCOPE = {None, 'full', 'partial'}
 SIGN = {None, 'proof', 'counterexample', 'determination'}

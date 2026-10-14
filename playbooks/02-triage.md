@@ -25,6 +25,18 @@ If it is resolved, set `resolution.tier` (`journal` or `arxiv`) and
 `resolution.ref`, and stop. Mark `resolution.checked: true` only after
 someone has read the proof.
 
+## 1b. Is it a real question?
+
+- If the extracted text does not state a concrete question, set
+  `literature.status: invalid` and stop (FAR, arXiv:2608.16977, §3.1).
+- Otherwise ask a cheap model to attempt a quick answer, then check three
+  things: is the question well defined, can it be approached, and would its
+  answer be objective? Flag the record if any check fails (UQ,
+  arXiv:2508.17580, §2.1).
+- Record the known solved special cases and the first open case. They are
+  the sanity checks for any later answer (Formal Conjectures,
+  arXiv:2605.13171, §3.1).
+
 ## 2. Score once
 
 Score against anchors you write down in `problems/SCORES.md`, with one

@@ -15,6 +15,14 @@ reason you can state.
 3. Write a three-line plan into the attempt log: the route, why this one, and
    what would count as progress.
 
+4. Search the literature again before attacking, even though triage
+   already did. Then check your restatement of the question against the
+   source's examples and its known special cases (FAR, arXiv:2608.16977,
+   §3.2; AlphaProof Nexus, arXiv:2605.22763, §3).
+5. Briefs say "prove or disprove", unless the user has switched the problem
+   to prove-mode. An agent told to prove a false statement will paper over
+   the gap (arXiv:2602.03837, §9.2).
+
 ## During the session
 
 - **Analysis before search.** Check claims by hand. Use numerics only to
@@ -34,12 +42,47 @@ reason you can state.
 - **A counterexample counts.** If evidence turns against the conjecture,
   look for a disproof as seriously as for a proof.
 
+- **Classify a failure before switching route.** Is it an execution error
+  (the plan is sound), a structural gap in the plan, or a sign that the
+  approach is fundamentally flawed? Write the class in the attempt log
+  (QED, arXiv:2604.24021, §4.2).
+- **A dead end names a concrete defect.** "Too long" or "too hard" does not
+  count (LeanMarathon, arXiv:2606.05400, §4.7).
+- **Narrowing is not progress.** If the outcome is "reduced to a narrower
+  question" twice in a row with no new idea, count it as no progress. Park
+  the problem, or ask the user (Gowers, *What sort of maths are LLMs good
+  at?*, 2026).
+- **Disproof methods.** On the disproof side, work through:
+  - off-the-shelf examples;
+  - examples with free parameters (metavariables);
+  - trying to prove the opposite;
+  - successive approximation;
+  - random examples;
+  - generic examples (Gowers, same post).
+- **No placeholders.** If a prerequisite is missing, park the problem. Never
+  substitute a dummy object that only looks like the real one.
+
 ## Before claiming a result
 
 - Re-read the question in its source, not in the record's paraphrase. Check
   the quantifiers: every p versus some p, a given object versus some object.
 - Decide honestly whether your result is full or partial. Name the open part.
 - Search once more for prior work on exactly your statement.
+- **An easy proof is a warning.** First look for a misreading: a
+  convention, a quantifier, a domain. If the statement is ambiguous, the
+  user asks the asker before anything is claimed (AlphaProof Nexus,
+  arXiv:2605.22763, §3–4).
+- **Asymptotic results.** A result "for n ≥ n0" with no explicit n0 is
+  partial. A counterexample at a case the asker would exclude does not
+  settle the question (Le Duc and Liberti, arXiv:2510.12829, §5.2).
+- **End with one outcome label**, recorded in the attempt log:
+  - KNOWN: the answer is already in the literature;
+  - NEW: a new answer;
+  - FIX: the statement as written is defective; record the counterexample
+    and the minimal repair as a new record with `form: ours`;
+  - NONE: no answer.
+
+  (FAR, arXiv:2608.16977, §3.2.)
 
 ## Archiving the claim
 
@@ -68,6 +111,15 @@ request a referee (stage 4); never review your own work.
   that matters in the record.
 - If you rewrite a solution sheet, overwrite it; the history keeps the old
   version.
+
+## Writing standards for the sheet
+
+- Put the verbatim source quote directly above the theorem.
+- For every citation, quote the cited statement and check each of its
+  hypotheses. Hallucinated "standard" lemmas are a known failure (QED,
+  arXiv:2604.24021, §4.3; AlphaProof Nexus, §3).
+- Name the key step. Inside it, do not use "clearly", "obviously" or
+  "straightforward" (QED, §4.4).
 
 ## Ending a session
 

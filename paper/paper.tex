@@ -781,7 +781,7 @@ past year, and their numbers are the natural comparison for ours
     \toprule
     Study                                & Problems               & Outcome                              \\
     \midrule
-    Gemini on Erdős problems~\cite{feng} & 700 open               & 13 addressed                         \\
+    Gemini on Erdős problems~\cite{feng} & 700 open               & 13 addressed, 4 novel                \\
     Formal proof search~\cite{tsoukalas} & 353 Erdős; 492 OEIS    & 9; 44 resolved                       \\
     OEIS Open~\cite{adamczewski}         & 492 OEIS               & 147 resolved                         \\
     Provers and verifiers~\cite{leduc}   & 66 conjectures         & about a third                        \\
@@ -797,13 +797,18 @@ past year, and their numbers are the natural comparison for ours
 \end{table}
 The closest study to ours is the Gemini case study on the Erdős problems, which
 reached the same conclusion: ``the `Open' status of the problems was through
-obscurity rather than difficulty''~\cite{feng}. Many of the problems it
-addressed were already solved in the literature, as were nine of our twelve
-easiest problems. The authors of the OEIS study note that their conjectures
-``are of uncertain mathematical significance, and most have likely received
-little previous attention''~\cite{adamczewski}. The FAR pipeline~\cite{far} is
-the nearest match to our method, at about fifteen times our scale: it extracted
-6453 candidate problems from 5245 combinatorics papers and sent 77 potential
+obscurity rather than difficulty''~\cite{feng}. Of the 13 problems it
+addressed, 9 turned out to be solved already in the literature, as were nine of
+our twelve easiest problems; of 200 candidate answers it graded, 68.5\% were
+flawed and only 6.5\% meaningfully correct, because most technically correct
+answers had misread the question and were vacuous. The FAR pipeline found that
+its difficulty scores predicted outcomes with an area under the curve of 0.69,
+a weak but real signal like the one in \cref{tab:difficulty}. The authors of
+the OEIS study note that their conjectures ``are of uncertain mathematical
+significance, and most have likely received little previous
+attention''~\cite{adamczewski}. The FAR pipeline~\cite{far} is the nearest
+match to our method, at about fifteen times our scale: it extracted 6453
+candidate problems from 5245 combinatorics papers and sent 77 potential
 resolutions to their authors. Like us, its authors identify the selection of
 problems and the review of the results as the bottlenecks. An early small test
 with five easy conjectures found the same pattern as ours: the easy ones fell,
@@ -934,6 +939,42 @@ These products are unverified in the same sense as the proofs, and the raw
 working files behind them, about 1300 notes, drafts and scripts, are of little
 use to anyone. Their value lies in the curated record of each problem. We would
 release that record per problem, labelled as a sketch, to anyone working on it.
+
+\section{What the literature changed in our process}\label{sec:adopted}
+
+We read the closest studies in full and changed our playbooks where they had
+learned something we had not. The main changes are:
+\begin{itemize}
+  \item \emph{Read the question before answering it.} Copy the source's
+        conventions into the record, check a restatement against known
+        special cases, and treat an easy answer as a sign of misreading:
+        most technically correct answers in the Gemini study were
+        vacuous~\cite{feng}, and AlphaProof's agents proved variants the
+        askers had not meant~\cite{tsoukalas}.
+  \item \emph{Blind, cross-family referees.} The referee first sees only
+        the question and the proof, as in QED, whose verifier accepted 17
+        of 214 candidate proofs and had all 17 confirmed by
+        experts~\cite{qed}; same-family validators overrate their own
+        answers~\cite{uq}. Review is capped at two rounds, after which the
+        problem goes to the human, since revisions converge on errors the
+        reviewer can no longer see~\cite{comathematician}.
+  \item \emph{A word-by-word statement check}, with a list of the ways a
+        proved statement drifts from the posed one~\cites{qed,kallel},
+        and a citation audit that quotes every cited result.
+  \item \emph{Outcome labels and honest reporting}: known, new, fixed
+        statement, or nothing~\cite{far}; claimed answers split into
+        flawed, technically correct and meaningfully
+        correct~\cite{feng}; asymptotic results without explicit
+        thresholds counted as partial~\cite{leduc}.
+  \item \emph{Neutral briefs}: ``prove or disprove'', since an agent told to
+        prove a false statement papers over the gap~\cite{woodruff}; and
+        repeated narrowing to a smaller question without a new idea counts
+        as no progress~\cite{gowersblog}.
+  \item \emph{Human sign-off before release}: the human confirms that the
+        statement matches the question~\cite{kallel}, writes or approves an
+        exposition they understand~\cite{bloomchanges}, could give a talk
+        on it~\cite{tao-age}, and adds a disclosure section~\cite{leiden}.
+\end{itemize}
 
 \section{Limits}\label{sec:limits}
 

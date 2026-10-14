@@ -30,6 +30,26 @@ asked the question:
 
 Then ask a second-model referee to read it as the asker would.
 
+## Before anything leaves the workspace
+
+- **The user signs off** that the statement proved matches the question
+  asked. This is separate from refereeing the proof (Kallel and El Louadi,
+  arXiv:2608.28997, §9).
+- **The explain-it test:** the user confirms they could give a clear,
+  expert-level talk on the result (Tao, arXiv:2608.16753, §8).
+- **The exposition** sent to askers is one the user has read, understood and
+  approved, not an unread agent-generated PDF (Bloom, *Changes to the Erdős
+  problems web site*, 2026).
+- **State the check level next to *Sketch*:** agent-reviewed, user-checked,
+  or asker-checked.
+- **Disclosure section.** Every PDF has a "Tool and computational resource
+  disclosure" section. It names the models and their roles, and says what
+  the user checked (Leiden Declaration).
+- **Language.** Avoid "first", "we solved" and other ownership language.
+  Novelty is at best an upper bound (Feng et al., §1.4).
+- **Lean, where feasible.** Attach a Lean proof, and have a referee check
+  that the formal statement matches the source.
+
 ## Exporting
 
 - Publish **PDFs and certificate code only**. No TeX sources, notes, records
