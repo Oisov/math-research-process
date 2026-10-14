@@ -75,3 +75,21 @@ Then ask a second-model referee to read it as the asker would.
   and what has *not* been checked.
 - Nothing goes to arXiv before the askers have been told.
 - Record the date in `told_authors`. Mark held items with a reason.
+
+## Three routes to the literature
+
+Which route fits depends on the user's standing in the field, and the user
+decides. Do not push for one.
+
+1. **Publish it yourself.** For a user who is a specialist and has checked the
+   result with colleagues. Add a disclosure of how it was found.
+2. **Write it up with an expert.** For a non-specialist whose result an expert
+   has checked and wants to develop. Coauthorship is then partly a courtesy
+   the expert extends; the expert carries the judgement that the result is
+   correct and that it matters.
+3. **Show it to the askers and claim nothing.** Send the solution sheet,
+   leave them free to use it, and expect at most an acknowledgement.
+
+All three are reasonable. Prepare every external result so that any of them
+is easy: a self-contained sheet in the asker's notation, an honest account of
+how it was checked, and no expectation attached.
