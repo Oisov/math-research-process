@@ -87,3 +87,14 @@ The evidence behind these documents is the version history of the working
 repository (about 1,000 commits), 14 Claude Code sessions with 393 subagents,
 and 586 Codex sessions, about 4.5 GB of logs in all. The logs are not
 published.
+
+## Licence
+
+Everything in this repository except the paper is dedicated to the public
+domain under [CC0 1.0](LICENSE): the playbooks, templates, `AGENTS.md`, docs,
+tools, scripts and data. Use, change and republish them freely; no credit is
+needed.
+
+The paper in [`paper/`](paper/) is the one thing here I vouch for, so it is
+licensed under [CC BY 4.0](paper/LICENSE): reuse it in any way, crediting the
+author.
