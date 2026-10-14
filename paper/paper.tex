@@ -6,6 +6,8 @@
 \usepackage{mathtools}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage[a4paper,margin=28mm]{geometry}
 \usepackage[hidelinks]{hyperref}
 \usepackage[msc-links]{amsrefs}
@@ -134,6 +136,34 @@ records:
 Moving from a single catalogue file to one file per problem let several agents
 and two different tools edit the database at once.
 
+\subsection*{How difficulty was scored}
+Each problem received an impact score and a difficulty score from 1 to 5. On 12
+October three Claude Opus 5.5 subagents scored the database, each taking a
+group of themes, under a common brief. The brief defined difficulty as ``effort
+for us with current tools'', to be scored against a fixed rubric with an anchor
+problem at each level so that the numbers meant the same across agents:
+\begin{center}
+  \begin{tabular}{cl}
+    \toprule
+    Difficulty & Meaning                                                                \\
+    \midrule
+    1          & short argument from known tools; days                                  \\
+    2          & focused effort; an existing method adapts, or a computation settles it \\
+    3          & needs a genuinely new idea, but a route is visible                     \\
+    4          & hard; the natural approaches are known to fail                         \\
+    5          & major open problem, or equivalent to one                               \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+Each score came with a one-line justification. The agents read each record's
+statement, literature status and evidence, and the source where the statement
+was unclear; resolved problems were scored as originally posed. These scores
+replaced rougher ``tractability'' guesses made by cheaper models during an
+earlier triage. Over all 373 problems the initial scores were distributed as
+37, 48, 110, 145 and 33 for difficulty 1 to 5. Later attempts led the agents to
+re-score some problems, mostly upwards; we use the initial scores throughout,
+because the re-scored ones record failure rather than predict it.
+
 \section{The workflow}\label{sec:workflow}
 
 Each problem was worked in sessions. A session begins by reading the record,
@@ -183,6 +213,47 @@ problem recorded as resolved by a paper that had since been withdrawn.
   \caption{Outcome by the difficulty assigned before any attempt, for the
     275 records that had one.}\label{tab:difficulty}
 \end{table}
+
+\subsection{When the results came}
+\Cref{fig:daily} shows when the 141 answers were obtained, coloured by the
+initial difficulty. The database itself existed only from 12 October, so
+everything obtained in the directed work of 3 to 11 October appears in the
+first bar. That bar holds 30 answers, including four of the six we rate most
+significant. The bulk campaign of 12 October settled 45 problems, almost all of
+difficulty 1 to 3 and none of high significance. On 13 October the agents
+worked through harder problems: of its 66 answers, 25 were rated 4 or 5, and
+two are of high significance.
+
+\begin{figure}[ht]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        ybar stacked,
+        bar width=28pt,
+        width=0.72\textwidth,
+        height=6.5cm,
+        symbolic x coords={before,12 Oct,13 Oct},
+        xticklabels={Before 12 Oct,12 Oct,13 Oct},
+        xtick=data,
+        ymin=0,
+        ylabel={answers settled},
+        legend style={at={(1.03,0.5)},anchor=west,font=\small},
+        legend cell align=left,
+        enlarge x limits=0.25,
+      ]
+      \addplot+[fill=blue!12,draw=black] coordinates {(before,3) (12 Oct,13) (13 Oct,6)};
+      \addplot+[fill=blue!30,draw=black] coordinates {(before,11) (12 Oct,14) (13 Oct,9)};
+      \addplot+[fill=blue!50,draw=black] coordinates {(before,8) (12 Oct,16) (13 Oct,26)};
+      \addplot+[fill=blue!72,draw=black] coordinates {(before,8) (12 Oct,2) (13 Oct,22)};
+      \addplot+[fill=blue!95,draw=black] coordinates {(before,0) (12 Oct,0) (13 Oct,3)};
+      \legend{difficulty 1,difficulty 2,difficulty 3,difficulty 4,difficulty 5}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Answers settled by our agents, by when they were recorded and by
+    the initial difficulty score. The first bar collects the directed work
+    before the database existed; its dates come from the first appearance
+    of each answer's write-up in the version history.}\label{fig:daily}
+\end{figure}
 
 \subsection{What kind of results were these?}
 
@@ -272,6 +343,88 @@ The six high-significance results are:
 \end{itemize}
 Each has been sent to the people who asked the question, or is being prepared
 for them. None is yet on arXiv.
+
+\section{What the agents did not settle}\label{sec:unsettled}
+
+Full answers are only half the picture. Of the 373 problems, 168 remain
+unsettled: 142 with partial results of ours and 26 without. We compared them
+with the 141 settled ones; the counts below come from the records, and the
+classification of obstructions is our judgement after reading each record's
+state of play.
+
+\subsection{How they differ}
+\begin{center}
+  \begin{tabular}{lrr}
+    \toprule
+                                                         & Unsettled (168) & Settled (141) \\
+    \midrule
+    Initial difficulty 4 or 5                            & 126             & 35            \\
+    Asked by others                                      & 83\%            & 63\%          \\
+    Impact 4 or more                                     & 19\%            & 4\%           \\
+    Partial progress by others already in the literature & 50\%            & 21\%          \\
+    Answer is a counterexample (or expected to be one)   & 5\%             & 30\%          \\
+    Inferences of ours                                   & 1               & 16            \\
+    Mean number of working sessions                      & 1.8             & 1.5           \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+The problems that resisted were not neglected: they received slightly more
+working sessions than the settled ones, and only four received none. They
+differ in kind. They were asked by others, they matter more, half of them had
+already been attacked in the literature, and they ask for a characterisation,
+an exact constant or a uniform estimate rather than a single construction. The
+settled problems, by contrast, include most of our own derived questions and
+most of the problems a counterexample could close. Themes rooted in number
+theory and probability (random multiplicative functions, Bohr radii, general
+Dirichlet series, Paley--Wiener extremals) were mostly unsettled; composition
+operators and the extremal problems around one published conjecture were mostly
+settled.
+
+\subsection{What blocked them}
+\begin{center}
+  \begin{tabular}{lr}
+    \toprule
+    Main obstruction                                               & Records \\
+    \midrule
+    Only special cases or families proved                          & 59      \\
+    Needs an estimate that is itself a known hard problem          & 37      \\
+    Open-ended, ambiguous, or in need of reformulation             & 23      \\
+    Endpoint or critical case; every method loses a log or a power & 22      \\
+    Exact constant wanted; only bounds or expansions found         & 14      \\
+    Numerics suggest the answer, but no route to a proof           & 6       \\
+    Depends on unrefereed or unavailable literature                & 5       \\
+    Not attempted in depth                                         & 2       \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+About 25 records reduce to three underlying problems: an $L^1$ endpoint
+estimate behind Schatten-class Nehari theorems, the value of one sharp constant
+in a multiplicative Hilbert-type inequality, and the unknown extremal functions
+of point evaluation in Paley--Wiener spaces. Settling any one of these would
+move many records at once; none moved.
+
+\subsection{Full versus partial}
+A full answer settles the question as posed; a partial one does not. Of the 142
+partial results, the main type was:
+\begin{center}
+  \begin{tabular}{lr}
+    \toprule
+    Type of partial result                                      & Records \\
+    \midrule
+    Special case, subrange or family                            & 90      \\
+    Counterexample to a stronger statement or a literal reading & 15      \\
+    Correct order, or two-sided bounds, without the constant    & 13      \\
+    Reduction to an equivalent reformulation                    & 12      \\
+    Conditional on a hypothesis or an unrefereed preprint       & 7       \\
+    One direction only                                          & 5       \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+A recurring kind is a local result near a point where the problem is already
+solved, for example near $p=2$, which proves the conjecture in a neighbourhood
+but gives no uniform control away from it. This is the pattern the human
+director called ``filling $\mathbb R$ with $\mathbb Q$'': more and more special
+cases, none of which converges to the general statement.
 
 \section{Walls}\label{sec:walls}
 
