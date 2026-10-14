@@ -13,7 +13,8 @@ reason you can state.
 2. Read the papers the source relies on. Results in an active area are often
    two known theorems combined in a new way.
 3. Write a three-line plan into the attempt log: the route, why this one, and
-   what would count as progress.
+   what would count as progress against the brief's objective (map or
+   settle; see below).
 
 4. Search the literature again before attacking, even though triage
    already did. Then check your restatement of the question against the
@@ -30,9 +31,16 @@ reason you can state.
   trying to prove it. Every computation is time-bounded and prints progress.
 - **At least three different routes** before you park a problem. Different
   means a different idea, not a different parameter.
-- **Prove, do not catalogue.** A map of what fails is not progress. If you
-  find yourself proving more and more special classes of the claim, stop and
-  ask whether the approach can ever reach the full statement.
+- **Measure progress against the current objective.** The brief states one
+  of two objectives. When the objective is to *map* the problem (triage, or
+  a first session on a problem nobody has looked at), a reduction, a special
+  case or a precise obstruction is progress: the goal is to know where the
+  problem stands. When the objective is to *settle* it, none of these is
+  progress; only a theorem, or a proof complete except for one precisely
+  stated lemma, counts. If the brief does not say, ask. If you find yourself
+  proving more and more special classes of the claim under a settle
+  objective, stop and ask whether the approach can ever reach the full
+  statement.
 - **Prove-mode** (when the user asks for a proof): commit to the single
   strategy most likely to give a proof. Push it to a theorem, or to a proof
   that is complete except for one precisely stated lemma. Report only that.

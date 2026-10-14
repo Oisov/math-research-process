@@ -21,14 +21,22 @@ reports, redirects, and keeps the database consistent.
 ## Briefs
 
 A brief is self-contained: the record path, the files to read first, the
-lane, what counts as success, what not to touch, and the hard rules from
-`AGENTS.md`. Do not tell agents about time limits; manage time yourself.
+lane, the objective, what counts as success, what not to touch, and the hard
+rules from `AGENTS.md`.
+
+The objective is either *map* or *settle*, and it decides what counts as
+progress. Under *map*, reductions, special cases and precise obstructions are
+the product. Under *settle*, only a theorem or a proof missing one precisely
+stated lemma counts. Switch a problem from map to settle once its state of
+play names a route; agents left alone keep mapping after the objective has
+changed. Do not tell agents about time limits; manage time yourself.
 
 ## Steering
 
 - Read every interim report. Redirect when:
   - lanes duplicate each other: "Lane C owns this lemma; cite it";
-  - an agent is cataloguing rather than proving: switch it to prove-mode;
+  - an agent is cataloguing under a settle objective: switch it to
+    prove-mode;
   - numerics are running without a question they answer.
 - When an agent reports success, send the claim to a referee before you
   report it to the user.
