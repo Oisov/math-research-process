@@ -770,38 +770,95 @@ drafts, which the history keeps.
 
 \section{Related work}\label{sec:related}
 
-\emph{Machine-assisted discovery.} Machine learning has guided human intuition
-in knot theory and representation theory~\cite{davies}, and reinforcement
-learning has found counterexamples to conjectures in
-combinatorics~\cite{wagner}. Language models coupled with evaluators have found
-new constructions~\cites{funsearch,alphaevolve}, and have been applied to many
-problems at once~\cite{georgiev}. Our counterexamples are of this kind:
-constructions that are hard to find and easy to check.
+\subsection*{Agents on lists of open problems}
+Several groups have run AI systems over whole lists of open problems in the
+past year, and their numbers are the natural comparison for ours
+(\cref{tab:compare}).
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    Study                                & Problems               & Outcome                              \\
+    \midrule
+    Gemini on Erdős problems~\cite{feng} & 700 open               & 13 addressed                         \\
+    Formal proof search~\cite{tsoukalas} & 353 Erdős; 492 OEIS    & 9; 44 resolved                       \\
+    OEIS Open~\cite{adamczewski}         & 492 OEIS               & 147 resolved                         \\
+    Provers and verifiers~\cite{leduc}   & 66 conjectures         & about a third                        \\
+    QED~\cite{qed}                       & 18 expert-chosen       & 5 original works                     \\
+    FAR pipeline~\cite{far}              & 4717 harvested         & 598 candidate resolutions            \\
+    UQ~\cite{uq}                         & 500 unsolved questions & 15\% pass validation                 \\
+    This report                          & 373 harvested          & 64 known; 141 claimed; 6 significant \\
+    \bottomrule
+  \end{tabular}
+  \caption{Reported outcomes of AI systems run on lists of open problems.
+    The lists differ widely in difficulty, and so do the meanings of
+    ``resolved''.}\label{tab:compare}
+\end{table}
+The closest study to ours is the Gemini case study on the Erdős problems, which
+reached the same conclusion: ``the `Open' status of the problems was through
+obscurity rather than difficulty''~\cite{feng}. Many of the problems it
+addressed were already solved in the literature, as were nine of our twelve
+easiest problems. The authors of the OEIS study note that their conjectures
+``are of uncertain mathematical significance, and most have likely received
+little previous attention''~\cite{adamczewski}. The FAR pipeline~\cite{far} is
+the nearest match to our method, at about fifteen times our scale: it extracted
+6453 candidate problems from 5245 combinatorics papers and sent 77 potential
+resolutions to their authors. Like us, its authors identify the selection of
+problems and the review of the results as the bottlenecks. An early small test
+with five easy conjectures found the same pattern as ours: the easy ones fell,
+and the one that needed two papers combined did not~\cite{godel}. Individual
+resolutions from such sweeps have been written up with
+care~\cites{sothanaphan,alexeevshort}, and one Erdős prize problem thought open
+for half a century turned out to have been settled three decades before it was
+posed~\cite{alexeevmixon}.
 
-\emph{Formal proof.} Language models for theorem proving date back at least
-to~\cites{polu,htps}; olympiad geometry has been solved without human
-demonstrations~\cite{alphageometry}. The mathlib library~\cite{mathlib}
-underlies much of this, and Avigad discusses the wider ``formal
-turn''~\cite{avigad}.
+\subsection*{Harvesting problems}
+Problem lists are now being built automatically. DeepMind's formal conjectures
+collect 2615 statements in Lean, including 1029 open conjectures; AI proofs and
+disproofs were used to find badly stated problems~\cite{formalconj}.
+OpenConjecture extracts conjectures from new arXiv papers with a language model
+and ranks them by apparent tractability, with the caveat that the results
+``have not been independently verified''~\cite{openconjecture}. FrontierMath's
+open-problems pilot sets out to provide a ``denominator'' for AI
+contributions~\cite{fmop}, and MathArena tracks performance on questions
+extracted from recent papers~\cite{matharena}. The Erdős problems
+database~\cite{erdos} and its AI wiki~\cite{erdos-wiki} remain the closest
+analogue to our database; the wiki warns that ``absence of past progress may
+reflect obscurity rather than difficulty''.
 
-\emph{Evaluation.} Early evaluations of language models on mathematics
-include~\cites{frieder,collins}. Benchmarks with unpublished
-problems~\cites{frontiermath,hle} and the First Proof project, which has
-experts referee AI solutions to unpublished research
-problems~\cite{firstproof}, measure capability under controlled conditions. Our
-report is neither controlled nor a benchmark; it is one practitioner's account
-of a whole area.
+\subsection*{Mathematicians' experience}
+Gowers writes that ``if a problem can be solved by means of a relatively
+standard argument, it is highly likely that an LLM will be able to find and use
+that argument'', while its suggestions on harder problems often ``sound
+promising until I think about them carefully''~\cite{gowersblog}. That is our
+experience in one sentence. Case studies from
+industry~\cites{woodruff,comathematician} and from individual groups, including
+one in functional analysis~\cite{banachlattices} and one with a consumer
+model~\cite{vibe}, report the same division of labour: models search for
+proofs, and experts close them. Earlier work on machine-assisted discovery
+found constructions and counterexamples by
+search~\cites{davies,wagner,funsearch,alphaevolve,georgiev}, and experiments
+with frontier models as research assistants are collected in~\cite{bubeck}.
+Formal proof~\cites{polu,htps,alphageometry,mathlib,avigad} and
+evaluation~\cites{frieder,collins,frontiermath,hle,firstproof} form the
+background.
 
-\emph{Research practice.} Experiments with frontier models as research
-assistants are collected in~\cite{bubeck}. The Erdős problems
-database~\cite{erdos} and its AI wiki~\cite{erdos-wiki} are the closest
-analogue to our problem database; the wiki warns that ``absence of past
-progress may reflect obscurity rather than difficulty''. On the goals of
-mathematics beyond problem solving we follow Thurston~\cite{thurston},
-Gowers~\cite{gowers}, Tao~\cites{tao-good,tao-age} and Bessis~\cite{bessis}.
-Journalism on the current state of the field includes~\cite{quanta}, where Igor
-Pak notes that language models are ``fantastic in finding the right
-references''.
+\subsection*{Verification and significance}
+Bloom, who maintains the Erdős problems database, reports ``a wave of
+AI-produced solutions provided with no explanation'', and that much recent
+progress came from renewed human effort ``rather than just
+AI''~\cite{bloomchanges}. Kallel and El Louadi separate the validity of a
+derivation, which a proof checker settles, from whether the formal statement
+means the intended question and whether the result matters; ``only the first is
+mechanizable''~\cite{kallel}. This is our distinction between settled and
+significant. A survey of arXiv mathematics finds substantive AI use growing to
+about 14\% of submissions by August 2026, concentrated in combinatorics rather
+than analysis~\cite{goldrush}, and long agent runs are documented to drift in
+the ways we saw~\cite{leanmarathon}. On the goals of mathematics beyond problem
+solving we follow Thurston~\cite{thurston}, Gowers~\cite{gowers},
+Tao~\cites{tao-good,tao-age} and Bessis~\cite{bessis}; journalism on the
+current state includes~\cite{quanta}, where Igor Pak notes that language models
+are ``fantastic in finding the right references''.
 
 \section{Limits}\label{sec:limits}
 
@@ -825,6 +882,199 @@ repository.
 
 \begin{bibdiv}
 \begin{biblist}
+
+\bib{adamczewski}{article}{
+  author={Adamczewski, T.},
+  title={OEIS Open: how many conjectures can language models turn into theorems?},
+  eprint={arXiv:2608.11941},
+  date={2026},
+}
+
+\bib{alexeevmixon}{article}{
+  author={Alexeev, B.},
+  author={Mixon, D. G.},
+  title={Forbidden Sidon subsets of perfect difference sets, featuring a human-assisted proof},
+  eprint={arXiv:2510.19804},
+  date={2025},
+}
+
+\bib{alexeevshort}{article}{
+  author={Alexeev, B.},
+  author={others},
+  title={Short proofs in combinatorics, probability and number theory II},
+  eprint={arXiv:2604.06609},
+  date={2026},
+}
+
+\bib{banachlattices}{article}{
+  author={de Dios Pont, J.},
+  author={others},
+  title={Banach lattices and phase retrieval: a case study for the use of AI in mathematics},
+  eprint={arXiv:2608.07396},
+  date={2026},
+}
+
+\bib{comathematician}{article}{
+  author={Zheng, D.},
+  author={others},
+  title={AI co-mathematician: accelerating mathematicians with agentic AI},
+  eprint={arXiv:2605.06651},
+  date={2026},
+}
+
+\bib{far}{article}{
+  author={Zheng, Z.},
+  author={Zhang, S.},
+  author={Avigad, J.},
+  author={Tetali, P.},
+  author={Welleck, S.},
+  title={The problem is the problem: towards scalable mathematical discovery},
+  eprint={arXiv:2608.16977},
+  date={2026},
+}
+
+\bib{feng}{article}{
+  author={Feng, T.},
+  author={others},
+  title={Semi-autonomous mathematics discovery with Gemini: a case study on the Erdős problems},
+  eprint={arXiv:2601.22401},
+  date={2026},
+}
+
+\bib{formalconj}{article}{
+  author={Firsching, M.},
+  author={others},
+  title={Formal Conjectures: an open and evolving benchmark for verified discovery in mathematics},
+  eprint={arXiv:2605.13171},
+  date={2026},
+}
+
+\bib{godel}{article}{
+  author={Feldman, M.},
+  author={Karbasi, A.},
+  title={Gödel Test: can large language models solve easy conjectures?},
+  eprint={arXiv:2509.18383},
+  date={2025},
+}
+
+\bib{goldrush}{article}{
+  author={Jin, J.},
+  author={Ke, Z. T.},
+  author={Sui, B.},
+  title={The gold rush in AI4Math: where are we now?},
+  eprint={arXiv:2608.24961},
+  date={2026},
+}
+
+\bib{kallel}{article}{
+  author={Kallel, M.},
+  author={El Louadi, M.},
+  title={Verification abundance, adjudication scarcity: what happens to mathematical knowledge when proof checking becomes free},
+  eprint={arXiv:2608.28997},
+  date={2026},
+}
+
+\bib{leanmarathon}{article}{
+  author={Zhang, Y.},
+  author={others},
+  title={LeanMarathon: toward reliable AI co-mathematicians through long-horizon Lean autoformalization},
+  eprint={arXiv:2606.05400},
+  date={2026},
+}
+
+\bib{leduc}{article}{
+  author={Le Duc, H.},
+  author={Liberti, L.},
+  title={Mathematics with large language models as provers and verifiers},
+  eprint={arXiv:2510.12829},
+  date={2025},
+}
+
+\bib{matharena}{article}{
+  author={Dekoninck, J.},
+  author={others},
+  title={Beyond benchmarks: MathArena as an evaluation platform for mathematics with LLMs},
+  eprint={arXiv:2605.00674},
+  date={2026},
+}
+
+\bib{qed}{article}{
+  author={An, C.},
+  author={Ye, Q.},
+  author={Pan, M.},
+  author={Zhang, J.},
+  title={QED\@: an open-source multi-agent system for generating mathematical proofs on open problems},
+  eprint={arXiv:2604.24021},
+  date={2026},
+}
+
+\bib{sothanaphan}{article}{
+  author={Sothanaphan, N.},
+  title={Resolution of Erdős Problem \#728: a writeup of Aristotle's Lean proof},
+  eprint={arXiv:2601.07421},
+  date={2026},
+}
+
+\bib{tsoukalas}{article}{
+  author={Tsoukalas, G.},
+  author={others},
+  title={Advancing mathematics research with AI-driven formal proof search},
+  eprint={arXiv:2605.22763},
+  date={2026},
+}
+
+\bib{uq}{article}{
+  author={Nie, F.},
+  author={others},
+  title={UQ\@: assessing language models on unsolved questions},
+  eprint={arXiv:2508.17580},
+  date={2025},
+}
+
+\bib{vibe}{article}{
+  author={Verbeken, B.},
+  author={others},
+  title={Early evidence of vibe-proving with consumer LLMs: a case study on spectral region characterization with ChatGPT-5.2 (Thinking)},
+  eprint={arXiv:2602.18918},
+  date={2026},
+}
+
+\bib{woodruff}{article}{
+  author={Woodruff, D. P.},
+  author={others},
+  title={Accelerating scientific research with Gemini: case studies and common techniques},
+  eprint={arXiv:2602.03837},
+  date={2026},
+}
+
+\bib{bloomchanges}{misc}{
+  author={Bloom, T.},
+  title={Changes to the Erdős problems web site},
+  date={2026},
+  note={Guest post on T. Tao's blog, 6 October 2026, \url{https://terrytao.wordpress.com/2026/10/06/changes-to-the-erdos-problems-web-site/}},
+}
+
+\bib{fmop}{misc}{
+  author={{Epoch AI}},
+  title={Introducing FrontierMath: Open Problems},
+  date={2026},
+  note={27 January 2026, \url{https://epochai.substack.com/p/introducing-frontiermath-open-problems}},
+}
+
+\bib{gowersblog}{misc}{
+  author={Gowers, W. T.},
+  title={What sort of maths are LLMs good at?},
+  date={2026},
+  note={Gowers's Weblog, 12 August 2026, \url{https://gowers.wordpress.com/2026/08/12/what-sort-of-maths-are-llms-good-at/}},
+}
+
+\bib{openconjecture}{misc}{
+  author={Brown, D.},
+  author={Kvinge, H.},
+  title={Introducing OpenConjecture, a living dataset of mathematics conjectures from the arXiv},
+  date={2026},
+  note={18 March 2026, \url{https://dlscience.substack.com/p/introducing-openconjecture-a-living}},
+}
 
 \bib{alphaevolve}{article}{
   author={Novikov, A.},
