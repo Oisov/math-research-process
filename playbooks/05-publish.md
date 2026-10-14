@@ -73,7 +73,11 @@ Then ask a second-model referee to read it as the asker would.
   department get one batched message.
 - Say plainly how the work was done (with AI agents, checked by the user)
   and what has *not* been checked.
-- Nothing goes to arXiv before the askers have been told.
+- Post results openly first, then tell the askers promptly, the same day if
+  possible. Telling them first would imply a head start and leave the result
+  in limbo.
+- Nothing goes to arXiv before the askers have been told and someone can
+  vouch for it.
 - Record the date in `told_authors`. Mark held items with a reason.
 
 ## Public language
