@@ -76,6 +76,16 @@ Then ask a second-model referee to read it as the asker would.
 - Nothing goes to arXiv before the askers have been told.
 - Record the date in `told_authors`. Mark held items with a reason.
 
+## Public language
+
+When writing for the public, state what is known and how much stands behind
+it, and link to the explanation: "x > y. A proof sketch, not checked by a
+specialist, is at [link]." Once an expert stands behind it: "x > y; see
+[paper]." No credit or scoreboard language: no "we solved", no "answered by
+us", no counts of solved problems. Say plainly that nobody claims the results
+and that anyone may develop them, crediting the people who asked the
+questions. (After Bloom's change to the Erdős problems site, 6 October 2026.)
+
 ## Three routes to the literature
 
 Which route fits depends on the user's standing in the field, and the user

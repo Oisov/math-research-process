@@ -19,88 +19,209 @@
 
 \begin{document}
 
-\title[Mapping a research area with AI agents]{Mapping a research area with AI
-  agents: a workflow, and 373 open problems in analysis}
+\title[Non-experts, AI agents and research mathematics]{Can non-experts
+  contribute to research mathematics? A case study with AI agents and 373 open
+  problems in analysis}
 \author{Øistein Søvik}
 \date{\today}
 
 \begin{abstract}
-We describe a workflow that lets a mathematician with graduate-level
-familiarity with an area enter its research literature and make research-level
-progress with AI coding agents, and we report what it produced in one area of
-analysis: Hardy, Bergman and Dirichlet-series spaces, Hankel and Helson
-operators, and Nehari-type theorems. The workflow has four parts: a harvested
-map of the area's open problems, explicit rules for directing agents, a
-per-problem record that carries the work from one session to the next, and
-review gates before anything leaves the repository. We describe each part as it
-was used, the failures that changed it, and the version we now recommend. In
-October 2026 the agents collected 373 problems, found that 64 had already been
-settled by others, and produced claimed answers to 141 more. Most of these are
-easy in hindsight. Seven are, in our judgement, of real significance, and on
-the hardest problems the agents produced maps of what fails rather than proofs.
-A blind audit of a random sample of 20 answers found no mathematical errors,
-but two that answer less than was asked. The work was directed by one person
-with a master's degree in the area who is not a research specialist. All
-results of ours are sketches until they appear on arXiv or in a journal, and
-the next stage is review by the people who asked the questions.
+In September and October 2026 mathematicians argued in public about
+AI-generated mathematics: results announced in a rush, prior work left uncited,
+proofs nobody could read, and the work of checking pushed onto experts. Most of
+the criticism was aimed at AI companies. This paper asks the same questions of
+a different contributor: one person with a master's degree in an area of
+analysis but no research career, directing AI coding agents at every open
+problem he could find in that area. We argue that such a person can contribute
+honestly if three acts are kept apart. Finding a result is now cheap, and
+agents do most of it. Sharing a result can be done without claiming it: saying
+what is known and how much stands behind it, and leaving anyone free to develop
+it. Vouching for a result, standing behind it as correct and worth reading, is
+an act only someone with expertise can perform, and it is what turns a shared
+result into a paper. The evidence is a workflow used in October 2026, described
+as it was used, with the failures that changed it. The agents collected 373
+problems, found that 64 had already been answered by others, and produced
+answers to 141 more. Most are easy in hindsight, seven we judged significant,
+and the hardest problems did not move. A blind audit of 20 answers found no
+mathematical errors and two that answer less than was asked. We also record
+where the project fell short of its own position.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
 
-Terence Tao has described research mathematics as climbing ``a big mountain
-range with lots of tall mountains and lots of foothills''~\cite{quanta}. Human
-mathematicians climb one step at a time, but they can plan a route to a distant
-summit. In his picture, current AI tools are small jumping robots: they can
-sometimes ``parkour their way to the top of a 6-foot wall'' that a human could
-not climb, but they cannot plan the long route, and ``the little jumping robots
-are nowhere near the Mount Everests of math''~\cite{quanta}.
+In September 2026 twenty-five Fields medallists signed a declaration that ``the
+goals of the AI companies and the goals of the mathematical community are
+severely misaligned''~\cite{fields-letter}. Results, they wrote, are
+``announced in a rush, leaving no time for a proper writeup'', which ``raises
+severe attribution and plagiarism questions'', and the mass production of true
+or false statements ``could destroy fertile ground instead of breathing life
+into new ideas''. The weeks around it supplied examples. A claimed blow-up
+result for the Navier--Stokes equations turned out to concern a forced variant
+that specialists found far less interesting than the open
+problem~\cite{sciam-ns}. A release of 722 machine-written manuscripts left
+their checking to whoever chose to read them~\cite{openai-math}. More than
+seven hundred mathematicians protested an event that would have asked
+undergraduates to verify AI output, work they called ``uncompensated,
+uncredited, and unacknowledged''~\cite{caltech-letter}. Terence Tao warned that
+problems were ``being solved autonomously by AI prompters who have no interest
+in the broader field'', and ``harvested at large scale in an unsustainable
+fashion''~\cite{tao-mathstodon}.
 
-This paper is about the person who points the robots. Our claim concerns a
-method: with a workflow of the kind we describe, someone with graduate-level
-familiarity with an area, but without a specialist's command of any of its
-problems, can enter the research literature, find out what is open, and make
-progress that a specialist would recognise as research. We give the workflow in
-enough detail to be reused, the rules the author used to direct it, the ways it
-failed and how each failure changed it, and what it produced in one area of
-analysis in October 2026.
+Most of this criticism concerns companies. The same questions apply to a single
+person outside the profession who uses the same tools, and they apply with more
+force, since such a person has less standing and fewer means to check what the
+tools produce. This paper asks whether such a person can contribute to research
+mathematics without doing the harms the declaration names, and how.
 
-The area is the theory of Hardy and Bergman spaces on the disc and the infinite
-polydisc, Dirichlet series viewed as functions on the infinite torus, and the
-Hankel, Helson and composition operators acting on them. A typical question,
-and one of the results discussed below, comes from Brevig and
+Our answer separates three acts that the current system bundles together.
+\emph{Finding} a result, a true statement with a proof, has become cheap, and
+agents do most of it.\@ \emph{Sharing} a result can be done without claiming
+it: by saying what is known, how much stands behind it and where the
+explanation is, and leaving anyone free to check, develop or publish it.\@
+\emph{Vouching} for a result, standing behind it as correct and worth reading,
+is an act that only someone with expertise can perform. In the author's field,
+posting to arXiv is that act: it says ``I stand behind this''. A non-expert can
+find and share honestly but cannot vouch, and the shared results wait until an
+expert chooses to. The closest existing statement of this position came on 6
+October 2026, when the Erdős problems site stopped using credit-giving language
+for any result, human or AI, and began to say instead what is known and where
+an explanation can be found~\cite{bloom-erdos}.
+
+The evidence is a case study. In October 2026 the author, who holds a master's
+degree in the area and has no research career in it, directed Claude Code and
+Codex agents at every open problem he could find in the theory of Hardy and
+Bergman spaces on the disc and the infinite polydisc, Dirichlet series viewed
+as functions on the infinite torus, and the Hankel, Helson and composition
+operators acting on them. A typical question comes from Brevig and
 Saksman~\cite{brevigsaksman}. For $0<p<1$ the Hardy space $H^p$ consists of the
 analytic functions $f$ on the unit disc for which
 $\sup_{r<1}\int_0^{2\pi}\abs{f(re^{it})}^p\,\dd t/2\pi$ is finite; it is not a
-Banach space, and many standard tools fail. Among all $f$ in the unit ball of
-$H^p$, consider those that maximise the size of the $k$th Taylor coefficient.
-Brevig and Saksman conjectured that every such extremal function has no zeros
-in the disc. The conjecture is precise and checkable, it had resisted its
-authors' methods, and an answer would be noticed by the few dozen people who
-work on such problems. Most questions in our database are of this kind.
+Banach space, and many standard tools fail. Brevig and Saksman conjectured that
+every function in the unit ball of $H^p$ that maximises the size of the $k$th
+Taylor coefficient has no zeros in the disc. The conjecture is precise and
+checkable, it had resisted its authors' methods, and an answer would be noticed
+by the few dozen people who work on such problems. Most questions in the
+database are of this kind.
 
-The outcome, in brief: the agents collected 373 problems, established that 64
-were already solved, and produced claimed answers to 141 others. Most answers
-are short arguments from known tools, results assembled from the literature, or
-counterexamples that are easy to check once found. Seven are, in our judgement,
-significant. On the problems where experts had made partial progress and
-stopped, the agents produced special cases, reformulations and records of what
-fails. The gain was largest in mapping the area and clearing its long tail, and
-smallest on its hardest problems.
+The agents collected 373 problems, established that 64 had already been
+answered by others, and produced answers to 141 more. Most of these are short
+arguments from known tools, results assembled from the literature, or
+counterexamples that are easy to check once found. Seven we judged significant.
+On the problems where experts had made partial progress and stopped, the agents
+produced special cases, reformulations and records of what fails. The workflow
+behind these numbers, its rules and its failures are the main subject of the
+paper, because they are what made the sharing honest: every answer was checked
+against the question as posed in its source, every answer was labelled by how
+much stands behind it, and the people who asked the questions were told before
+anything went to arXiv. The project also fell short of its own position in ways
+we record in \cref{sec:position}.
 
-\Cref{sec:start} describes the starting point, \cref{sec:map} how the map was
-built, \cref{sec:directing} how the work was directed, and
+\Cref{sec:position} sets out the position and the strongest objections to it.
+\Cref{sec:start} describes the starting point, \cref{sec:map} how the problems
+were found, \cref{sec:directing} how the work was directed, and
 \cref{sec:continuity} how it was carried from one session to the next.
-\Cref{sec:failures} lists the failures and the corrections they forced, and
-\cref{sec:episodes} follows three of them in detail. \Cref{sec:produced}
-reports what the method produced, including a blind audit, and \cref{sec:costs}
-what it cost. \Cref{sec:related} compares the work with other reports,
-\cref{sec:limits} lists its limits, and \cref{sec:next} describes the next
-stage, review by the people who asked the questions. The appendices hold a
-sample record, an analysis of the record fields, notes on version control and
-files, the practices we adopted from other studies, the significance gradings
-in detail, and the agents' own reports of the main results.
+\Cref{sec:failures,sec:episodes} describe the failures and the corrections they
+forced. \Cref{sec:produced} reports what the method produced, including a blind
+audit, and \cref{sec:costs} what it cost. \Cref{sec:related} compares the work
+with other reports, \cref{sec:limits} lists its limits, and \cref{sec:next}
+describes what happens to the results now. The appendices hold a sample record,
+an analysis of the record fields, notes on version control and files, the
+practices we adopted from other studies, the significance gradings in detail,
+and the agents' own reports of the main results.
+
+\sectionbreak
+\section{Finding, sharing and vouching}\label{sec:position}
+
+\subsection*{Vouching}
+A paper on arXiv carries named authors who ``each individually take full
+responsibility for all its contents, irrespective of how the contents were
+generated''~\cite{arxiv-moderation}. Since December 2025, anyone who has not
+already written an arXiv mathematics paper must be personally endorsed to post
+one~\cite{arxiv-endorsement}. In the author's field arXiv holds papers on their
+way to a journal. A post there is a statement by a person with standing in the
+field that the result is correct and worth reading, which is more than a Lean
+check, which shows that the steps are valid but not that the statement is the
+right one, and more than an agent referee's verdict. The Leiden Declaration
+puts the same principle generally: ``credit and responsibility continue to
+belong to humans''~\cite{leiden}. The author could not make that statement
+about most of the results in this paper. He could read each proof, and he did,
+but he could not judge whether an argument in an unfamiliar corner of the field
+was new, or whether it mattered. Only an expert can vouch.
+
+\subsection*{Sharing without claiming}
+The results can still be shared. Robert Merton described the findings of
+science as ``a product of social collaboration'' that is ``assigned to the
+community'', and observed that the only property right left to a scientist is
+``the recognition by others of the scientist's distinctive part in having
+brought the result into being''~\cite{merton1957}. Thurston argued that ``our
+strong communal emphasis on theorem-credits has a negative effect on
+mathematical progress''~\cite{thurston}. Kevin Buzzard, writing about AI
+results this October, put the point most simply: ``These humans have a right to
+know what is known''~\cite{buzzard-grieve}. The public volumes of this project
+follow the Erdős site's lead. Each entry states the question with its source
+and, where something is known, what it is and how much stands behind it: the
+published literature, a preprint, or a proof sketch that no specialist has
+checked. Nobody claims the sketches, and anyone may develop or publish them,
+crediting the people who asked the questions.
+
+History suggests what happens to results shared this way. An anonymous proof of
+a lower bound for superpermutations, posted on an image board in 2011,
+``slipped under the radar of the mathematics community for seven years'',
+partly because its ideas were not clearly expressed; experts later checked it
+and wrote it up~\cite{quanta-superperm}. An upper bound that the novelist Greg
+Egan posted on his website in 2018 was clear, and specialists verified it
+within weeks~\cite{quanta-superperm}. Credit attached in both cases, to a
+pseudonym in the first. Sharing without claiming does not stop credit from
+attaching; it only declines to ask for it. What decides whether a shared result
+is used is whether it is clear enough for an expert to check, and that is why
+the workflow spends so much effort on writing each answer for the person who
+asked.
+
+\subsection*{The objections}
+The declaration and the debate around it raise objections that apply to this
+project, and we take them in turn.
+
+\emph{A rush, without a proper writeup.} Nothing here was announced. Each
+answer became a self-contained sheet with exact citations, checked against the
+question as posed in its source (\cref{sec:continuity}), and answers to
+external questions were rewritten in the asker's notation.\@
+
+\emph{Attribution and prior work.} The literature check found that 64 of the
+373 problems had already been answered, and one answer was credited to an
+independent preprint that reached part of it first (\cref{sec:produced}). This
+check is bounded, and some prior work has surely been missed
+(\cref{sec:limits}).\@
+
+\emph{Checking pushed onto experts.} This objection applies, and it is the
+hardest to answer. Expert attention is the scarce resource, and one person with
+agents can now produce more than any asker can read. The project's practice was
+to batch everything for one department into a single message, to attach no
+expectation, and to let the expert choose what, if anything, to do with it
+(\cref{sec:next}). A batch of nineteen items is still a cost to its reader.\@
+
+\emph{Fertile ground.} Easy open problems are where students learn research,
+and agents cleared many of them in two days. We cannot say whether mapping and
+answering a field's long tail helps or harms the people who would have worked
+on it. The answers are public, unclaimed and labelled, so a student can still
+take one up, rewrite it and develop it, but some problems will no longer be
+open in the sense a student needs.\@
+
+\emph{Prompters with no interest in the field.} The author spent the six weeks
+before the campaign writing a monograph on the area, and the project produced a
+map of its open problems with a record of what was tried on each. That does not
+make him an expert, but it is an interest in the field rather than in the
+problems as trophies.
+
+\subsection*{Where the project fell short}
+The rule was that the people who asked a question hear about an answer before
+anything goes to arXiv. That rule was kept. But the public answers volume went
+out, labelled as sketches, before every asker had been told, so some will learn
+of answers to their questions from it. The one message prepared for a group of
+askers lists nineteen results, more than a careful reader can take in at once.
+And the agents answered our own derived questions most often, which adds to the
+volume without adding much that matters (\cref{sec:produced}).
 
 \sectionbreak
 \section{The starting point}\label{sec:start}
@@ -123,8 +244,8 @@ book on a teaching website. This writing did three things for the later work.
 It forced a shared vocabulary between author and agents, so that a brief could
 say ``the Helson-matrix route'' and mean one thing. It left a local collection
 of about 300 papers, which became the first source of problems. And it produced
-mathematics: one of the seven significant results, the critical case of a
-conjecture of Bondarenko, Brevig, Saksman and Seip~\cite{bbss}, was first
+mathematics: one of the seven answers we judged significant, the critical case
+of a conjecture of Bondarenko, Brevig, Saksman and Seip~\cite{bbss}, was first
 proved as a theorem of the monograph on 11 October, a day before the problem
 database existed, and only later recognised as the answer to a stated
 conjecture.
@@ -282,11 +403,11 @@ problems several agents shared one problem, each assigned a different approach
 redirected them, for example ``three lanes have proved the same single-scale
 bound; stop extending it''. Parallel lanes needed distinct mathematical
 mandates and active coordination; without them they repeatedly reproduced the
-same intermediate bounds. Five of the seven significant results arose during
-the week of focused work before the database existed, when the author steered
-one problem at a time with the asker's question in view. We do not read this as
-a comparison of the two modes, since the lanes were given the hardest problems
-in the database.\@
+same intermediate bounds. Five of the seven answers we judged significant arose
+during the week of focused work before the database existed, when the author
+steered one problem at a time with the asker's question in view. We do not read
+this as a comparison of the two modes, since the lanes were given the hardest
+problems in the database.\@
 
 \emph{What counts as progress.} This rule changed during the work, and the
 change resolves an apparent tension in the method. While building the map, a
@@ -506,26 +627,26 @@ recorded as resolved by a paper that had since been withdrawn.
   \centering
   \begin{tabular}{lrrrrr}
     \toprule
-    Initial difficulty & Settled by others & Settled by us & Partial & Open & Total \\
+    Initial difficulty & Answered by others & Answered here & Partial & Open & Total \\
     \midrule
-    1                  & 15                & 22            & 0       & 0    & 37    \\
-    2                  & 12                & 34            & 2       & 0    & 48    \\
-    3                  & 20                & 50            & 32      & 8    & 110   \\
-    4                  & 10                & 32            & 91      & 12   & 145   \\
-    5                  & 7                 & 3             & 17      & 6    & 33    \\
+    1                  & 15                 & 22            & 0       & 0    & 37    \\
+    2                  & 12                 & 34            & 2       & 0    & 48    \\
+    3                  & 20                 & 50            & 32      & 8    & 110   \\
+    4                  & 10                 & 32            & 91      & 12   & 145   \\
+    5                  & 7                  & 3             & 17      & 6    & 33    \\
     \midrule
-    Total              & 64                & 141           & 142     & 26   & 373   \\
+    Total              & 64                 & 141           & 142     & 26   & 373   \\
     \bottomrule
   \end{tabular}
-  \caption{Outcome of all 373 problems by initial difficulty. ``Settled by
-    us'' counts claimed answers that passed one agent
+  \caption{Outcome of all 373 problems by initial difficulty. ``Answered
+    here'' counts claimed answers that passed one agent
     referee.}\label{tab:difficulty}
 \end{table}
 
 \Cref{fig:daily} shows when the 141 answers came. The database existed only
 from 12 October, so everything from the directed work of 3 to 11 October is in
 the first bar: 30 answers, including five of the seven we rate significant. The
-bulk campaign of 12 October settled 45 problems, almost all of difficulty 1 to
+bulk campaign of 12 October answered 45 problems, almost all of difficulty 1 to
 3 and none significant. On 13 October the agents worked through harder
 problems: 25 of its 66 answers were rated 4 or 5, and two are significant.
 
@@ -542,7 +663,7 @@ problems: 25 of its 66 answers were rated 4 or 5, and two are significant.
         xtick=data,
         ymin=0,
         ymax=75,
-        ylabel={answers settled},
+        ylabel={answers},
         legend style={at={(1.03,0.5)},anchor=west,font=\small},
         legend cell align=left,
         enlarge x limits=0.25,
@@ -558,11 +679,11 @@ problems: 25 of its 66 answers were rated 4 or 5, and two are significant.
       \node[above,font=\small] at (axis cs:13 Oct,66) {66};
     \end{axis}
   \end{tikzpicture}
-  \caption{Answers settled by our agents (30, 45 and 66), by when they were
+  \caption{Answers found in this work (30, 45 and 66), by when they were
     recorded and by initial difficulty. The first bar collects the directed
     work before the database existed; its dates come from the first
     appearance of each write-up in the version history. Dates are Oslo time
-    (CEST), so the two significant results first reported late on 12 October
+    (CEST), so the two significant answers first reported late on 12 October
     UTC (\cref{tab:timeline}) count for 13 October.}\label{fig:daily}
 \end{figure}
 
@@ -629,7 +750,7 @@ estimates; the judgement of the askers and other specialists will inform them.
     re-read.}\label{tab:sig}
 \end{table}
 
-\subsection{The seven significant results}
+\subsection{Seven answers we judged significant}
 \Cref{tab:six} lists them. Stated briefly: for $0<p<1$, every extremal of a
 nonzero bounded functional on $H^p$ is outer, which proves the Brevig--Saksman
 conjecture in a stronger form; the extremals of the prescribed-coefficient
@@ -666,7 +787,7 @@ yet on arXiv.
     Approximant zeros           & See~\cite{centner}*{Conj.~7.1}           & agent                 & no                    \\
     \bottomrule
   \end{tabular}
-  \caption{The seven significant results. ``Queued'' means the result is in a note
+  \caption{The seven answers we judged significant. ``Queued'' means the result is in a note
     prepared for one of the askers that has not yet been sent; ``via
     colleague'' means that note goes to a colleague of the askers rather than
     to them. For the $H^1$ partial sums, Lean covers the finite-torus lower
@@ -681,18 +802,18 @@ is approximate.
 \begin{center}
   \begin{tabular}{lrrrrr}
     \toprule
-    How posed                & Records & Others solved & We solved & Unsettled & High \\
+    How posed                & Records & By others & Here & Unsettled & High \\
     \midrule
-    Conjecture (others)      & 63      & 13            & 23        & 27        & 4    \\
-    Problem (others)         & 69      & 18            & 18        & 33        & 1    \\
-    Question (others)        & 67      & 12            & 24        & 31        & 2    \\
-    Informal remark (others) & 90      & 18            & 24        & 48        & 0    \\
-    Our own question         & 84      & 3             & 52        & 29        & 0    \\
+    Conjecture (others)      & 63      & 13        & 23   & 27        & 4    \\
+    Problem (others)         & 69      & 18        & 18   & 33        & 1    \\
+    Question (others)        & 67      & 12        & 24   & 31        & 2    \\
+    Informal remark (others) & 90      & 18        & 24   & 48        & 0    \\
+    Our own question         & 84      & 3         & 52   & 29        & 0    \\
     \bottomrule
   \end{tabular}
 \end{center}
-Our own questions were settled most often, 52 of 84, and none of those answers
-is significant. Informally posed questions were the least often settled and
+Our own questions were answered most often, 52 of 84, and none of those answers
+is significant. Informally posed questions were the least often answered and
 produced nothing significant. We now record the form of each question when it
 is harvested.
 
@@ -725,17 +846,17 @@ by people in the field.
 
 \subsection{The unsettled problems as a map}
 Of the 373 problems, 168 remain unsettled: 142 with partial results of ours and
-26 without. They differ from the settled ones in kind.
+26 without. They differ from the answered ones in kind.
 \begin{center}
   \begin{tabular}{lrr}
     \toprule
-                                                         & Unsettled (168) & Settled (141) \\
+                                                         & Unsettled (168) & Answered (141) \\
     \midrule
-    Initial difficulty 4 or 5                            & 126             & 35            \\
-    Asked by others                                      & 83\%            & 63\%          \\
-    Impact 4 or more                                     & 19\%            & 4\%           \\
-    Partial progress by others already in the literature & 50\%            & 21\%          \\
-    Inferences of ours                                   & 1               & 16            \\
+    Initial difficulty 4 or 5                            & 126             & 35             \\
+    Asked by others                                      & 83\%            & 63\%           \\
+    Impact 4 or more                                     & 19\%            & 4\%            \\
+    Partial progress by others already in the literature & 50\%            & 21\%           \\
+    Inferences of ours                                   & 1               & 16             \\
     \bottomrule
   \end{tabular}
 \end{center}
@@ -916,7 +1037,7 @@ has a dense literature of recent preprints, which made the literature check
 unusually productive.
 
 \sectionbreak
-\section{Next stage: expert review}\label{sec:next}
+\section{What happens to the results}\label{sec:next}
 
 Producing a candidate proof was cheap; checking it was the bottleneck. This
 matches Tao's analysis of the problem-solving pipeline, in which generation is
@@ -1076,7 +1197,7 @@ repository was managed with Jujutsu (\texttt{jj}), which recorded 2409
 operations and 1007 commits. Of the operations, 1944 fall on 12 and 13 October,
 after the rule that each problem record is committed together with the work it
 describes. The directed work of 3 to 11 October, which produced five of the
-seven significant results, left only 136 operations; those results can be dated
+seven significant answers, left only 136 operations; those results can be dated
 only by when their write-ups first appeared. Everything quantitative in this
 report comes from the fine-grained part of the history. Jujutsu's automatic
 snapshots meant that no edit by an agent was ever lost, and cheap small commits
@@ -1197,7 +1318,7 @@ written, and recognised as the answer to a conjecture only later.
     Positive Nehari             & 12 Oct, 22:44  & GPT-6 Astra         & counterex. \\
     \bottomrule
   \end{tabular}
-  \caption{When the seven significant results were first reported. Each was
+  \caption{When the seven significant answers were first reported. Each was
     later checked by at least one other agent; the first two are also
     Lean-verified, and the finite-torus lower bound behind the $H^1$ partial
     sums is formalized. Times are UTC.}\label{tab:timeline}
@@ -1287,6 +1408,77 @@ certificate, and four minutes later had one:
   date={2019},
   pages={6677\ndash 6702},
   eprint={arXiv:1801.06515},
+}
+
+\bib{fields-letter}{misc}{
+  title={A severe misalignment of {AI} in mathematics},
+  note={Declaration by Fields medallists, 11 September 2026, posted at \url{https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/}},
+}
+
+\bib{sciam-ns}{article}{
+  title={Did {OpenAI} solve the wrong {Navier--Stokes} problem?},
+  journal={Scientific American},
+  date={2026},
+  note={\url{https://www.scientificamerican.com/article/did-openai-solve-the-wrong-navier-stokes-problem/}},
+}
+
+\bib{openai-math}{misc}{
+  title={{OpenAI} mathematics manuscripts},
+  note={Repository released 6 October 2026, \url{https://github.com/openai/math}},
+}
+
+\bib{caltech-letter}{misc}{
+  title={Open letter about the {Mathathon}},
+  date={2026-09-10}, % chktex 8
+  note={\url{https://proofsandprompts.com/2026/09/10/open-letter-about-the-mathathon/}},
+}
+
+\bib{tao-mathstodon}{misc}{
+  author={Tao, T.},
+  title={Post on {Mathstodon}, 6 October 2026},
+  note={\url{https://mathstodon.xyz/@tao/117395269325940185}},
+}
+
+\bib{bloom-erdos}{misc}{
+  author={Bloom, T.},
+  title={Changes to the {Erdős} problems web site},
+  date={2026-10-06}, % chktex 8
+  note={Guest post, \url{https://terrytao.wordpress.com/2026/10/06/changes-to-the-erdos-problems-web-site/}},
+}
+
+\bib{buzzard-grieve}{misc}{
+  author={Buzzard, K.},
+  title={To grieve or not to grieve},
+  date={2026-10-01}, % chktex 8
+  note={\url{https://xenaproject.wordpress.com/2026/10/01/to-grieve-or-not-to-grieve/}},
+}
+
+\bib{arxiv-moderation}{misc}{
+  title={{arXiv} moderation},
+  note={\url{https://info.arxiv.org/help/moderation/index.html}, accessed 14 October 2026},
+}
+
+\bib{arxiv-endorsement}{misc}{
+  title={Updated endorsement policy for {arXiv} mathematics},
+  date={2025-12-10}, % chktex 8
+  note={\url{https://blog.arxiv.org/arxiv/2025/12/10/updated-endorsement-policy-for-arxiv-mathematics}},
+}
+
+\bib{merton1957}{article}{
+  author={Merton, R. K.},
+  title={Priorities in scientific discovery},
+  journal={American Sociological Review},
+  volume={22},
+  date={1957},
+  pages={635\ndash 659},
+}
+
+\bib{quanta-superperm}{article}{
+  author={Klarreich, E.},
+  title={Sci-fi writer {Greg Egan} and anonymous math whiz advance permutation problem},
+  journal={Quanta Magazine},
+  date={2018-11-05}, % chktex 8
+  note={\url{https://www.quantamagazine.org/sci-fi-writer-greg-egan-and-anonymous-math-whiz-advance-permutation-problem-20181105/}},
 }
 
 \bib{perfekt-fr}{article}{

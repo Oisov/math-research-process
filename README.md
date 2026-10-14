@@ -1,61 +1,46 @@
-# Harvesting and attacking open problems with AI agents
+# Finding, sharing and vouching: a non-expert, AI agents and open problems
 
-In October 2026 I spent twelve days working through the open problems of one
-research area with Claude Code and Codex agents: Hardy, Bergman and
-Dirichlet-series spaces, Hankel and Helson operators, and Nehari-type
-theorems. Before that I spent about six weeks writing a monograph on the area
-with the same agents. I have a master's degree in the area and directed the
-work.
+Can someone outside the profession contribute to research mathematics with AI
+agents without doing the harms mathematicians warned about this autumn:
+results announced in a rush, prior work left uncited, proofs nobody can read,
+checking pushed onto experts? The [paper](paper/paper.pdf) argues that it can,
+if three acts are kept apart.
 
-This repository records how we did it, what worked and what did not. The
-[`AGENTS.md`](AGENTS.md) file turns the recommended version into instructions
-a coding agent can follow in another field: give it a list of papers, a list
-of authors or an arXiv query, and it builds, triages and works a problem
-database the same way.
+- **Finding** a result is now cheap, and agents do most of it.
+- **Sharing** a result can be done without claiming it: say what is known, how
+  much stands behind it and where the explanation is, and leave anyone free to
+  develop it.
+- **Vouching** for a result, standing behind it as correct and worth reading,
+  is an act only someone with expertise can perform. It is what turns a shared
+  result into a paper.
 
-## What the agents achieved, and what they did not
+The evidence is one case. In October 2026 I spent twelve days directing Claude
+Code and Codex agents at the open problems of one area of analysis: Hardy,
+Bergman and Dirichlet-series spaces, Hankel and Helson operators, and
+Nehari-type theorems. Before that I spent about six weeks writing a monograph
+on the area with the same agents. I have a master's degree in the area and no
+research career in it.
 
-The agents were very good at mapping the field: finding, collecting and
-classifying problems, checking the literature, and picking off low-hanging
-fruit. Most of the problems they settled were short arguments from known
-tools, or counterexamples that are easy to verify once found. Only a few
-results are of real significance; those have been sent to the people who
-asked the questions.
+This repository holds the workflow as I now recommend it. The
+[`AGENTS.md`](AGENTS.md) file turns it into instructions a coding agent can
+follow in another field: give it a list of papers, a list of authors or an
+arXiv query, and it builds, triages and works a problem database the same way.
 
-They did not get us past the walls. On the hard problems, several agents
-working for days produced maps of what fails, not proofs. A hard problem
-stayed hard. We use this method as the first step of research, to get to know
-a field and find questions worth working on, not as a way to break hard
-problems. Terence Tao has made the same observation about the Erdős problems;
-see the [paper](paper/paper.pdf).
+## What happened
 
-## Credit
+The agents were good at mapping the field: finding and classifying problems,
+checking the literature, and answering the easy ones. Most of their answers are
+short arguments from known tools, or counterexamples that are easy to check
+once found. A few may matter; whether they do is for specialists to judge. On
+the hard problems, several agents working for days produced maps of what
+fails, not proofs.
 
-The questions belong to the people who asked them, and every record cites
-the exact source. The proofs and computations were produced by AI agents and
-checked by me. The mathematics itself is published separately as PDFs.
-
-## The publication rule
-
-Everything we produced is labelled **Sketch** until it appears on arXiv or in
-a journal, however it was checked. Before anything goes to arXiv I email the
-authors who asked the question.
-
-## Where things stand (14 October 2026)
-
-| | Count |
-|---|---|
-| Problems in the database | 373 (289 asked by others, 84 by us) |
-| Settled by someone else (journal or arXiv), found during triage | 64 |
-| Settled by our agents, all *Sketch*, mostly low-hanging fruit | 141 (89 of them asked by others) |
-| Of those, public as PDFs | 61 |
-| Partial results only | 142 |
-| Untouched or still being worked | 26 |
-| Askers contacted so far | a handful of author groups; the rest are batched |
-
-"Settled by our agents" means a written proof or counterexample, a solution
-sheet and one agent referee pass. [Lessons: review](docs/lessons.md#review-is-the-weakest-link)
-says what that is worth.
+The results themselves are shared, unclaimed, at
+[github.com/Oisov/math-preprints](https://github.com/Oisov/math-preprints).
+Each says what is known and how much stands behind it. Nobody claims them:
+anyone may check, develop or publish them, crediting the people who asked the
+questions. The questions belong to those who asked them, and every record
+cites its source. Before anything goes to arXiv, the people who asked are told.
 
 ## Getting started
 
@@ -82,6 +67,7 @@ Then ask your agent to read `AGENTS.md` and start the harvest.
 | [`docs/schema-review.md`](docs/schema-review.md) | Which record fields earned their place |
 | [`docs/recommendations.md`](docs/recommendations.md) | **What we recommend** |
 | [`paper/`](paper/) | The paper (LaTeX, built with `make pdf TEX=paper/paper.tex`) |
+| [`data/`](data/) | The anonymised records and audit behind every count in the paper; `python3 data/tables.py` recomputes them |
 
 The evidence behind these documents is the version history of the working
 repository (about 1,000 commits), 14 Claude Code sessions with 393 subagents,
