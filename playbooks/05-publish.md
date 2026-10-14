@@ -91,10 +91,10 @@ questions. (After Bloom's change to the Erdős problems site, 6 October 2026.)
 Which route fits depends on the user's standing in the field, and the user
 decides. Do not push for one.
 
-1. **Publish it yourself.** For a user with expertise in the result's field
-   who has checked it with colleagues. Add a disclosure of how it was found.
+1. **Publish it yourself.** For a user with command of the result's
+   research context who has checked it with colleagues. Add a disclosure of how it was found.
 2. **Write it up with an expert.** For a user who has not yet acquired
-   expertise in the result's field, with a specialist who has checked the
+   command of the result's research context, with a specialist who has checked the
    result and wants to develop it. Each supplies what the paper needs: the
    result and its proof, and the judgement of whether it is correct, new and
    worth reading.
@@ -102,7 +102,8 @@ decides. Do not push for one.
    leave them free to use it, and expect at most an acknowledgement.
 
 Having found or understood a proof is not the same as understanding its
-field. Before route 1, the user takes the time to understand the result's
+research context: its claims, dependencies, relevant prior work, scope and
+implications. Before route 1, the user takes the time to understand the result's
 importance, formulation and framing, and what it means to the people who work
 nearby; a fast result is not readiness to publish. Without that, use route 2
 or 3.

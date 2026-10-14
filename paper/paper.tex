@@ -37,15 +37,15 @@ honestly if three acts are kept apart. Finding a result is now cheap, and
 agents do most of it. Sharing a result can be done without claiming it: saying
 what is known and how much stands behind it, and leaving anyone free to develop
 it. Vouching for a result, standing behind it as correct, new and worth
-reading, requires understanding the field it belongs to. Agents make it
-possible to find and understand a proof before acquiring that broader
-expertise. The evidence is a workflow used in October 2026, described as it was
-used, with the failures that changed it. The agents collected 373 problems,
-found that 64 had already been answered by others, and produced answers to 141
-more. Most are easy in hindsight, seven we judged significant, and the hardest
-problems did not move. A blind audit of 20 answers found no mathematical errors
-and two that answer less than was asked. We also record where the project fell
-short of its own position.
+reading, requires command of its research context. Agents make it possible to
+find and understand a proof before acquiring that broader expertise. The
+evidence is a workflow used in October 2026, described as it was used, with the
+failures that changed it. The agents collected 373 problems, found that 64 had
+already been answered by others, and produced answers to 141 more. Most are
+easy in hindsight, seven we judged significant, and the hardest problems did
+not move. A blind audit of 20 answers found no mathematical errors and two that
+answer less than was asked. We also record where the project fell short of its
+own position.
 \end{abstract}
 
 \maketitle
@@ -82,7 +82,8 @@ agents do most of it.\@ \emph{Sharing} a result can be done without claiming
 it: by saying what is known, how much stands behind it and where the
 explanation is, and leaving anyone free to check, develop or publish it.\@
 \emph{Vouching} for a result, standing behind it as correct, new and worth
-reading, requires expertise in the field the result belongs to. In the author's
+reading, requires expertise in the result's research context: its claims,
+dependencies, relevant prior work, scope and implications. In the author's
 field, posting to arXiv is that act: it says ``I stand behind this''. Someone
 without that expertise can find and share honestly but cannot vouch, and the
 shared results wait until someone who can chooses to. The closest existing
@@ -142,24 +143,25 @@ responsibility for all its contents, irrespective of how the contents were
 generated''~\cite{arxiv-moderation}. Since December 2025, anyone who has not
 already written an arXiv mathematics paper must be personally endorsed to post
 one~\cite{arxiv-endorsement}. In the author's field arXiv holds papers on their
-way to a journal. A post there is a statement by a person with standing in the
-field that the result is correct and worth reading, which is more than a Lean
-check, which shows that the steps are valid but not that the statement is the
-right one, and more than an agent referee's verdict. The Leiden Declaration
-puts the same principle generally: ``credit and responsibility continue to
-belong to humans''~\cite{leiden}. By expertise we mean what it takes to answer
-for a result in front of the people who work on it: to explain its proof, check
-its assumptions, say what it extends and whether it is new, and defend its
-scope. A practical test is Tao's: whether one could give a clear, expert-level
-talk on the result and answer the audience's questions~\cite{tao-age}. This is
-a requirement of understanding, not of credentials, and it can be acquired
-through the work.
+way to a journal. A post there is a statement by an author taking
+responsibility for the result that it is correct and worth reading, which is
+more than a Lean check, which shows that the steps are valid but not that the
+statement is the right one, and more than an agent referee's verdict. The
+Leiden Declaration puts the same principle generally: ``credit and
+responsibility continue to belong to humans''~\cite{leiden}. By expertise we
+mean what it takes to answer for a result in front of the people who work on
+it: to explain its proof, check its assumptions, say what it extends and
+whether it is new, and defend its scope. A practical test is Tao's: whether one
+could give a clear, expert-level talk on the result and answer the audience's
+questions~\cite{tao-age}. This is a requirement of understanding, not of
+credentials, and it can be acquired through the work.
 
-Most of that understanding concerns the field rather than the proof. A few
-weeks with one fish teaches a lot about the fish and a little about the ocean.
-Agents speed up both kinds of understanding, but unevenly, and the time needed
-to produce a result has fallen much faster than the time needed to become its
-responsible author.
+Agents speed up both kinds of understanding, but unevenly. In this project they
+repeatedly brought results within reach before the author had acquired the
+contextual understanding needed to publish them responsibly. The clearest case
+is the fractional functional: its proof was a theorem of the author's monograph
+before he recognised which published conjecture it answered (\cref{sec:start}).
+Understanding what had been proved came before understanding what it answered.
 \begin{center}
   \small
   \begin{tabular}{p{0.24\textwidth}p{0.33\textwidth}p{0.33\textwidth}}
@@ -173,7 +175,7 @@ responsible author.
   \end{tabular}
 \end{center}
 Hence a warning. Having understood a proof, or even having found it, is not the
-same as understanding the field it belongs to. Before a result is published,
+same as understanding its research context. Before a result is published,
 someone has to take the time to understand its importance, how it should be
 formulated and framed, and what it means to the people who work nearby: the
 person who found it, through further study, or a specialist who works with
@@ -191,13 +193,13 @@ sufficient preparation to publish it himself. For the outer-extremals theorem
 the division of work was visible: the author understood the proof, and the
 specialist who checked it supplied the knowledge of the field.
 
-Agents can aid understanding, but they cannot replace it. Even with their help,
-understanding a field deeply takes months or years, not the days the author
-spent on most of these problems. It is the author's view, and his wish, that
-published research should still be the work of people who understand it and
-stand behind every sentence, written with human readers in mind, even when the
-exploration, the classification and the solutions themselves were found with
-the help of agents.
+Agents can aid understanding, but they cannot replace it. In the author's
+experience, even with their help, understanding a field deeply takes months or
+years, not the days the author spent on most of these problems. It is the
+author's view, and his wish, that published research should still be the work
+of people who understand it and stand behind every sentence, written with human
+readers in mind, even when the exploration, the classification and the
+solutions themselves were found with the help of agents.
 
 \subsection*{Sharing without claiming}
 The results can still be shared. Robert Merton described the findings of
@@ -212,8 +214,13 @@ know what is known''~\cite{buzzard-grieve}. The public volumes of this project
 follow the Erdős site's lead. Each entry states the question with its source
 and, where something is known, what it is and how much stands behind it: the
 published literature, a preprint, or a proof sketch that no specialist has
-checked. Nobody claims the sketches, and anyone may develop or publish them,
-crediting the people who asked the questions.
+checked. Sharing still carries responsibility for describing the statement, its
+provenance and the checks performed accurately. ``Without claiming'' means
+making that material available without seeking priority credit or a role in its
+eventual publication: anyone may develop or publish the sketches, crediting the
+people who asked the questions. Declining credit is the author's chosen way of
+contributing. It does not follow from the argument about expertise, and others
+in his position may reasonably choose differently.
 
 History suggests what happens to results shared this way. An anonymous proof of
 a lower bound for superpermutations, posted on an image board in 2011,
@@ -635,9 +642,8 @@ equivalent reformulations; three proved the same lemma. He called the pattern
 brief, and disjoint mandates for the lanes. Under prove mode every route
 reduced to the same square-function estimate in $L^1$, which would be a theorem
 in its own right.\@ \emph{What happened after.} The author stopped the work and
-sent Bampouras a note with the reductions. The episode is the clearest instance
-of Tao's picture: the agents climbed many short walls around the problem and
-none of them led to the summit.
+sent Bampouras a note with the reductions. The agents climbed many short walls
+around the problem, and none of them led to a proof.
 
 \subsection*{``Partial results don't count''}
 \emph{What happened.} On 13 October a campaign over difficulty-4 problems
@@ -1097,15 +1103,15 @@ outside its range, a missing hypothesis, and above all overstated scope. They
 rarely asked whether the claim was the right one.
 
 Every result of ours is therefore labelled a \emph{sketch} until it appears on
-arXiv or in a journal, however it was checked. Before anything is posted, the
-people who asked the question are told, following the Leiden Declaration on
-attribution, disclosure and the humanity of authorship~\cite{leiden}. The
-questions belong to those who asked them. The proofs and computations were
-produced by AI agents and checked by the author, and following Tao's rule of
-thumb~\cite{tao-age}, no result should be published until a human can give a
-clear, expert-level talk on it. Proofs for external questions are rewritten in
-the asker's notation, with the idea before the computation, and sent to the
-asker; several groups have been contacted.
+arXiv or in a journal, however it was checked. Before a research paper goes to
+arXiv, the people who asked the question are told, following the Leiden
+Declaration on attribution, disclosure and the humanity of
+authorship~\cite{leiden}. The questions belong to those who asked them. The
+proofs and computations were produced by AI agents and checked by the author,
+and following Tao's rule of thumb~\cite{tao-age}, no result should be published
+until a human can give a clear, expert-level talk on it. Proofs for external
+questions are rewritten in the asker's notation, with the idea before the
+computation, and sent to the asker; several groups have been contacted.
 
 \subsection*{Three ways to hand over a result}
 A result found this way can reach the literature in three ways, and which one
@@ -1114,18 +1120,20 @@ result's field who has checked it with colleagues can publish it under their
 own name, with a disclosure of how it was found. Someone who has not yet
 acquired that expertise can write it up with a specialist, each supplying what
 the paper needs: one the result and its proof, the other the judgement of
-whether it is correct, new and worth reading. Or the results can be shown to
-the people who asked the questions, with no claim of ownership beyond an
-acknowledgement, leaving them free to use the results in their own work. All
-three are reasonable. The author had not acquired enough expertise in most of
-these problems to take sole responsibility for their publication, so the first
-was not open to him. For the outer-extremals result the second happened: one of
-the askers, the author's former master's supervisor, proposed writing it up
-together. For other results the askers thanked us for the notes without
-proposing a collaboration, which is the third. The choice belongs to the
-expert, and the workflow should make each route easy: a self-contained solution
-sheet in the asker's notation, an honest account of how it was checked, and no
-expectation attached.
+whether it is correct, new and worth reading. In developing the paper together
+they build enough shared understanding for each to take responsibility for its
+claims and presentation. Or the results can be shown to the people who asked
+the questions, with no claim of ownership beyond an acknowledgement, leaving
+them free to use the results in their own work. All three are reasonable. The
+author had not acquired enough expertise in most of these problems to take sole
+responsibility for their publication, so the first was not open to him. For the
+outer-extremals result the second happened: one of the askers, the author's
+former master's supervisor, proposed writing it up together. For other results
+the askers thanked us for the notes without proposing a collaboration, which is
+the third. Whether a specialist takes part is their choice; the author can also
+keep studying, or approach someone else. The workflow should make each route
+easy: a self-contained solution sheet in the asker's notation, an honest
+account of how it was checked, and no expectation attached.
 
 The next stage of this work is that review. The people who asked the questions
 will decide which answers are correct, which are new, and which matter, and
