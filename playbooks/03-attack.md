@@ -77,7 +77,9 @@ request a referee (stage 4); never review your own work.
 
 ## Parking
 
-Park a problem (`effort.parked: true`) after the session budget for its
-difficulty (1, 2, 3, 5, 8 sessions for difficulty 1–5) without progress, or
-when the user decides. Write in State of play what would justify reopening
+The session budget is the difficulty: 1 to 4 sessions for difficulty 1 to 4.
+A problem that uses its budget without a full answer moves to difficulty 5.
+Difficulty 5 problems are worked only with a specific new idea; park them
+(`effort.parked: true`) after that, or after six sessions without even a
+partial result, or when the user decides. Write in State of play what would justify reopening
 it: a specific new idea, a new paper, or a specific lemma.

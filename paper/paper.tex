@@ -133,6 +133,47 @@ The problems came from four sources, in this order.
         classical problem book, and the open-problem sections of two monographs.
 \end{enumerate}
 
+\subsection*{From candidates to 373 records}
+\Cref{tab:funnel} follows the problems from extraction to the database. The
+local collection was broad: the director's paper library also held books from
+unrelated projects, so the first catalogue contained questions from fluid
+dynamics, arithmetic geometry and combinatorics alongside the target area.
+Scope was then fixed by one sentence: \emph{Hardy and Bergman spaces, Dirichlet
+series, analytic extremals, Hankel operators, sampling and interpolation, and
+directly related analytic number theory}, informally ``what the people working
+in this area would work on''. An agent applied it theme by theme and wrote down
+a reason for every excluded theme, for example ``Euler and Navier--Stokes
+questions are outside the selected scope'' or ``sphere-packing and
+energy-optimality conjectures are excluded''; adjacent topics were kept only
+with a stated connection, such as random multiplicative functions for their
+link to Dirichlet-polynomial norms. Incomplete candidates, mostly exercises,
+were dropped. Excluded records were kept in a separate report rather than
+deleted.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lr}
+    \toprule
+    Stage (date)                                                          & Records  \\
+    \midrule
+    PDFs screened in the local collection                                 & 299      \\
+    Candidate records extracted, deduplicated (10 Oct)                    & 459      \\
+    \quad of which problem statements                                     & 399      \\
+    \quad of which incomplete candidates, dropped                         & 60       \\
+    Excluded as out of scope, with a reason per theme (11 Oct)            & 166      \\
+    Kept in the focused catalogue, plus 2 local additions                 & 235      \\
+    \quad first order (in the collection) / second order (cited by it)    & 178 / 57 \\
+    Database at migration, adding 40 questions from our own book (12 Oct) & 270      \\
+    Added from synthesis, workshop lists and monographs (12 Oct)          & 72       \\
+    Added during the work, mostly questions met while attacking others    & 31       \\
+    \midrule
+    Database                                                              & 373      \\
+    \bottomrule
+  \end{tabular}
+  \caption{How the database was built. Duplicates were merged at each step,
+    so the rows do not add up exactly.}\label{tab:funnel}
+\end{table}
+
 Each problem became one Markdown file with validated metadata. The metadata
 records:
 \begin{itemize}
@@ -156,9 +197,9 @@ routine deduction or literature reconciliation, 2 = focused tractable project,
 3 = substantial specialist project, 4 = probably requires a major new idea, 5 =
 longstanding frontier problem. Their brief warned that ``a ten-minute failure
 to prove a statement is not evidence for a high score''. On 12 October three
-Claude Opus 5.5s scored the whole database, each taking a group of themes,
-under a common brief that defined difficulty as ``effort for us with current
-tools'' and fixed an anchor problem at each level:
+Claude Opus 5.5 subagents scored the whole database, each taking a group of
+themes, under a common brief that defined difficulty as ``effort for us with
+current tools'' and fixed an anchor problem at each level:
 \begin{center}
   \begin{tabular}{cl}
     \toprule
@@ -180,13 +221,31 @@ unchanged; they scored the rest from scratch. Over all 373 problems the initial
 scores were distributed as 37, 48, 110, 145 and 33 for difficulty 1 to 5. The
 scores moved during the work. After the scoring pass, 145 of the 168 problems
 that remained unsettled were re-rated, almost always upwards (127 by one level
-and 23 by two), as attempts failed; following the protocol, a problem that
-resisted its sessions was moved up. Of the 141 problems our agents settled, 38
-were re-rated, mostly downwards. The final scores therefore record the outcome
+and 23 by two), as attempts failed. Most of these moves were mechanical: the
+protocol raised any problem that used its session budget without a full answer
+to difficulty 5 (see below). Of the 141 problems our agents settled, 38 were
+re-rated, mostly downwards. The final scores therefore record the outcome
 rather than predict it, and we use the initial scores of 12 October throughout.
 Even these are not blind: they were assigned after the directed work of 3 to 11
 October, so for problems attempted then the score already reflects that
 attempt.
+
+\subsection*{Selection for attack}
+Problems were attacked in rounds by difficulty, from 1 upwards: ``start with
+the low-hanging fruit''. Within a round the orchestrating session picked open,
+unparked problems with the best impact relative to difficulty, mixing cheap
+problems with one or two of high impact, and skipping problems whose literature
+status was an unverified claim by others. Each problem had a session budget
+equal to its difficulty, from one session at difficulty 1 to four at difficulty
+4; difficulty 5 problems were worked only in dedicated rounds with a specific
+new idea. The protocol then moved problems mechanically: a problem at
+difficulty 1 to 4 that used its budget without a full answer was raised to
+difficulty 5, and a problem at difficulty 5, or after six sessions without even
+a partial result, was parked. Parked problems could be reopened only for a new
+idea, paper or tool.
+
+The public problem volume was a further selection: questions asked only
+internally were removed, leaving 308 questions and 58 answers.
 
 \section{The workflow}\label{sec:workflow}
 
